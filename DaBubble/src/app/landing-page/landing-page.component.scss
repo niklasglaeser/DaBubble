@@ -1,0 +1,22 @@
+.content {
+    position: relative;
+    overflow-x: hidden;
+}
+
+.logo {
+    width: 242px;
+    height: 70px;
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    margin-left: 45px;
+    margin-top: 30px;
+    gap: 16px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
