@@ -12,6 +12,7 @@ export class SidebarComponent {
   isMessagesDropdownOpen = true;
   isActive = true;
   isOnline = true;
+  isDirectChat = false;
 
   channels = Array(5).fill(0);
   directUser = Array(5).fill(0);

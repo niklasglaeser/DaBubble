@@ -7,6 +7,7 @@
   border-radius: 30px;
   padding: 32px 30px;
   background-color: white;
+  margin: 50px;
 }
 
 .headline {
@@ -121,7 +122,8 @@
     gap: 15px;
     padding: 4px 20px;
 
-    &:hover {
+    &:hover,
+    &.active {
       background-color: var(--lighterPurple);
       color: var(--purple3);
       border-radius: 30px;

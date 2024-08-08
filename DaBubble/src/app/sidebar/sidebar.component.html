@@ -100,7 +100,7 @@
   <div class="dropdown" [class.show]="isMessagesDropdownOpen">
     @for (user of directUser; track $index) {
     <div class="directUser" (click)="openDirectmessage()">
-      <div>
+      <div [class.active]="isDirectChat">
         <div class="avatarStatus">
           <img src="../../assets/img/landing-page/men1.svg">
           <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
