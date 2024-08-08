@@ -19,6 +19,8 @@
 
 body {
     background-color: var(--bgColor);
+    height: auto;
+    width: auto;
 }
 
 
@@ -35,6 +37,11 @@ body {
 .fs-24{
   font-size: 24px;
   font-weight: 400;
+}
+
+.fs-46{
+  font-size: 46px;
+  font-weight: 700;
 }
 
 /* nunito-200 - latin */

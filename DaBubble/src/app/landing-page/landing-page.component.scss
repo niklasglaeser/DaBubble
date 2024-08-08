@@ -1,22 +1,202 @@
-.content {
+.container {
     position: relative;
-    overflow-x: hidden;
+    height: 100vh;
+    width: 100vw;
 }
 
-.logo {
-    width: 242px;
-    height: 70px;
+.content{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1920px;
+    min-height: 950px;
+    width: 100%;
+    height: 100%;
 }
 
 .logo-box {
+    position: absolute;
+    top: 75px;
+    left: 75px;
+    .logo {
+        width: 242px;
+        height: 70px;
+    }
+}
+
+.create-acc{
+    position: absolute;
     display: flex;
+    flex-direction: column;
+    right: 75px;
+    top: 75px;
+    justify-content: center;
     align-items: center;
-    margin-left: 45px;
-    margin-top: 30px;
     gap: 16px;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
+a{
+    cursor: pointer;
+    text-decoration: none;
 }
+
+.footer{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 16px;
+    bottom: 50px;
+}
+
+.link{
+    transition: border-color 0.125s ease-in-out;
+    padding: 10px 15px;
+    border: 1px solid transparent;
+    border-radius: 25px;
+    color: var(--purple2);
+    &:hover{
+        border-color: var(--lightPurple);
+    }
+}
+
+.intro-animation{
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color:blue;
+    animation: hideIntro 0.4s ease-out 2.2s forwards;
+}
+
+.logo-animation{
+    position: absolute;
+    top: calc(50vh - 92px );
+    left: calc(50vw - 92px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation:  showLogo 0.5s ease-in forwards, 
+                moveLeft 0.5s ease-in 0.5s forwards,
+                moveTopLeft 0.4s ease-in 1.8s forwards;
+
+    span{
+        position: absolute;
+        color: white;
+        font-size: 56px;
+        font-weight: 700;
+        opacity: 0;
+        animation: textAnimation 0.5s ease-in 1s forwards,
+                    changeFontColor 0.4s ease-in 1.8s forwards;
+    }
+}
+
+.box{
+    padding: 24px;
+    z-index: 5;
+    background-color: blue;
+    animation: rmPadding 0.4s ease-in 1.8s forwards;
+    img{
+        height: 184px;
+        width: auto;
+        animation: changeLogoSize 0.4s ease-in 1.8s forwards;
+    }
+}
+
+@keyframes showLogo{
+    0% {
+        opacity: 0;
+    }
+    50%{
+        opacity: 0.2;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@keyframes moveLeft{
+    0% {
+        top: calc(50vh - 92px );
+        left: calc(50vw - 92px);
+    }
+    50% {
+        top: calc(50vh - 92px );
+        left: calc(50vw - 92px);
+    }
+    100%{
+        top: calc(50vh - 92px );
+        left: calc(50vw - (255px));
+    }
+}
+
+@keyframes textAnimation {
+    0% {
+        transform: translateX(0);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 1;
+    }
+}
+
+@keyframes moveTopLeft {
+    0%{
+        top: calc(50vh - 92px );
+        left: calc(50vw - (255px));
+    }
+    100%{
+        top:75px;
+        left:75px;
+        color: black;
+    }
+}
+
+@keyframes changeFontColor{
+    0%{
+        color: white;
+    }
+    100%{
+        color: black;
+        font-size: 34px;
+        transform: translateX(78.5%);
+    }
+}
+
+@keyframes changeLogoSize{
+    0%{
+        height: 184px;
+    }
+    100%{
+        height: 70px;
+    }
+}
+
+@keyframes rmPadding{
+    0%{
+        padding: 24px;
+    }
+    100%{
+        padding: 0px;
+    }
+}
+
+@keyframes hideIntro {
+    0% {
+        opacity: 1;
+    }
+    99% {
+        opacity: 0;
+        display: flex;  
+    }
+    100% {
+        display: none;
+    }
+}
+
