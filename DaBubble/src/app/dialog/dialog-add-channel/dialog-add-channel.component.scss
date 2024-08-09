@@ -1,0 +1,90 @@
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-width: 872px;
+  width: 100%;
+  padding: 40px;
+  border-radius: 30px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  svg {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--lighterPurple);
+      border-radius: 50%;
+
+      path {
+        fill: var(--purple3);
+      }
+    }
+  }
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+
+  button {
+    margin-left: 8px;
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 100%;
+    border: 1px solid var(--lightPurple);
+    border-radius: 40px;
+    box-sizing: border-box;
+    padding: 18px 20px 18px 20px;
+    outline: none;
+  }
+  :focus {
+    border: 1px solid var(--purple1);
+  }
+}
+
+button {
+  width: 125px;
+  height: 49px;
+  padding: 12px 25px 12px 25px;
+  color: white;
+  background-color: var(--purple1);
+  border: unset;
+  border-radius: 25px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--lightPurple);
+  }
+}
+
+.error {
+  color: red;
+  padding-top: 8px;
+  padding-left: 20px;
+}
