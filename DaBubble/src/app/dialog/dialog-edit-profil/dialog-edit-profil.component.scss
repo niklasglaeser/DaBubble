@@ -1,0 +1,145 @@
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 30px 0 30px 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-width: 500px;
+  width: 100%;
+  padding: 40px;
+  margin: 0 8px;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  svg {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--lighterPurple);
+      border-radius: 50%;
+
+      path {
+        fill: var(--purple3);
+      }
+    }
+  }
+}
+
+.container-profil {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  > img {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+  }
+}
+
+.container-title {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: 220ms;
+
+  > div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .edit {
+      color: var(--purple3);
+      cursor: pointer;
+
+      &:hover {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.email {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  > div:first-of-type {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  a {
+    text-decoration: none;
+  }
+}
+
+.email-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  > .row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    > input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--lightPurple);
+      border-radius: 40px;
+      box-sizing: border-box;
+      padding: 18px 20px 18px 20px;
+      outline: none;
+      overflow: hidden;
+    }
+    :focus {
+      border: 1px solid var(--purple1);
+    }
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+
+  .exitBtn {
+    padding: 12px 25px 12px 25px;
+    color: var(--purple1);
+    background-color: white;
+    border: unset;
+    border: 1px solid var(--purple2);
+    border-radius: 25px;
+    cursor: pointer;
+
+    &:hover {
+      color: white;
+      background-color: var(--purple1);
+    }
+  }
+  .saveBtn {
+    padding: 12px 25px 12px 25px;
+    color: white;
+    background-color: var(--purple1);
+    border: unset;
+    border: 1px solid var(--purple2);
+    border-radius: 25px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--purple2);
+    }
+  }
+}
