@@ -1,0 +1,170 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 366px;
+  min-height: 940px;
+  border-radius: 30px;
+  padding: 32px 30px;
+  background-color: white;
+  margin: 50px;
+}
+
+.headline {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  > img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.containerChannels {
+  display: flex;
+  justify-content: space-between;
+
+  svg {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--lighterPurple);
+      border-radius: 50%;
+
+      path {
+        fill: var(--purple3);
+      }
+    }
+  }
+}
+
+.channels {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+
+  svg {
+    transition: transform 0.3s ease, fill 0.3s ease;
+
+    &.rotated {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &:hover {
+    color: var(--purple3);
+    svg path {
+      fill: var(--purple3);
+    }
+  }
+}
+
+.channel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+
+  > div {
+    display: flex;
+    align-items: center;
+    padding: 4px 20px;
+
+    &.active {
+      background-color: var(--lighterPurple);
+      color: var(--purple3);
+      border-radius: 20px;
+
+      svg path {
+        fill: var(--purple3);
+      }
+
+      span {
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.addChannel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  &:hover {
+    color: var(--purple3);
+    svg path {
+      fill: var(--purple3);
+    }
+  }
+}
+
+.containerMessages {
+  display: flex;
+  justify-content: space-between;
+}
+
+.directUser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 4px 20px;
+
+    &:hover,
+    &.active {
+      background-color: var(--lighterPurple);
+      color: var(--purple3);
+      border-radius: 30px;
+      span {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.avatarStatus {
+  position: relative;
+
+  > img {
+    width: 50px;
+  }
+
+  > :last-child {
+    position: absolute;
+    width: 14px;
+    bottom: 4px;
+    right: 1px;
+  }
+}
+
+.dropdown {
+  display: none;
+  z-index: 1;
+}
+
+.dropdown.show {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.rotated {
+  transform: rotate(-90deg);
+  transition: transform 0.2s ease-in-out;
+}
+
+.border-blue {
+  border: 1px solid blue;
+}

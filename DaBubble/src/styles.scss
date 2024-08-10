@@ -1,94 +1,115 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-    --bgColor: #ECEEFE;
-    --lightPurple: #AEB0D9;
-    --lighterPurple: #ECEEFE;
-    --textGray: #686868;
-    --purple1: #444DF2;
-    --purple2: #797EF3;
-    --purple3: #535AF1;
-    --onlineGreen: #91C93E;
-    --rosaError: #ED1E7A;
+  --bgColor: #eceefe;
+  --lightPurple: #aeb0d9;
+  --lighterPurple: #eceefe;
+  --textGray: #686868;
+  --purple1: #444df2;
+  --purple2: #797ef3;
+  --purple3: #535af1;
+  --onlineGreen: #91c93e;
+  --rosaError: #ed1e7a;
 }
 
-*{
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Nunito';
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Nunito";
 }
 
 body {
-    // background-color: var(--bgColor);
-    height: auto;
-    width: auto;
+  // background-color: var(--bgColor);
+  height: auto;
+  width: auto;
+  background-color: var(--bgColor);
 }
 
-
-.fs-18{
+.fs-18 {
   font-size: 18px;
   font-weight: 400;
 }
 
-.fs-20{
+.fs-18-700 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fs-20 {
   font-size: 20px;
   font-weight: 400;
 }
+.fs-20-700 {
+  font-size: 20px;
+  font-weight: 700;
+}
 
-.fs-24{
+.fs-24 {
   font-size: 24px;
   font-weight: 400;
 }
 
-.fs-46{
+.fs-46 {
   font-size: 46px;
+}
+.fs-24-700 {
+  font-size: 24px;
+  font-weight: 700;
+}
+.fs-32 {
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.fs-32-700 {
+  font-size: 32px;
   font-weight: 700;
 }
 
 /* nunito-200 - latin */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 200;
-    src: url('assets/fonts/nunito-v26-latin-200.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* nunito-300 - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 300;
-    src: url('assets/fonts/nunito-v26-latin-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* nunito-regular - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 400;
-    src: url('assets/fonts/nunito-v26-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* nunito-500 - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 500;
-    src: url('assets/fonts/nunito-v26-latin-500.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* nunito-600 - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 600;
-    src: url('assets/fonts/nunito-v26-latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* nunito-700 - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 700;
-    src: url('assets/fonts/nunito-v26-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 200;
+  src: url("assets/fonts/nunito-v26-latin-200.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* nunito-300 - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 300;
+  src: url("assets/fonts/nunito-v26-latin-300.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* nunito-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  src: url("assets/fonts/nunito-v26-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* nunito-500 - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 500;
+  src: url("assets/fonts/nunito-v26-latin-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* nunito-600 - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 600;
+  src: url("assets/fonts/nunito-v26-latin-600.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* nunito-700 - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 700;
+  src: url("assets/fonts/nunito-v26-latin-700.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
