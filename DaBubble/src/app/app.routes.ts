@@ -4,8 +4,9 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { DialogAddChannelComponent } from './dialog/dialog-add-channel/dialog-add-channel.component';
 import { DialogChannelEditComponent } from './dialog/dialog-channel-edit/dialog-channel-edit.component';
 import { DialogEditProfilComponent } from './dialog/dialog-edit-profil/dialog-edit-profil.component';
+import { DialogOverviewUsersComponent } from './dialog/dialog-overview-users/dialog-overview-users.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
-  { path: 'sidebar', component: DialogEditProfilComponent },
+  { path: 'sidebar', component: DialogOverviewUsersComponent },
 ];
