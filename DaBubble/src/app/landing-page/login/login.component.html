@@ -1,7 +1,66 @@
 <div class="container">
     <div class="content">
-        <h1>Anmelden</h1>
-        <span>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
-        <form></form>
+        <h1 class="fs-46">Anmelden</h1>
+        <span class="fs-20 login-text">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
+        <form [formGroup]="registerForm"  (ngSubmit)="onSubmit()">
+            
+            <div class="input-container">
+                
+                <input 
+                class="fs-18"
+                formControlName="email" 
+                id="email" 
+                type="email"
+                placeholder="beispielname@email.com"
+                >
+                <mat-icon>mail_outline</mat-icon>
+                <span *ngIf="errorFc('email')">*Diese E-Mail-Adresse ist leider ungültig.</span>
+            </div>
+            <div class="input-container">
+                
+                <input 
+                class="fs-18"
+                formControlName="password"
+                id="password"
+                type="password"
+                placeholder="Passwort"
+                 >
+                 <mat-icon>lock_outline</mat-icon>
+                 <span *ngIf="errorFc('password')">*Dieses Passwort ist leider ungültig.</span>
+            </div>
+
+            <div class="fpw">
+                <a href=""><span class="fs-18">Passwort vergessen?</span></a>
+            </div>
+
+            <div class="separtate-box">
+                <div class="separate"></div>
+                <span class="fs-18">ODER</span>
+                <div class="separate"></div>
+            </div>
+
+            <div class="google-btn">
+                <button>
+                    <img src="assets/img/landing-page/google.svg" alt="Google-Logo">
+                    <span class="fs-18">Anmelden mit Google</span>
+                </button>
+            </div>
+
+            <div class="login-btn-box">
+                <div class="login-btn">
+                    <button>
+                        <span class="fs-18-b">Anmelden</span>
+                    </button>
+                    
+                </div>
+                <div class="guest-btn">
+                    <button>
+                        <span class="fs-18-b">Gäste-Login</span>
+                    </button>
+                    
+                </div>
+            </div>
+
+        </form>
     </div>
 </div>
