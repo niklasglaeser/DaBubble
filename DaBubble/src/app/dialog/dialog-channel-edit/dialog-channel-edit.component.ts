@@ -25,6 +25,8 @@ export class DialogChannelEditComponent {
   editNameClicked: boolean = false;
   editDescriptionClicked: boolean = false;
 
+  channelExist?: boolean;
+
   inputNameDisabled: boolean = false; //testing
 
   constructor() {}

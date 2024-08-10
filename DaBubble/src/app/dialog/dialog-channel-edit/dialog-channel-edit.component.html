@@ -25,8 +25,11 @@
       }@else {
       <div class="edit-channel">
         <!-- <span>#</span> -->
-        <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="title" type="text">
+        <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="title" minlength="3" type="text">
       </div>
+      @if(channelExist){
+      <span style="color:red">Dieser Kanal existiert bereit</span>
+      }
       }
 
 
