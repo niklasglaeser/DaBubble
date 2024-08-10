@@ -1,3 +1,4 @@
+
 .container{
     display: flex;
     flex-direction: column;
@@ -17,4 +18,188 @@
     justify-content: center;
     align-items: center;
     gap: 32px;
+    h1{
+        color: var(--purple1);
+    }
+    .login-text{
+        text-align: center;
+    }
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+}
+
+.input-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    position: relative;
+    span{
+        position: absolute;
+        color: red;
+        font-size: 12px;
+        left: 0;
+        top: 105%;
+    }
+}
+
+mat-icon{
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    color: #686868;
+    transition: color 0.3s ease; 
+    &input:focus{
+        color: black;
+    }
+}
+
+input {
+    max-width: 500px;
+    width: 100%;
+    height: 60px;
+    padding: 18px 32px 18px 70px;
+    gap: 10px;
+    border-radius: 100px;
+    outline: 1px solid transparent;
+    border: 1px solid transparent;
+    background-color: var(--bgColor);
+    color: black; 
+    &::placeholder {
+        color: #686868;
+        transition: color 0.3s ease; 
+    }
+    &:hover {
+        border: 1px solid #686868;
+    }
+    &:focus {
+        border: 1px solid transparent;
+        outline: 1px solid var(--purple1);
+        color: black; 
+        &::placeholder {
+            color: transparent; 
+        }
+    }
+
+    &:not(:placeholder-shown) + mat-icon {
+        color: black;
+    }
+
+}
+
+input:focus ~ mat-icon{
+    color: black;
+}
+
+
+.fpw{
+    span{
+        color: var(--purple2);
+        border-radius: 20px;
+        padding: 4px 16px;
+        
+        &:hover{
+            background-color: var(--bgColor);
+            color: var(--purple1);
+        }
+    }
+}
+
+.separtate-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 35px;
+    .separate{
+        flex: 1;
+        height: 1px;
+        border: 0.5px solid var(--lighterPurple);
+    }
+    span{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 80px;
+        text-align: center;
+    }
+}
+
+.google-btn{
+    button{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: (500px);
+        height: (60px);
+        padding: 18px 32px;
+        border-radius: 100px;
+        outline: unset;
+        border: unset;
+        background-color: var(--bgColor);
+        color: var(--purple1);
+        span{
+            margin-left: 10px;
+        }
+        &:hover{
+            border: 1px solid var(--purple1);
+            span,img{
+                scale: 1.05;
+            }
+        }
+    }
+}
+
+.login-btn-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    height: 49px; 
+    width: 100%;
+}
+
+.login-btn,.guest-btn{
+    height: 49px;
+    width: 137px;
+    button{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border: unset;
+        outline: unset;
+        border-radius: 25px;
+    }
+}
+
+.login-btn{
+    button{
+        background-color: var(--purple1);
+        color: white;
+        &:hover{
+            opacity: 0.7;
+        }
+    }
+}
+
+.guest-btn{
+    button{
+        border: 1px solid var(--purple1);
+        background-color: white;
+        color: var(--purple1);
+        &:hover{
+            background-color: var(--purple1);
+            color: white;
+        }
+    }
 }
