@@ -5,25 +5,27 @@
         <div  class="logo-box">
             <img src="assets/img/landing-page/Logo-text.svg" alt="logo" class="logo">
         </div>
-        <div *ngIf="!$signUp" class="create-acc">
+        <div *ngIf="$login" class="create-acc">
             <p class="fs-18">Neu bei DABubble?</p>
             <a (click)="toCreatAcc()"><span class="fs-18 link">Konto erstellen</span></a>
         </div>
-  
-        <app-login *ngIf="false"></app-login>
-        <app-sign-up *ngIf="false"></app-sign-up>
-        <app-avatar *ngIf="false"></app-avatar>
-        <app-reset-password *ngIf="false"></app-reset-password>
-        <app-set-password *ngIf="true"></app-set-password>
+ 
+        <app-login *ngIf="$login"></app-login>
+        <app-sign-up *ngIf="$signUp"></app-sign-up>
+        <app-avatar *ngIf="$avatar"></app-avatar>
+        <app-reset-password *ngIf="$resetPW"></app-reset-password>
+        <app-set-password *ngIf="$setPW"></app-set-password>
+        <app-imprint *ngIf="$imprint"></app-imprint>
+        <app-privacy-policy *ngIf="$privacy"></app-privacy-policy>
 
         <div class="footer">
-            <a href=""><span class="fs-18 link">Impressum</span></a>
-            <a href=""><span class="fs-18 link">Datenschutz</span></a>
+            <a (click)="toImprint()" ><span class="fs-18 link">Impressum</span></a>
+            <a (click)="toPrivacy()" ><span class="fs-18 link">Datenschutz</span></a>
         </div>
 
     </div>
 
-     <div *ngIf="!$signUp" class="intro-animation">
+     <div *ngIf="$login && !animated" class="intro-animation">
         <div class="intro content">
             <div class="logo-animation">
                 <div class="box">
