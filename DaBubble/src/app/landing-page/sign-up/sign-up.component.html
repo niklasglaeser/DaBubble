@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="content">
+        <div class="back-box">
+            <a (click)="backToLogin()"><mat-icon>arrow_back</mat-icon></a>
+        </div>
+        <h1 class="fs-46">Konto erstellen</h1>
+        <span class="fs-20 login-text">Mit deinem Namen und deiner E-Mail Adresse hast du dein neues DABubble Konto.</span>
+        <form [formGroup]="registerForm"  (ngSubmit)="onSubmit()">
+            
+            <div class="input-container">
+                <input 
+                class="fs-18"
+                formControlName="name" 
+                id="name" 
+                type="text"
+                placeholder="Name und Nachname"
+                >
+                <mat-icon>person_outline</mat-icon>
+                <span *ngIf="errorFc('name')">*Diese E-Mail-Adresse ist leider ungültig.</span>
+            </div>
+            <div class="input-container">
+                <input 
+                class="fs-18"
+                formControlName="email" 
+                id="email" 
+                type="email"
+                placeholder="beispielname@email.com"
+                >
+                <mat-icon>mail_outline</mat-icon>
+                <span *ngIf="errorFc('email')">*Diese E-Mail-Adresse ist leider ungültig.</span>
+            </div>
+            <div class="input-container">
+                
+                <input 
+                class="fs-18"
+                formControlName="password"
+                id="password"
+                type="password"
+                placeholder="Passwort"
+                 >
+                 <mat-icon>lock_outline</mat-icon>
+                 <span *ngIf="errorFc('password')">*Dieses Passwort ist leider ungültig.</span>
+            </div>
+
+            <div class="input-checkbox">
+                <div class="checkbox">
+                    <input 
+                    class="fs-18"
+                    formControlName="checkbox"
+                    id="checkbox"
+                    type="checkbox"
+                    >
+                </div>
+                
+                 <span>Ich stimme der <a>Datenschutzerkärung</a> zu.</span>
+                 <span *ngIf="errorFc('checkbox')">*Dieses Passwort ist leider ungültig.</span>
+            </div>
+
+            <div class="futer-box">
+                <div class="futer-btn">
+                    <button disabled>
+                        <span class="fs-18-b">Weiter</span>
+                    </button>
+                    
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
