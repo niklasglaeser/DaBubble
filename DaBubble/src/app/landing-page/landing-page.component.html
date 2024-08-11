@@ -5,12 +5,13 @@
         <div  class="logo-box">
             <img src="assets/img/landing-page/Logo-text.svg" alt="logo" class="logo">
         </div>
-        <div class="create-acc">
+        <div *ngIf="!signUp" class="create-acc">
             <p class="fs-18">Neu bei DABubble?</p>
             <a href=""><span class="fs-18 link">Konto erstellen</span></a>
         </div>
     
-        <app-login></app-login>
+        <app-login *ngIf="login"></app-login>
+        <app-sign-up *ngIf="signUp"></app-sign-up>
 
         <div class="footer">
             <a href=""><span class="fs-18 link">Impressum</span></a>
@@ -19,7 +20,7 @@
 
     </div>
 
-     <div class="intro-animation">
+     <div *ngIf="!signUp" class="intro-animation">
         <div class="intro content">
             <div class="logo-animation">
                 <div class="box">
