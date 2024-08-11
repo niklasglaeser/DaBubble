@@ -17,5 +17,12 @@ import { LandingPageComponent } from '../landing-page.component';
   styleUrl: './reset-password.component.scss'
 })
 export class ResetPasswordComponent {
-  
+ 
+  constructor(private lp: LandingPageComponent){}
+
+  backToLogin(){
+    this.lp.$resetPW = false
+    this.lp.$login = true
+  }
+
 }

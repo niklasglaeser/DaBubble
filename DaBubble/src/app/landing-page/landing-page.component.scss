@@ -143,6 +143,17 @@ app-set-password{
     width: 100%;
 }
 
+app-imprint{
+    max-width: 676px;
+    width: 100%;
+}
+
+app-privacy-policy{
+    max-width: 900px;
+    width: 100%;
+    height: auto;
+}
+
 @keyframes showLogo{
     0% {
         opacity: 0;
