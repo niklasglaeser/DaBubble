@@ -16,7 +16,12 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 })
 export class LandingPageComponent {
 
-  login: boolean = false;
-  signUp: boolean = true;
+  $login: boolean = true;
+  $signUp: boolean = false;
 
+
+  toCreatAcc(){
+    this.$login = false
+    this.$signUp = true
+  }
 }

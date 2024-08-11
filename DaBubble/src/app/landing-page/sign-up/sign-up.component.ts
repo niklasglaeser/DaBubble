@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { LandingPageComponent } from '../landing-page.component';
 
 
 @Component({
@@ -28,12 +29,17 @@ export class SignUpComponent {
     password: ['', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private lp: LandingPageComponent) {}
 
   onSubmit() {}
 
   errorFc(id: string) {
     const control = this.registerForm.get(id);
     return control && control.invalid && (control.dirty || control.touched || this.isSubmited);
+  }
+
+  backToLogin(){
+    this.lp.$signUp = false
+    this.lp.$login = true
   }
 }
