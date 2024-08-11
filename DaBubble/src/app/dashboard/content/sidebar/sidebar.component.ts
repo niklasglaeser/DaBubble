@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { DialogAddChannelComponent } from '../dialog/dialog-add-channel/dialog-add-channel.component';
+import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
