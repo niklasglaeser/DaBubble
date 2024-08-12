@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
 
 @Component({
   selector: 'app-sidebar',
