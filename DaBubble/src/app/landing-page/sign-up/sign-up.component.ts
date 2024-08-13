@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { LandingPageComponent } from '../landing-page.component';
+import { AuthService } from '../../services/lp-services/auth.service';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -20,18 +23,27 @@ import { LandingPageComponent } from '../landing-page.component';
   styleUrl: './sign-up.component.scss'
 })
 export class SignUpComponent {
-
+  authService = inject(AuthService)
+  router = inject(Router)
+  
   isSubmited: boolean = false
 
   registerForm = this.fb.group({
-    name: ['', [Validators.required]],
+    username: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
+    checkbox: ['', [Validators.required]],
   });
 
   constructor(private fb: FormBuilder, private lp: LandingPageComponent) {}
 
-  onSubmit() {}
+  onSubmit():void {
+    const rawForm = this.registerForm.getRawValue()
+    this.authService.register(rawForm.email!,rawForm.username!,rawForm.password!).subscribe(()=>{
+      this.router.navigateByUrl('/')
+    })
+
+  }
 
   errorFc(id: string) {
     const control = this.registerForm.get(id);
