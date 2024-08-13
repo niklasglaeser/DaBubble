@@ -4,6 +4,8 @@ import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators 
 import {MatIconModule} from '@angular/material/icon';
 import { LandingPageComponent } from '../landing-page.component';
 import { AuthService } from '../../services/lp-services/auth.service';
+import { routes } from '../../app.routes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +21,7 @@ import { AuthService } from '../../services/lp-services/auth.service';
 })
 export class LoginComponent {
   authService = inject(AuthService)
+  router = inject(Router)
   isSubmited: boolean = false
 
   registerForm = this.fb.group({
@@ -28,7 +31,18 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private lp: LandingPageComponent) {}
 
-  onSubmit() {}
+  onSubmit(): void {
+    const rawForm = this.registerForm.getRawValue();
+    console.log(rawForm);
+  
+    this.authService.login(
+      rawForm.email!,
+      rawForm.password!
+    ).subscribe({
+      next: () => this.router.navigateByUrl('/dashboard'),
+      error: (err) => console.error('Registration error:', err)
+    });
+  }
 
   errorFc(id: string) {
     const control = this.registerForm.get(id);
