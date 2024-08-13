@@ -35,6 +35,10 @@ $DaBubble-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($DaBubble-theme);
 
+
+
+
+
 /* You can add global styles to this file, and also import other style files */
 :root {
   --bgColor: #eceefe;
@@ -71,6 +75,11 @@ a{
 
 .fs-18 {
   font-size: 18px;
+  font-weight: 400;
+}
+
+.fs-14 {
+  font-size: 14px;
   font-weight: 400;
 }
 

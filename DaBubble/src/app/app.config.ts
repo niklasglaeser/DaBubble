@@ -15,7 +15,6 @@ const firebaseConfig = {
   appId: "1:444352507604:web:6f7c377c02e29020279541"
 };
 
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), 

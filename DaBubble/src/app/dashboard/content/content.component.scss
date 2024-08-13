@@ -1,11 +1,14 @@
 .chat-window {
-  width: 60%;
+  width: 70%;
+  padding-right: 30px;
 }
 
 .thread-window {
-  width: 15%;
+  width: 30%;
+  display: flex;
+  padding-right: 50px;
 }
 
-// .sidebar {
-//     width: 15%;
-// }
+.sidebar-window {
+  padding-left: 50px;
+}
