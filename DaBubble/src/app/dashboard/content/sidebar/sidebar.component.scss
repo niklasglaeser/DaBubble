@@ -13,11 +13,29 @@
 
 .headline {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 24px;
-  > img {
-    width: 60px;
-    height: 60px;
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    > img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+  svg {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--lighterPurple);
+      border-radius: 50%;
+
+      path {
+        fill: var(--purple3);
+      }
+    }
   }
 }
 
