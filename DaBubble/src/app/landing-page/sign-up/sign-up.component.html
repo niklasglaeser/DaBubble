@@ -6,11 +6,11 @@
         <h1 class="fs-46">Konto erstellen</h1>
         <span class="fs-20 login-text">Mit deinem Namen und deiner E-Mail Adresse hast du dein neues DABubble Konto.</span>
         <form [formGroup]="registerForm"  (ngSubmit)="onSubmit()">
-            
+           
             <div class="input-container">
                 <input 
                 class="fs-18"
-                formControlName="name" 
+                formControlName="username" 
                 id="name" 
                 type="text"
                 placeholder="Name und Nachname"
@@ -58,7 +58,7 @@
 
             <div class="futer-box">
                 <div class="futer-btn">
-                    <button disabled>
+                    <button type="submit" [disabled]="!registerForm.valid">
                         <span class="fs-18-b">Weiter</span>
                     </button>
                     
