@@ -17,14 +17,15 @@
     <span class="fs-18">Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein
       #marketing zum
       Beispiel.</span>
-    <form [formGroup]="form" (ngSubmit)="submit()">
+    <form [formGroup]="channelForm" (ngSubmit)="submit()">
       <div class="form-group">
         <label for="name" class="fs-18-700">Channel-Name</label>
         <input id="name" type="text" class="fs-18" formControlName="name" placeholder="# z.B. Kooperationsprojekte"
           required>
-        <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="error">
-          <div *ngIf="form.get('name')?.errors?.['required']">Name ist erforderlich.</div>
-          <div *ngIf="form.get('name')?.errors?.['minlength']">Der Name muss mindestens 3 Zeichen lang sein.</div>
+        <div *ngIf="channelForm.get('name')?.touched && channelForm.get('name')?.invalid" class="error">
+          <div *ngIf="channelForm.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+          <div *ngIf="channelForm.get('name')?.errors?.['minlength']">Der Name muss mindestens 3 Zeichen lang sein.
+          </div>
         </div>
       </div>
       <div class="form-group">
@@ -32,7 +33,7 @@
         <input id="description" class="fs-18" type="text" formControlName="description" placeholder="Dein Text hier">
       </div>
       <div class="dialog-actions">
-        <button type="submit" class="fs-18-700" [disabled]="form.invalid">Erstellen</button>
+        <button type="submit" class="fs-18-700" [disabled]="channelForm.invalid">Erstellen</button>
       </div>
     </form>
   </div>

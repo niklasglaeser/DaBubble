@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Channel } from '../../../app/models/channel.class';
 
 @Component({
   selector: 'app-dialog-add-channel',
@@ -13,14 +14,14 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./dialog-add-channel.component.scss'],
 })
 export class DialogAddChannelComponent {
-  form: FormGroup;
+  channelForm: FormGroup;
   // isOpen = false;
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<DialogAddChannelComponent>
   ) {
-    this.form = this.fb.group({
+    this.channelForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
     });
@@ -31,8 +32,13 @@ export class DialogAddChannelComponent {
   }
 
   submit() {
-    if (this.form.valid) {
-      console.log('Form Value:', this.form.value);
+    if (this.channelForm.valid) {
+      let formData = this.channelForm.value;
+      let newChannel = new Channel({
+        name: formData.name,
+        description: formData.description,
+      });
+      console.log('channelForm Value:', newChannel);
       this.close();
     }
   }
