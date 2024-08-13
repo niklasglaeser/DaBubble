@@ -25,25 +25,36 @@ import { HttpClient } from '@angular/common/http';
 export class SignUpComponent {
   authService = inject(AuthService)
   router = inject(Router)
+  http = inject(HttpClient)
   
   isSubmited: boolean = false
 
   registerForm = this.fb.group({
     username: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
+    password: ['', [Validators.required,Validators.minLength(6)]],
     checkbox: ['', [Validators.required]],
   });
 
   constructor(private fb: FormBuilder, private lp: LandingPageComponent) {}
 
-  onSubmit():void {
-    const rawForm = this.registerForm.getRawValue()
-    this.authService.register(rawForm.email!,rawForm.username!,rawForm.password!).subscribe(()=>{
-      this.router.navigateByUrl('/')
-    })
-
+  onSubmit(): void {
+    const rawForm = this.registerForm.getRawValue();
+    console.log(rawForm);
+  
+    this.authService.register(
+      rawForm.email!,
+      rawForm.username!,
+      rawForm.password!
+    ).subscribe({
+      next: () => {
+        this.lp.$signUp = false;
+        this.lp.$avatar = true;
+      },
+      error: (err) => console.error('Registration error:', err)
+    });
   }
+  
 
   errorFc(id: string) {
     const control = this.registerForm.get(id);
