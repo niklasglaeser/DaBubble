@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../../app/models/channel.class';
+import { ChannelService } from '../../models/channel.service';
 
 @Component({
   selector: 'app-dialog-add-channel',
@@ -19,7 +20,8 @@ export class DialogAddChannelComponent {
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<DialogAddChannelComponent>
+    public dialogRef: MatDialogRef<DialogAddChannelComponent>,
+    private channelService: ChannelService
   ) {
     this.channelForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -31,14 +33,21 @@ export class DialogAddChannelComponent {
     this.dialogRef.close();
   }
 
-  submit() {
+  async submit() {
     if (this.channelForm.valid) {
       let formData = this.channelForm.value;
       let newChannel = new Channel({
         name: formData.name,
         description: formData.description,
       });
-      console.log('channelForm Value:', newChannel);
+
+      try {
+        await this.channelService.createChannel(newChannel);
+        console.log('Channel created successfully:', newChannel);
+      } catch (e) {
+        console.error('Error creating channel:', e);
+      }
+
       this.close();
     }
   }
