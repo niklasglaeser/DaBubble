@@ -1,6 +1,7 @@
 .chat-window {
   width: 70%;
   padding-right: 30px;
+  padding-left: 30px;
 }
 
 .thread-window {
@@ -11,4 +12,6 @@
 
 .sidebar-window {
   padding-left: 50px;
+  height: 95%;
+  box-sizing: border-box;
 }
