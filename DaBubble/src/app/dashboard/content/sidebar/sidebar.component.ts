@@ -1,21 +1,25 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
 import { ChannelService } from '../../../models/channel.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
+import { WorkspaceToggleComponent } from '../../../dialog/workspace-toggle/workspace-toggle.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [DialogAddChannelComponent],
+  imports: [DialogAddChannelComponent, WorkspaceToggleComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
   @ViewChild('dialogAddChannel')
   dialogAddChannelComponent!: DialogAddChannelComponent;
+
+  workspaceVisible: boolean = true;
+  showWorkspaceToggle = true;
 
   isChannelsDropdownOpen = true;
   isMessagesDropdownOpen = true;
@@ -31,7 +35,9 @@ export class SidebarComponent {
   constructor(
     public dialog: MatDialog,
     private channelService: ChannelService
-  ) {}
+  ) {
+    this.checkWindowSize();
+  }
 
   getList(): Channel[] {
     return this.channelService.channels;
@@ -69,6 +75,10 @@ export class SidebarComponent {
   }
   /*TESTING*/
 
+  toggleWorkspace(isHidden: boolean) {
+    this.workspaceVisible = !isHidden;
+  }
+
   openChannel() {
     console.log('open channel');
   }
@@ -82,5 +92,14 @@ export class SidebarComponent {
     } else if (menu === 'messages') {
       this.isMessagesDropdownOpen = !this.isMessagesDropdownOpen;
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkWindowSize();
+  }
+
+  checkWindowSize() {
+    this.showWorkspaceToggle = window.innerWidth <= 1980;
   }
 }
