@@ -3,7 +3,7 @@ import { Component, ViewChild, ElementRef, Input, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../models/channel.service';
 import { Channel } from '../../models/channel.class';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { getDoc } from '@angular/fire/firestore';
 
 @Component({
@@ -36,7 +36,8 @@ export class DialogChannelEditComponent {
 
   constructor(
     private channelService: ChannelService,
-    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string },
+    public dialogRef: MatDialogRef<DialogChannelEditComponent>
   ) {}
 
   ngOnInit() {
@@ -112,6 +113,10 @@ export class DialogChannelEditComponent {
 
   toggleDialog() {
     this.isOpen = !this.isOpen;
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
   adjustHeight(event: any) {
