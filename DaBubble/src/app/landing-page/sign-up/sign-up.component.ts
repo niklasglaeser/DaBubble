@@ -26,7 +26,7 @@ export class SignUpComponent {
   authService = inject(AuthService)
   router = inject(Router)
   http = inject(HttpClient)
-  
+
   isSubmited: boolean = false
 
   registerForm = this.fb.group({
