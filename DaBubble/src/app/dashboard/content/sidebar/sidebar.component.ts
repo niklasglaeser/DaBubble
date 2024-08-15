@@ -6,13 +6,41 @@ import { ChannelService } from '../../../models/channel.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { WorkspaceToggleComponent } from '../../../dialog/workspace-toggle/workspace-toggle.component';
+import { CommonModule } from '@angular/common';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [DialogAddChannelComponent, WorkspaceToggleComponent],
+  imports: [DialogAddChannelComponent, WorkspaceToggleComponent, CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
+  animations: [
+    trigger('slideInOut', [
+      state(
+        'in',
+        style({
+          transform: 'translateX(0%)',
+          display: 'flex',
+        })
+      ),
+      state(
+        'out',
+        style({
+          transform: 'translateX(-100%)',
+          display: 'none',
+        })
+      ),
+      transition('in => out', animate('125ms ease-in')),
+      transition('out => in', animate('125ms ease-out')),
+    ]),
+  ],
 })
 export class SidebarComponent {
   @ViewChild('dialogAddChannel')
@@ -75,8 +103,9 @@ export class SidebarComponent {
   }
   /*TESTING*/
 
-  toggleWorkspace(isHidden: boolean) {
-    this.workspaceVisible = !isHidden;
+  toggleWorkspace() {
+    this.workspaceVisible = !this.workspaceVisible;
+    console.log(this.workspaceVisible);
   }
 
   openChannel() {
