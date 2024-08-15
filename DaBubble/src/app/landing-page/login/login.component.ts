@@ -34,7 +34,7 @@ export class LoginComponent {
   onSubmit(): void {
     const rawForm = this.registerForm.getRawValue();
     console.log(rawForm);
-  
+ 
     this.authService.login(
       rawForm.email!,
       rawForm.password!
