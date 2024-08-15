@@ -137,8 +137,10 @@
       }
 
       span {
-        font-size: 18px;
-        font-weight: 700;
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -187,6 +189,16 @@
       }
     }
   }
+}
+
+.directUserName {
+  display: inline-block;
+  max-width: 200px;
+  line-height: 1.2em;
+  height: 2.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .avatarStatus {
