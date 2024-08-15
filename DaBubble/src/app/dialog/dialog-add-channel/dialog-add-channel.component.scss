@@ -18,16 +18,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  svg {
-    cursor: pointer;
+
+  button {
+    background-image: url("/assets/img/main-page/thread/cross.svg");
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+    color: white;
+    background-color: white;
+    border: none;
+    // border: unset;
+    // cursor: pointer;
 
     &:hover {
-      background-color: var(--lighterPurple);
-      border-radius: 50%;
-
-      path {
-        fill: var(--purple3);
-      }
+      background-image: url("/assets/img/main-page/thread/cross-hover.svg");
     }
   }
 }
@@ -69,18 +73,20 @@
   }
 }
 
-button {
-  width: 125px;
-  height: 49px;
-  // padding: 12px 25px 12px 25px;
-  color: white;
-  background-color: var(--purple1);
-  border: unset;
-  border-radius: 25px;
-  cursor: pointer;
+.dialog-actions {
+  button {
+    width: 125px;
+    height: 49px;
+    // padding: 12px 25px 12px 25px;
+    color: white;
+    background-color: var(--purple1);
+    border: unset;
+    border-radius: 25px;
+    cursor: pointer;
 
-  &:hover {
-    background-color: var(--lightPurple);
+    &:hover {
+      background-color: var(--lightPurple);
+    }
   }
 }
 
@@ -157,4 +163,9 @@ button {
   left: 20px;
   background-color: white;
   width: 200px;
+}
+
+// Das Verhalten, das du beschreibst, ist typisch für den Fokusrahmen, der durch Browser- oder Framework-Styles (wie Angular Material) auf fokussierbare Elemente wie Buttons angewendet wird.
+button:focus {
+  outline: none;
 }

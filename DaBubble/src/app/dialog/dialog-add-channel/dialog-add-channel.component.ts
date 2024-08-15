@@ -48,14 +48,12 @@ export class DialogAddChannelComponent {
       });
       try {
         await this.channelService.createChannel(newChannel);
-        await console.log('Channel created successfully:', newChannel);
+        console.log('Channel created successfully:', newChannel);
         this.channelName = formData.name;
         this.currentStep = 'user';
       } catch (e) {
         console.error('Error creating channel:', e);
       }
-
-      // this.close();
     }
   }
 
