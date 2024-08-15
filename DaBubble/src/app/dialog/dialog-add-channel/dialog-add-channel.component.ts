@@ -3,52 +3,71 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../../app/models/channel.class';
 import { ChannelService } from '../../models/channel.service';
+import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 
 @Component({
   selector: 'app-dialog-add-channel',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, DialogAddUserComponent],
   templateUrl: './dialog-add-channel.component.html',
   styleUrls: ['./dialog-add-channel.component.scss'],
 })
 export class DialogAddChannelComponent {
-  channelForm: FormGroup;
-  // isOpen = false;
+  addChannelForm: FormGroup;
+  addUserForm: FormGroup;
+  showInputField = false;
+  addChannel: boolean = true;
+  currentStep: 'channel' | 'user' = 'channel';
+  channelName: string = '';
 
   constructor(
-    private fb: FormBuilder,
+    private fbChannel: FormBuilder,
+    private fbUser: FormBuilder,
     public dialogRef: MatDialogRef<DialogAddChannelComponent>,
     private channelService: ChannelService
   ) {
-    this.channelForm = this.fb.group({
+    this.addChannelForm = this.fbChannel.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
     });
-  }
-
-  close() {
-    this.dialogRef.close();
+    this.addUserForm = this.fbUser.group({
+      selection: ['', Validators.required],
+      specificMembers: [''],
+    });
   }
 
   async submit() {
-    if (this.channelForm.valid) {
-      let formData = this.channelForm.value;
+    if (this.addChannelForm.valid) {
+      let formData = this.addChannelForm.value;
       let newChannel = new Channel({
         name: formData.name,
         description: formData.description,
       });
-
       try {
         await this.channelService.createChannel(newChannel);
-        console.log('Channel created successfully:', newChannel);
+        await console.log('Channel created successfully:', newChannel);
+        this.channelName = formData.name;
+        this.currentStep = 'user';
       } catch (e) {
         console.error('Error creating channel:', e);
       }
 
-      this.close();
+      // this.close();
     }
+  }
+
+  submitUser() {
+    if (this.addUserForm.valid) {
+      let formData = this.addUserForm.value;
+      console.log('Users added to channel:', formData);
+      this.dialogRef.close();
+    }
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }

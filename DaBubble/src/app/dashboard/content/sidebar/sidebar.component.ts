@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
 import { ChannelService } from '../../../models/channel.service';
 import { Subscription } from 'rxjs';
+import { Channel } from '../../../models/channel.class';
 
 @Component({
   selector: 'app-sidebar',
@@ -27,20 +28,23 @@ export class SidebarComponent {
 
   directUser = Array(5).fill(0);
 
-  
   constructor(
     public dialog: MatDialog,
     private channelService: ChannelService
   ) {}
 
-  ngOnInit(): void {
-    this.channelsSubscription = this.channelService.channels$.subscribe(
-      (data) => {
-        this.channels = data;
-        console.log(this.channels);
-      }
-    );
+  getList(): Channel[] {
+    return this.channelService.channels;
   }
+
+  // ngOnInit(): void {
+  //   this.channelsSubscription = this.channelService.channels$.subscribe(
+  //     (data: any) => {
+  //       this.channels = data;
+  //       console.log(this.channels);
+  //     }
+  //   );
+  // }
 
   addChannel() {
     console.log('add channel');
@@ -50,6 +54,20 @@ export class SidebarComponent {
       console.log('Dialog closed', result);
     });
   }
+
+  /*TESTING*/
+  openEditDialog(channelId: string) {
+    console.log(channelId);
+
+    const dialogRef = this.dialog.open(DialogChannelEditComponent, {
+      data: { channelId: channelId },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+  /*TESTING*/
 
   openChannel() {
     console.log('open channel');

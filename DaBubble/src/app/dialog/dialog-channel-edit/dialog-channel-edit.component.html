@@ -1,9 +1,8 @@
-<div class="dialog" *ngIf="isOpen">
+<div class="dialog">
   <div class="dialog-content">
     <div class="dialog-header">
-      <h2># {{title}}</h2>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-        (click)="toggleDialog()">
+      <h2># {{name}}</h2>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="close()">
         <mask id="mask0_70047_938" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24"
           height="24">
           <rect width="24" height="24" fill="#D9D9D9" />
@@ -21,11 +20,11 @@
         <span class="edit" (click)="editChannelBtn($event)">{{editName}}</span>
       </div>
       @if (!editNameClicked) {
-      <span class="fs-18"># {{title}}</span>
+      <span class="fs-18"># {{name}}</span>
       }@else {
       <div class="edit-channel">
         <!-- <span>#</span> -->
-        <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="title" minlength="3" type="text">
+        <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="name" minlength="3" type="text">
       </div>
       @if(channelExist){
       <span style="color:red">Dieser Kanal existiert bereit</span>
@@ -41,7 +40,7 @@
       </div>
       @if (!editDescriptionClicked) {
 
-      <span>{{description}}</span>
+      <span class="fs-18">{{description}}</span>
       } @else {
       <div class="edit-channel">
         <!-- <span>#</span> -->

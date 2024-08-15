@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ChannelService } from '../../models/channel.service';
+import { Channel } from '../../models/channel.class';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { getDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-channel-edit',
@@ -12,12 +16,10 @@ import { FormsModule } from '@angular/forms';
 export class DialogChannelEditComponent {
   @ViewChild('descriptionTextarea')
   descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
+  channel!: Channel;
 
   isOpen = true;
   title: string = 'Entwicklerteam 1';
-  description: string =
-    'Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meetings abhalten, Dokumente teilen und Entscheidungen treffen';
-  creator: string = 'DaBubble';
 
   editName: string = 'Bearbeiten';
   editDescription: string = 'Bearbeiten';
@@ -25,11 +27,54 @@ export class DialogChannelEditComponent {
   editNameClicked: boolean = false;
   editDescriptionClicked: boolean = false;
 
+  inputNameDisabled: boolean = false; // testing
   channelExist?: boolean;
 
-  inputNameDisabled: boolean = false; //testing
+  name?: string;
+  description?: string;
+  creator?: string;
 
-  constructor() {}
+  constructor(
+    private channelService: ChannelService,
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string },
+    public dialogRef: MatDialogRef<DialogChannelEditComponent>
+  ) {}
+
+  ngOnInit() {
+    this.loadChannel();
+  }
+
+  async loadChannel() {
+    if (this.data.channelId) {
+      const channelDoc = this.channelService.getSingleChannel(
+        'channels',
+        this.data.channelId
+      );
+      const channelData = (await getDoc(channelDoc)).data();
+      if (channelData) {
+        this.channel = new Channel({ id: this.data.channelId, ...channelData });
+        this.name = this.channel.name;
+        this.description = this.channel.description;
+        this.creator = this.channel.creator;
+      }
+    }
+  }
+
+  async updateChannel() {
+    if (this.channel) {
+      try {
+        this.channel.name = this.name!;
+        this.channel.description = this.description!;
+        await this.channelService.updateChannel(
+          this.data.channelId,
+          this.channel
+        );
+        console.log('Channel updated successfully');
+      } catch (e) {
+        console.error('Error updating channel', e);
+      }
+    }
+  }
 
   editChannelBtn(event: Event) {
     if (!this.editNameClicked) {
@@ -39,7 +84,7 @@ export class DialogChannelEditComponent {
       try {
         this.editNameClicked = false;
         this.editName = 'Bearbeiten';
-        this.channelUpdate(event);
+        this.updateChannel();
       } catch {
         console.log('error');
       }
@@ -59,19 +104,19 @@ export class DialogChannelEditComponent {
       try {
         this.editDescriptionClicked = false;
         this.editDescription = 'Bearbeiten';
-        this.channelUpdate(event);
+        this.updateChannel();
       } catch {
         console.log('error');
       }
     }
   }
 
-  channelUpdate(event: Event) {
-    console.log('Channel update' + event);
-  }
-
   toggleDialog() {
     this.isOpen = !this.isOpen;
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
   adjustHeight(event: any) {

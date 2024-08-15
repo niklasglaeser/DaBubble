@@ -1,18 +1,18 @@
 export class Channel {
-  Id?: string;
+  id?: string;
   name: string;
   description: string;
   creator: string;
   // members: User[];
 
   constructor(data: {
-    Id?: string;
+    id?: string;
     name?: string;
     description?: string;
     creator?: string;
     // members?: User[];
   }) {
-    this.Id = data.Id || '';
+    this.id = data.id || '';
     this.name = data.name || '';
     this.description = data.description || '';
     this.creator = data.creator || 'Demo User';
