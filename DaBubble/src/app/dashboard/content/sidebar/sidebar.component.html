@@ -85,8 +85,8 @@
     </div>
   </div>
   <div class="dropdown" [class.show]="isMessagesDropdownOpen">
-    @for (user of directUser; track $index) {
-    <div class="directUser" (click)="openDirectmessage()">
+    @for (user of allUsers; track $index) {
+    <div class="directUser" (click)="openDirectmessage(user.id)">
       <div [class.active]="isDirectChat">
         <div class="avatarStatus">
           <img src="../../assets/img/landing-page/men1.svg">
@@ -95,7 +95,7 @@
               stroke="#ECEEFE" stroke-width="2" />
           </svg>
         </div>
-        <span class="directUserName fs-18">Frederik HoffmannHoffmannHoffmannHoffmannHoffmannHoffmann</span>
+        <span class="directUserName fs-18">{{user.name}}</span>
       </div>
     </div>
     }

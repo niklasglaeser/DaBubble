@@ -14,6 +14,8 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { User } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -58,11 +60,14 @@ export class SidebarComponent {
   channels: any = [];
   channelsSubscription!: Subscription;
 
-  directUser = Array(5).fill(0);
+  // directUser = Array(5).fill(0);
+  allUsers: User[] = [];
+  unsubscribe: any;
 
   constructor(
     public dialog: MatDialog,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private userService: UserService
   ) {
     this.checkWindowSize();
   }
@@ -71,14 +76,16 @@ export class SidebarComponent {
     return this.channelService.channels;
   }
 
-  // ngOnInit(): void {
-  //   this.channelsSubscription = this.channelService.channels$.subscribe(
-  //     (data: any) => {
-  //       this.channels = data;
-  //       console.log(this.channels);
-  //     }
-  //   );
-  // }
+  ngOnInit(): void {
+    this.unsubscribe = this.loadAllUsers();
+  }
+
+  loadAllUsers(): void {
+    this.userService.getUsersList().subscribe((users) => {
+      this.allUsers = users;
+      console.log('all users' + this.allUsers);
+    });
+  }
 
   addChannel() {
     console.log('add channel');
@@ -111,8 +118,8 @@ export class SidebarComponent {
   openChannel() {
     console.log('open channel');
   }
-  openDirectmessage() {
-    console.log('open Directmessage');
+  openDirectmessage(userId: string) {
+    console.log('open Directmessage for User' + userId);
   }
 
   toggleDropdown(menu: string) {

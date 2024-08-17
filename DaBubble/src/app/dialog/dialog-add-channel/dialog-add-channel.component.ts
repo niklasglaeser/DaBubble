@@ -11,12 +11,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../../app/models/channel.class';
 import { ChannelService } from '../../models/channel.service';
-import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 
 @Component({
   selector: 'app-dialog-add-channel',
@@ -24,10 +24,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    DialogAddUserComponent,
     MatAutocompleteModule,
     MatChipsModule,
     MatFormFieldModule,
+    DialogAddUserComponent,
   ],
   templateUrl: './dialog-add-channel.component.html',
   styleUrls: ['./dialog-add-channel.component.scss'],
@@ -137,30 +137,10 @@ export class DialogAddChannelComponent implements OnInit {
     }
   }
 
-  onSearchUsers(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const query = inputElement.value.toLowerCase();
-    this.searchUsers(query);
-  }
-
-  searchUsers(query: string): void {
-    this.filteredUsers = this.allUsers.filter((user) =>
-      user.name.toLowerCase().includes(query)
-    );
-  }
-
-  selectUser(user: User): void {
-    if (!this.selectedUsers.includes(user)) {
-      this.selectedUsers.push(user);
-      console.log(this.selectedUsers);
-      this.filteredUsers = this.filteredUsers.filter((u) => u.id !== user.id);
-      this.userControl.setValue('');
-    }
-  }
-
   removeUser(user: User): void {
     this.selectedUsers = this.selectedUsers.filter((u) => u !== user);
     this.filteredUsers.push(user);
+    this.filteredUsers.sort((a, b) => a.name.localeCompare(b.name));
   }
   close() {
     this.dialogRef.close();

@@ -47,33 +47,12 @@
           <input id="select" type="radio" formControlName="selection" value="select" required>
           <label for="select" class="fs-18">Bestimmte Leute hinzufügen</label>
         </div>
-        <div *ngIf="addUserForm.get('selection')?.value === 'select'" class="form-group-search">
-          <input type="text" placeholder="Mitglieder suchen" [formControl]="userControl" [matAutocomplete]="auto"
-            class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen" (input)="onSearchUsers($event)">
-          <mat-autocomplete #auto="matAutocomplete" (opened)="isPanelOpen = true" (closed)="isPanelOpen = false">
-            <mat-option *ngFor="let user of filteredUsers" [value]="user.name" (onSelectionChange)="selectUser(user)">
-              <img src="../../../assets/img/general/avatars/Avatar.svg" alt="">
-              <p class="fs-18">{{ user.name }}</p>
-            </mat-option>
-          </mat-autocomplete>
-        </div>
-        <div *ngIf="addUserForm.get('selection')?.value === 'select'">
-          <div *ngIf="selectedUsers.length > 0">
-            <input style="display: none;" [matChipInputFor]="chipGrid" [matChipInputAddOnBlur]="true" />
-            <mat-chip-grid #chipGrid>
-              <mat-chip-row *ngFor="let user of selectedUsers" [removable]="true" (removed)="removeUser(user)">
-                <div class="chip-subcontainer">
-                  <!-- Function für get img -->
-                  <img src="../../../assets/img/general/avatars/Avatar.svg" alt="">
-                  <p>{{ user.name }}</p>
-                </div>
-                <button matChipRemove>
-                  <img src="../../../assets/img/main-page/thread/cross.svg">
-                </button>
-              </mat-chip-row>
-            </mat-chip-grid>
-          </div>
-        </div>
+        <ng-container *ngIf="addUserForm.get('selection')?.value === 'select'">
+          <app-dialog-add-user [selectedUsers]="selectedUsers" [allUsers]="allUsers" [filteredUsers]="filteredUsers"
+            (removeUser)="removeUser($event)"></app-dialog-add-user>
+        </ng-container>
+
+
       </div>
       <div class="dialog-actions">
         <button type="submit" class="fs-18-700" [disabled]="addUserForm.invalid">Hinzufügen</button>
