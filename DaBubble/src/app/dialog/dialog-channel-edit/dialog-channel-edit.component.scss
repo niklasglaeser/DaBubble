@@ -99,3 +99,17 @@
     margin-left: 8px;
   }
 }
+
+.close {
+  background-image: url("/assets/img/main-page/thread/cross.svg");
+  background-repeat: no-repeat;
+  height: 40px;
+  width: 40px;
+  color: white;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-image: url("/assets/img/main-page/thread/cross-hover.svg");
+  }
+}

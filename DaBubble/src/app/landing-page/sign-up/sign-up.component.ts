@@ -26,11 +26,12 @@ export class SignUpComponent {
   authService = inject(AuthService)
   router = inject(Router)
   http = inject(HttpClient)
-  
+
   isSubmited: boolean = false
 
   registerForm = this.fb.group({
-    username: ['', [Validators.required]],
+    username: ['', [Validators.required,
+      Validators.pattern(/^[a-zA-Z]+ [a-zA-Z]+$/) ]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required,Validators.minLength(6)]],
     checkbox: ['', [Validators.required]],

@@ -1,0 +1,49 @@
+.container {
+  position: absolute;
+  left: 0;
+  bottom: 16%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 60px;
+  border-radius: 0 30px 30px 0;
+  padding: 23px 14px;
+  background-color: white;
+  box-shadow: 4px 4px 7px 0px #00000033;
+  cursor: pointer;
+
+  span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+  }
+
+  &:hover {
+    color: var(--purple3);
+
+    .icon-hide {
+      background-image: url("/assets/img/main-page/workspace/workspace-hide-hover.svg");
+    }
+
+    .icon-open {
+      background-image: url("/assets/img/main-page/workspace/workspace-open-hover.svg");
+    }
+  }
+}
+
+.icon-hide {
+  background-image: url("/assets/img/main-page/workspace/workspace-hide.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 40px;
+  height: 40px;
+}
+
+.icon-open {
+  background-image: url("/assets/img/main-page/workspace/workspace-open.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 40px;
+  height: 40px;
+}

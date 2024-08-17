@@ -6,6 +6,7 @@ import { LandingPageComponent } from '../landing-page.component';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { routes } from '../../app.routes';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   authService = inject(AuthService)
   router = inject(Router)
+  http = inject(HttpClient)
   isSubmited: boolean = false
 
   registerForm = this.fb.group({
@@ -34,7 +36,7 @@ export class LoginComponent {
   onSubmit(): void {
     const rawForm = this.registerForm.getRawValue();
     console.log(rawForm);
-  
+ 
     this.authService.login(
       rawForm.email!,
       rawForm.password!

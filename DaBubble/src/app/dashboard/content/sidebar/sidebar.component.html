@@ -1,22 +1,10 @@
-<div class="container ">
+<div class="container" [@slideInOut]="workspaceVisible ? 'in' : 'out'">
   <div class="headline">
     <div>
       <img src="../../assets/img/main-page/workspace/workspace-logo.svg" alt="">
       <h1 class="fs-24-700">DevSpace</h1>
     </div>
-    <div class="addIcon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <mask id="mask0_71052_6642" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24"
-          height="24">
-          <rect width="24" height="24" fill="#D9D9D9" />
-        </mask>
-        <g mask="url(#mask0_71052_6642)">
-          <path
-            d="M5 23.7C4.45 23.7 3.97917 23.5042 3.5875 23.1125C3.19583 22.7208 3 22.25 3 21.7V7.69999C3 7.14999 3.19583 6.67915 3.5875 6.28749C3.97917 5.89582 4.45 5.69999 5 5.69999H13.925L11.925 7.69999H5V21.7H19V14.75L21 12.75V21.7C21 22.25 20.8042 22.7208 20.4125 23.1125C20.0208 23.5042 19.55 23.7 19 23.7H5ZM16.175 6.27499L17.6 7.67499L11 14.275V15.7H12.4L19.025 9.07499L20.45 10.475L13.825 17.1C13.6417 17.2833 13.4292 17.4292 13.1875 17.5375C12.9458 17.6458 12.6917 17.7 12.425 17.7H10C9.71667 17.7 9.47917 17.6042 9.2875 17.4125C9.09583 17.2208 9 16.9833 9 16.7V14.275C9 14.0083 9.05 13.7542 9.15 13.5125C9.25 13.2708 9.39167 13.0583 9.575 12.875L16.175 6.27499ZM20.45 10.475L16.175 6.27499L18.675 3.77499C19.075 3.37499 19.5542 3.17499 20.1125 3.17499C20.6708 3.17499 21.1417 3.37499 21.525 3.77499L22.925 5.19999C23.3083 5.58332 23.5 6.04999 23.5 6.59999C23.5 7.14999 23.3083 7.61665 22.925 7.99999L20.45 10.475Z"
-            fill="black" />
-        </g>
-      </svg>
-    </div>
+    <div class="newMessage"></div>
 
   </div>
 
@@ -41,36 +29,19 @@
       </svg>
       <span class="fs-20-700">Channels</span>
     </div>
-    <svg (click)="addChannel()" id="plus" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_36764_14402)">
-        <mask id="mask0_36764_14402" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24"
-          height="24">
-          <rect width="24" height="24" fill="#D9D9D9" />
-        </mask>
-        <g mask="url(#mask0_36764_14402)">
-          <path
-            d="M12 19C11.7167 19 11.4793 18.904 11.288 18.712C11.096 18.5207 11 18.2833 11 18V13H6C5.71667 13 5.479 12.904 5.287 12.712C5.09567 12.5207 5 12.2833 5 12C5 11.7167 5.09567 11.479 5.287 11.287C5.479 11.0957 5.71667 11 6 11H11V6C11 5.71667 11.096 5.479 11.288 5.287C11.4793 5.09567 11.7167 5 12 5C12.2833 5 12.521 5.09567 12.713 5.287C12.9043 5.479 13 5.71667 13 6V11H18C18.2833 11 18.5207 11.0957 18.712 11.287C18.904 11.479 19 11.7167 19 12C19 12.2833 18.904 12.5207 18.712 12.712C18.5207 12.904 18.2833 13 18 13H13V18C13 18.2833 12.9043 18.5207 12.713 18.712C12.521 18.904 12.2833 19 12 19Z"
-            fill="black" />
-        </g>
-      </g>
-      <defs>
-        <clipPath id="clip0_36764_14402">
-          <rect width="24" height="24" rx="12" fill="white" />
-        </clipPath>
-      </defs>
-    </svg>
+    <div class="addIcon" (click)="addChannel()"></div>
   </div>
   <div class="dropdown" [class.show]="isChannelsDropdownOpen">
-    @for (channel of channels; track $index) {
-    <div class="channel" (click)="openChannel()">
+    @for (channel of getList(); track $index) {
+    <div class="channel" (click)="channel.id ? openEditDialog(channel.id) : null">
       <div [class.active]="isActive">
         <svg width="24" height="24" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M9.65649 28C9.23359 28 8.88859 27.8203 8.6215 27.4609C8.3544 27.1016 8.2765 26.7062 8.38779 26.275L9.32262 22.25H6.35119C5.90603 22.25 5.5499 22.0646 5.28281 21.6937C5.01571 21.3219 4.93781 20.9083 5.0491 20.4531C5.11587 20.1177 5.27168 19.8542 5.51652 19.6625C5.76135 19.4708 6.03958 19.375 6.35119 19.375H9.99036L11.3258 13.625H7.68666C7.2415 13.625 6.88538 13.4396 6.61828 13.0687C6.35119 12.6969 6.27328 12.2833 6.38457 11.8281C6.45135 11.4927 6.60715 11.2292 6.85199 11.0375C7.09683 10.8458 7.37505 10.75 7.68666 10.75H11.9936L13.0953 6.04219C13.1621 5.73073 13.3068 5.47917 13.5294 5.2875C13.7519 5.09583 14.019 5 14.3307 5C14.7536 5 15.0986 5.17969 15.3656 5.53906C15.6327 5.89844 15.7106 6.29375 15.5994 6.725L14.6645 10.75H20.0064L21.1082 6.04219C21.175 5.73073 21.3196 5.47917 21.5422 5.2875C21.7648 5.09583 22.0319 5 22.3435 5C22.7664 5 23.1114 5.17969 23.3785 5.53906C23.6456 5.89844 23.7235 6.29375 23.6122 6.725L22.6774 10.75H25.6488C26.094 10.75 26.4501 10.9354 26.7172 11.3063C26.9843 11.6781 27.0622 12.0917 26.9509 12.5469C26.8841 12.8823 26.7283 13.1458 26.4835 13.3375C26.2386 13.5292 25.9604 13.625 25.6488 13.625H22.0096L20.6742 19.375H24.3133C24.7585 19.375 25.1146 19.5604 25.3817 19.9313C25.6488 20.3031 25.7267 20.7167 25.6154 21.1719C25.5487 21.5073 25.3928 21.7708 25.148 21.9625C24.9032 22.1542 24.6249 22.25 24.3133 22.25H20.0064L18.9047 26.9578C18.8379 27.2693 18.6932 27.5208 18.4706 27.7125C18.2481 27.9042 17.981 28 17.6693 28C17.2464 28 16.9014 27.8203 16.6344 27.4609C16.3673 27.1016 16.2894 26.7062 16.4006 26.275L17.3355 22.25H11.9936L10.8918 26.9578C10.825 27.2693 10.6804 27.5208 10.4578 27.7125C10.2352 27.9042 9.9681 28 9.65649 28ZM12.6613 19.375H18.0032L19.3387 13.625H13.9968L12.6613 19.375Z"
             fill="black" />
         </svg>
-        <span class="fs-18">{{channel.name}}</span>
+        <!-- <span class="fs-18">{{channel.name}}</span> -->
+        <span class="fs-18-700">{{channel.name}}</span>
       </div>
     </div>
     }
@@ -114,8 +85,8 @@
     </div>
   </div>
   <div class="dropdown" [class.show]="isMessagesDropdownOpen">
-    @for (user of directUser; track $index) {
-    <div class="directUser" (click)="openDirectmessage()">
+    @for (user of allUsers; track $index) {
+    <div class="directUser" (click)="openDirectmessage(user.id)">
       <div [class.active]="isDirectChat">
         <div class="avatarStatus">
           <img src="../../assets/img/landing-page/men1.svg">
@@ -124,11 +95,13 @@
               stroke="#ECEEFE" stroke-width="2" />
           </svg>
         </div>
-
-        <span class=" fs-18">Frederik HoffmannHoffmann</span>
+        <span class="directUserName fs-18">{{user.name}}</span>
       </div>
     </div>
     }
   </div>
 </div>
-<!-- <app-dialog-add-channel #dialogAddChannel></app-dialog-add-channel> -->
+
+@if (showWorkspaceToggle) {
+<app-workspace-toggle (toggle)="toggleWorkspace()"></app-workspace-toggle>
+}
