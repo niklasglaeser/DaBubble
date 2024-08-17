@@ -8,6 +8,7 @@ import { UploadService } from '../../services/lp-services/upload.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { concatMap, of } from 'rxjs';
 import { AuthService } from '../../services/lp-services/auth.service';
+import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 
 @Component({
   selector: 'app-avatar',
@@ -23,6 +24,7 @@ import { AuthService } from '../../services/lp-services/auth.service';
 export class AvatarComponent {
 profileImg: any
 authService = inject(AuthService)
+userService = inject(UserLoggedService)
 
 
  avatars: boolean [] = [
@@ -84,9 +86,10 @@ authService = inject(AuthService)
     if (this.profileImg && currentUser) {
         this.authService.updateProfileData({ photoURL: this.profileImg }).subscribe({
             next: () => {
+                this.userService.updateUserImg(currentUser.uid,this.profileImg)
                 this.lp.$avatar = false;
                 this.lp.$login = true; 
-                console.log(currentUser) 
+                 
             },
             error: (err) => console.error('Error updating profile:', err)
         });
