@@ -47,6 +47,9 @@ export class DialogAddChannelComponent implements OnInit {
   selectedUsers: User[] = [];
 
   unsubscribe: any;
+  createdChannel: any;
+
+  allowDuplicateNames: boolean = true;
 
   constructor(
     private fbChannel: FormBuilder,
@@ -77,32 +80,60 @@ export class DialogAddChannelComponent implements OnInit {
     this.userService.getUsersList().subscribe((users) => {
       this.allUsers = users;
       this.filteredUsers = users;
+      console.log('all users' + this.allUsers);
     });
   }
 
   async submit() {
     if (this.addChannelForm.valid) {
       let formData = this.addChannelForm.value;
-      let newChannel = new Channel({
-        name: formData.name,
-        description: formData.description,
-      });
+      let newChannelName = formData.name;
+
       try {
-        await this.channelService.createChannel(newChannel);
-        console.log('Channel created successfully:', newChannel);
-        this.channelName = formData.name;
-        this.currentStep = 'user';
+        if (!this.allowDuplicateNames) {
+          const nameExists = await this.channelService.checkChannelExists(
+            newChannelName
+          );
+          if (nameExists) {
+            console.log('Channel name already exists.');
+            return;
+          }
+        }
+        let newChannel = new Channel({
+          name: formData.name,
+          description: formData.description,
+        });
+        let channelId = await this.channelService.createChannel(newChannel);
+        if (channelId) {
+          this.channelName = formData.name;
+          this.createdChannel = channelId;
+          this.currentStep = 'user';
+          console.log('Channel created successfully:', this.channelName);
+        }
       } catch (e) {
         console.error('Error creating channel:', e);
       }
     }
   }
 
-  submitUser() {
-    if (this.addUserForm.valid) {
-      let formData = this.addUserForm.value;
-      console.log('Users added to channel:', formData);
-      this.dialogRef.close();
+  async submitUser() {
+    if (this.addUserForm.valid && this.createdChannel) {
+      let userIds: string[];
+      if (this.addUserForm.get('selection')?.value === 'all') {
+        userIds = this.allUsers.map((user) => user.id);
+      } else {
+        userIds = this.selectedUsers.map((user) => user.id);
+      }
+      try {
+        await this.channelService.addUsersToChannel(
+          this.createdChannel,
+          userIds
+        );
+        console.log('Users added to channel:', userIds);
+        this.dialogRef.close();
+      } catch (e) {
+        console.error('Error adding users to channel:', e);
+      }
     }
   }
 

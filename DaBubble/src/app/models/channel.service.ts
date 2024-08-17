@@ -7,6 +7,10 @@ import {
   updateDoc,
   onSnapshot,
   deleteDoc,
+  where,
+  getDocs,
+  QuerySnapshot,
+  query,
 } from '@angular/fire/firestore';
 import { Channel } from './channel.class';
 
@@ -43,24 +47,6 @@ export class ChannelService {
       });
     });
   }
-
-  setChannelObject(obj: any, id: string): Channel {
-    return {
-      id: id,
-      name: obj.name,
-      description: obj.description || '',
-      creator: obj.creator,
-    };
-  }
-
-  getSingleChannel(colId: string, docId: string) {
-    return doc(collection(this.firestore, colId), docId);
-  }
-
-  getChannelsRef() {
-    return collection(this.firestore, 'channels');
-  }
-
   async createChannel(channel: Channel) {
     try {
       const docRef = await addDoc(this.getChannelsRef(), {
@@ -68,9 +54,22 @@ export class ChannelService {
         description: channel.description,
         creator: channel.creator,
       });
-      console.log('Channel created with ID:' + docRef.id);
+      return docRef.id;
     } catch (error) {
       console.error('error adding channel' + error);
+      return null;
+    }
+  }
+
+  async addUsersToChannel(channelId: string, userIds: string[]): Promise<void> {
+    try {
+      const channelDocRef = this.getSingleChannel('channels', channelId);
+      await updateDoc(channelDocRef, {
+        members: userIds,
+      });
+      console.log('Users added to Channel ID:', channelId);
+    } catch (e) {
+      console.error('Error adding users to channel: ', e);
     }
   }
 
@@ -96,5 +95,29 @@ export class ChannelService {
     } catch (e) {
       console.error('Error deleting document: ', e);
     }
+  }
+
+  async checkChannelExists(name: string): Promise<boolean> {
+    const q = query(this.getChannelsRef(), where('name', '==', name));
+    const querySnapshot: QuerySnapshot = await getDocs(q);
+
+    return !querySnapshot.empty; // Gibt true zurück, wenn der Name bereits existiert
+  }
+
+  setChannelObject(obj: any, id: string): Channel {
+    return {
+      id: id,
+      name: obj.name,
+      description: obj.description || '',
+      creator: obj.creator,
+    };
+  }
+
+  getSingleChannel(colId: string, docId: string) {
+    return doc(collection(this.firestore, colId), docId);
+  }
+
+  getChannelsRef() {
+    return collection(this.firestore, 'channels');
   }
 }
