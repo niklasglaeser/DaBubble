@@ -28,9 +28,10 @@
                 >
                 <mat-icon>mail_outline</mat-icon>
                 <span class="fs-14" *ngIf="errorFc('email')">*Diese E-Mail-Adresse ist leider ungültig.</span>
+                <span class="fs-14" *ngIf="alreadyUsed">*Diese E-Mail-Adresse ist bereits vergeben.</span>
             </div>
             <div class="input-container">
-                
+               
                 <input 
                 class="fs-18"
                 formControlName="password"

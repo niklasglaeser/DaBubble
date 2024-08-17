@@ -26,7 +26,8 @@
                 placeholder="Passwort"
                  >
                  <mat-icon>lock_outline</mat-icon>
-                 <span class="fs-14" *ngIf="errorFc('password')">*Dieses Passwort ist leider ungültig.</span>
+                 <span class="fs-14" *ngIf="errorFc('password') && !errorM">*Das Passwort ist erforderlich.</span>
+                 <span class="fs-14" *ngIf="errorM">{{ errorM }}</span>
             </div>
 
             <div class="fpw">

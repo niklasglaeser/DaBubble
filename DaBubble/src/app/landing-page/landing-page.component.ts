@@ -33,6 +33,7 @@ export class LandingPageComponent {
   $setPW: boolean = false;
   $imprint: boolean = false;
   $privacy: boolean = false;
+  $userId: string = '';
   animated: boolean = false;
 
   ngOnInit(): void {

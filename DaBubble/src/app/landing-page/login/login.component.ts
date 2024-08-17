@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { LandingPageComponent } from '../landing-page.component';
 import { AuthService } from '../../services/lp-services/auth.service';
-import { routes } from '../../app.routes';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -21,10 +20,11 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  authService = inject(AuthService)
-  router = inject(Router)
-  http = inject(HttpClient)
-  isSubmited: boolean = false
+  authService = inject(AuthService);
+  router = inject(Router);
+  http = inject(HttpClient);
+  isSubmited: boolean = false;
+  errorM: string | null = null; // Ändere zu string | null für spezifische Fehlermeldungen
 
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -34,15 +34,18 @@ export class LoginComponent {
   constructor(private fb: FormBuilder, private lp: LandingPageComponent) {}
 
   onSubmit(): void {
+    this.isSubmited = true; 
     const rawForm = this.registerForm.getRawValue();
-    console.log(rawForm);
- 
-    this.authService.login(
-      rawForm.email!,
-      rawForm.password!
-    ).subscribe({
-      next: () => this.router.navigateByUrl('/dashboard'),
-      error: (err) => console.error('Registration error:', err)
+
+    this.authService.login(rawForm.email!, rawForm.password!).subscribe({
+      next: () => {
+        this.errorM = null; 
+        this.router.navigateByUrl('/dashboard');
+      },
+      error: (err) => {
+        // console.error('Login error:', err);
+        this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
+      }
     });
   }
 
@@ -51,7 +54,7 @@ export class LoginComponent {
     return control && control.invalid && (control.dirty || control.touched || this.isSubmited);
   }
 
-  resetPW(){
+  resetPW() {
     this.lp.$login = false;
     this.lp.$resetPW = true;
   }
