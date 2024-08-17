@@ -3,7 +3,7 @@
   <div class="dialog-content">
     <div class="dialog-header">
       <h2>Channel erstellen</h2>
-      <button type="button" (click)="close()"></button>
+      <button class="close" type="button" (click)="close()"></button>
     </div>
     <span class="fs-18">Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein
       #marketing zum
@@ -33,23 +33,14 @@
   <div class="dialog-content">
     <div class="dialog-header">
       <h2>Leute hinzufügen</h2>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="close()">
-        <mask id="mask0_70047_938" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24"
-          height="24">
-          <rect width="24" height="24" fill="#D9D9D9" />
-        </mask>
-        <g mask="url(#mask0_70047_938)">
-          <path
-            d="M12 13.3998L7.10005 18.2998C6.91672 18.4831 6.68338 18.5748 6.40005 18.5748C6.11672 18.5748 5.88338 18.4831 5.70005 18.2998C5.51672 18.1165 5.42505 17.8831 5.42505 17.5998C5.42505 17.3165 5.51672 17.0831 5.70005 16.8998L10.6 11.9998L5.70005 7.0998C5.51672 6.91647 5.42505 6.68314 5.42505 6.3998C5.42505 6.11647 5.51672 5.88314 5.70005 5.6998C5.88338 5.51647 6.11672 5.4248 6.40005 5.4248C6.68338 5.4248 6.91672 5.51647 7.10005 5.6998L12 10.5998L16.9 5.6998C17.0834 5.51647 17.3167 5.4248 17.6 5.4248C17.8834 5.4248 18.1167 5.51647 18.3 5.6998C18.4834 5.88314 18.575 6.11647 18.575 6.3998C18.575 6.68314 18.4834 6.91647 18.3 7.0998L13.4 11.9998L18.3 16.8998C18.4834 17.0831 18.575 17.3165 18.575 17.5998C18.575 17.8831 18.4834 18.1165 18.3 18.2998C18.1167 18.4831 17.8834 18.5748 17.6 18.5748C17.3167 18.5748 17.0834 18.4831 16.9 18.2998L12 13.3998Z"
-            fill="black" />
-        </g>
-      </svg>
+      <button class="close" type="button" (click)="close()"></button>
     </div>
     <form [formGroup]="addUserForm" (ngSubmit)="submitUser()">
       <div class="form-group-add-user">
         <div class="form-group-row border-blue">
           <input id="all" type="radio" formControlName="selection" value="all" required>
-          <label for="all" class="fs-18">Alle Mitglieder zu <span style="color: var(--purple1);">{{channelName}}</span>
+          <label for="all" class="fs-18">Alle Mitglieder zu <span style="color: var(--purple1);">{{ channelName
+              }}</span>
             hinzufügen</label>
         </div>
         <div>
@@ -57,7 +48,31 @@
           <label for="select" class="fs-18">Bestimmte Leute hinzufügen</label>
         </div>
         <div *ngIf="addUserForm.get('selection')?.value === 'select'" class="form-group-search">
-          <input id="specificMembers" type="text" formControlName="specificMembers">
+          <input type="text" placeholder="Mitglieder suchen" [formControl]="userControl" [matAutocomplete]="auto"
+            class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen" (input)="onSearchUsers($event)">
+          <mat-autocomplete #auto="matAutocomplete" (opened)="isPanelOpen = true" (closed)="isPanelOpen = false">
+            <mat-option *ngFor="let user of filteredUsers" [value]="user.name" (onSelectionChange)="selectUser(user)">
+              <img src="../../../assets/img/general/avatars/Avatar.svg" alt="">
+              <p class="fs-18">{{ user.name }}</p>
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <div *ngIf="addUserForm.get('selection')?.value === 'select'">
+          <div *ngIf="selectedUsers.length > 0">
+            <input style="display: none;" [matChipInputFor]="chipGrid" [matChipInputAddOnBlur]="true" />
+            <mat-chip-grid #chipGrid>
+              <mat-chip-row *ngFor="let user of selectedUsers" [removable]="true" (removed)="removeUser(user)">
+                <div class="chip-subcontainer">
+                  <!-- Function für get img -->
+                  <img src="../../../assets/img/general/avatars/Avatar.svg" alt="">
+                  <p>{{ user.name }}</p>
+                </div>
+                <button matChipRemove>
+                  <img src="../../../assets/img/main-page/thread/cross.svg">
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+          </div>
         </div>
       </div>
       <div class="dialog-actions">

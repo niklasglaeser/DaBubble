@@ -6,6 +6,7 @@ import {
   addDoc,
   updateDoc,
   onSnapshot,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { Channel } from './channel.class';
 
@@ -84,6 +85,16 @@ export class ChannelService {
       console.log('Channel updated with ID: ', channelId);
     } catch (e) {
       console.error('Error updating document: ', e);
+    }
+  }
+
+  async deleteChannel(channelId: string) {
+    try {
+      const channelDocRef = this.getSingleChannel('channels', channelId);
+      await deleteDoc(channelDocRef);
+      console.log('Channel deleted with ID: ', channelId);
+    } catch (e) {
+      console.error('Error deleting document: ', e);
     }
   }
 }

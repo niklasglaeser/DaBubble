@@ -49,6 +49,30 @@ $DaBubble-theme: mat.define-light-theme(
   --rosaError: #ed1e7a;
 }
 
+/* Custom Scrollbar */
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--lighterPurple);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--lightPurple);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background: var(--purple3);
+}
+
+/* Custom Scrollbar */
+
 * {
   margin: 0;
   box-sizing: border-box;

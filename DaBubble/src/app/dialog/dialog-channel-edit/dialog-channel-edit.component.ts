@@ -76,6 +76,16 @@ export class DialogChannelEditComponent {
     }
   }
 
+  async deleteChannel() {
+    if (this.data.channelId) {
+      try {
+        await this.channelService.deleteChannel(this.data.channelId);
+        this.dialogRef.close();
+      } catch (e) {
+        console.error('Error deleting channel', e);
+      }
+    }
+  }
   editChannelBtn(event: Event) {
     if (!this.editNameClicked) {
       this.editNameClicked = true;

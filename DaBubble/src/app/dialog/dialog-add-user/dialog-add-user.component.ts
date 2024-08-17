@@ -7,11 +7,20 @@ import {
   Validators,
 } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AddSelectedUserListComponent } from './add-selected-user-list/add-selected-user-list.component';
+import { UserService } from '../../services/user.service';
+import { Observable } from 'rxjs';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-dialog-add-user',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    AddSelectedUserListComponent,
+  ],
   templateUrl: './dialog-add-user.component.html',
   styleUrl: './dialog-add-user.component.scss',
 })
@@ -19,8 +28,11 @@ export class DialogAddUserComponent {
   form: FormGroup;
   isOpen = true;
   showInputField = false;
+  users$: Observable<User[]> = new Observable<User[]>();
 
-  constructor(private fb: FormBuilder) {
+  selectedUsers: User[] = [];
+
+  constructor(private fb: FormBuilder, private userService: UserService) {
     this.form = this.fb.group({
       selection: ['', Validators.required],
       specificMembers: [''],

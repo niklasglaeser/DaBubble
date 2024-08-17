@@ -117,7 +117,7 @@
 
 .channel {
   display: flex;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   gap: 10px;
   cursor: pointer;
@@ -125,7 +125,16 @@
   > div {
     display: flex;
     align-items: center;
+    gap: 10px;
     padding: 4px 20px;
+    &:hover {
+      color: var(--purple3);
+      background-color: var(--lighterPurple);
+      border-radius: 30px;
+      svg path {
+        fill: var(--purple3);
+      }
+    }
 
     &.active {
       background-color: var(--lighterPurple);
@@ -225,6 +234,9 @@
   display: flex;
   flex-direction: column;
   gap: 13px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .rotated {

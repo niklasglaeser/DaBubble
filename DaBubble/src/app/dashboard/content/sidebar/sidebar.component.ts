@@ -51,7 +51,7 @@ export class SidebarComponent {
 
   isChannelsDropdownOpen = true;
   isMessagesDropdownOpen = true;
-  isActive = true;
+  isActive = false;
   isOnline = true;
   isDirectChat = false;
 
