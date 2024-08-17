@@ -1,0 +1,104 @@
+
+.chat-footer {
+    width: 100%;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px 30px 15px 30px;
+    border: 1px solid rgba(173, 176, 217, 1);
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+
+.chat-message-toolbar {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    justify-content: space-between;
+
+}
+
+#chat-message-input {
+    height: 80px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    padding-top: 15px;
+    resize: none;
+    &::placeholder {
+        font-size: 20px;
+    }
+    &:hover {
+        cursor: pointer;
+    }
+    &:focus {
+        cursor: text;
+    }
+}
+
+.chat-toolbar-left {
+    display: flex;
+}
+
+.add-file {
+    height: 40px;
+    width: 40px;
+    background-image: url('/assets/img/main-page/chat/add-file.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    &:hover {
+        cursor: pointer;
+        background-image: url('/assets/img/main-page/chat/add-file-hover.svg');
+        background-color: #EDEEFE;
+        border-radius: 20px;
+    }
+}
+
+.seperator {
+    height: 40px;
+    width: 10px;
+    background-image: url('/assets/img/main-page/chat/seperator.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.add-emojis {
+    height: 40px;
+    width: 40px;
+    background-image: url('/assets/img/main-page/chat/add-emoji.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    &:hover {
+        cursor: pointer;
+        background-image: url('/assets/img/main-page/chat/add-emoji-hover.svg');
+        background-color: #EDEEFE;
+        border-radius: 20px;
+    }
+}
+
+.tag-user {
+    height: 40px;
+    width: 40px;
+    background-image: url('/assets/img/main-page/chat/tag-user.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    &:hover {
+        cursor: pointer;
+        background-image: url('/assets/img/main-page/chat/tag-user-hover.svg');
+        background-color: #EDEEFE;
+        border-radius: 20px;
+    }
+}
+
+.send-message {
+    height: 40px;
+    width: 40px;
+    background-image: url('/assets/img/main-page/chat/send-message.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    &:hover {
+        cursor: pointer;
+        scale: 130%;
+    }
+}

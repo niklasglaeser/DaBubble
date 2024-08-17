@@ -1,40 +1,5 @@
 <div class="thread-window-container">
-    <div class="thread-header">
-        <div class="thread-header-left">
-            <div class="fs-24-700">Thread</div>
-            <div class="fs-14" style="color: rgba(121, 126, 243, 1);">#Entwicklerteam</div>
-        </div>
-        <div class="thread-header-right">
-            <div class="close-thread-icon"></div>
-        </div>
-    </div>
-    <div class="thread-content">
-        <div id="thread-messages-container">
-            <div class="message">TEST</div>
-            <div class="message">TEST</div>
-            <div class="message">TEST</div>
-        </div>
-    </div>
-    <div class="chat-footer">
-        <textarea type="text" name="message-input" id="chat-message-input" placeholder="Antworten..."></textarea>
-        <div class="chat-message-toolbar">
-            <div class="chat-toolbar-left">
-                <div>
-                    <div class="add-file"></div>
-                </div>
-                <div class="seperator"></div>
-                <div>
-                    <div class="add-emojis"></div>
-                </div>
-                <div>
-                    <div class="tag-user"></div>
-                </div>
-            </div>
-            <div class="chat-toolbar-right">
-                <div>
-                    <div class="send-message"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <app-thread-header></app-thread-header>
+    <app-thread-messages class="messages"></app-thread-messages>
+    <app-thread-footer class="footer"></app-thread-footer>
 </div>

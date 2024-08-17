@@ -1,0 +1,40 @@
+.thread-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+    background-color: transparent;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.thread-header-left {
+    display: flex;
+    padding-left: 50px;
+    gap: 15px;
+    >div {
+        display: flex;
+        align-items: center;
+
+    }
+}
+
+.thread-header-right {
+    display: flex;
+    align-items: center;
+    padding-right: 30px;
+}
+
+.close-thread-icon {
+    background-image: url('/assets/img/main-page/thread/cross.svg');
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+    &:hover {
+        cursor: pointer;
+        background-image: url('/assets/img/main-page/thread/cross-hover.svg');
+    }
+
+}
