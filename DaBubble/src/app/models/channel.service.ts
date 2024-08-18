@@ -67,7 +67,6 @@ export class ChannelService {
       await updateDoc(channelDocRef, {
         members: userIds,
       });
-      console.log('Users added to Channel ID:', channelId);
     } catch (e) {
       console.error('Error adding users to channel: ', e);
     }
