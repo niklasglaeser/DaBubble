@@ -42,7 +42,6 @@ export class DialogAddChannelComponent implements OnInit {
   currentStep: 'channel' | 'user' = 'channel';
   channelName: string = '';
 
-  isPanelOpen!: boolean;
   userControl = new FormControl();
   users: UserLogged[] = [];
   filteredUsers: UserLogged[] = [];
@@ -146,9 +145,16 @@ export class DialogAddChannelComponent implements OnInit {
   }
 
   removeUser(user: UserLogged): void {
-    this.selectedUsers = this.selectedUsers.filter((u) => u !== user);
-    this.filteredUsers.push(user);
-    this.filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
+    this.selectedUsers = this.selectedUsers.filter((u) => u.uid !== user.uid);
+
+    let alreadyInFilteredUsers = this.filteredUsers.some(
+      (u) => u.uid === user.uid
+    );
+
+    if (!alreadyInFilteredUsers) {
+      this.filteredUsers.push(user);
+      this.filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
+    }
   }
 
   close() {

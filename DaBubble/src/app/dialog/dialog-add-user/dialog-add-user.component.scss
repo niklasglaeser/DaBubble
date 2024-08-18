@@ -80,7 +80,12 @@ mat-option {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
   }
+}
+
+.mdc-evolution-chip-set {
+  margin-top: 16px !important;
 }
 
 .chip-subcontainer {
@@ -91,6 +96,7 @@ mat-option {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
   }
 
   p {
