@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from "@angular/core";
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, user, UserInfo } from "@angular/fire/auth";
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user, UserInfo } from "@angular/fire/auth";
 import { concatMap, from, Observable, of,} from 'rxjs';
 import { UserInterface } from '../../models/user.interface';
 
@@ -18,13 +18,16 @@ export class AuthService{
                 this.currentUserSig.set({
                     email: user.email!,
                     username: user.displayName!,
+                    userId: user.uid!
                 });
             } else {
                 this.currentUserSig.set(null);
             }
+            console.log(this.currentUserSig());
+            return this.currentUserSig()
         });
     }
-    
+  
 
     register(email:string,username:string,password:string,):Observable <void>{
         const promise = createUserWithEmailAndPassword(this.firebaseAuth,email,password)
@@ -40,15 +43,9 @@ export class AuthService{
         return from(promise)
     }
 
-    updateProfileData(profileData: Partial<UserInfo>): Observable<any> {
-        const user = this.firebaseAuth.currentUser; 
-        return of(user).pipe(
-            concatMap(user => {
-                if (!user) throw Error('No Authenticated User');
-                
-                return from(updateProfile(user, profileData)); 
-            })
-        );
+    logout():Observable<void>{
+        const promise = signOut(this.firebaseAuth)
+        return from(promise)
     }
 }
 
