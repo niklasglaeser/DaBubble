@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { LandingPageComponent } from '../landing-page.component';
-import { User } from '@angular/fire/auth';
 import { UploadService } from '../../services/lp-services/upload.service';
 import { HotToastService } from '@ngneat/hot-toast';
-import { concatMap, of } from 'rxjs';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 
@@ -19,37 +16,28 @@ import { UserLoggedService } from '../../services/lp-services/user-logged.servic
     LandingPageComponent,
   ],
   templateUrl: './avatar.component.html',
-  styleUrl: './avatar.component.scss'
+  styleUrls: ['./avatar.component.scss']
 })
 export class AvatarComponent {
-profileImg: any
-authService = inject(AuthService)
-userService = inject(UserLoggedService)
+  profileImg: string | null = null;  // TypeScript-typischer Ansatz
+  authService = inject(AuthService);
+  userService = inject(UserLoggedService);
+  currentUser = this.authService.currentUserSig();
 
-
- avatars: boolean [] = [
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  ]
+  avatars: boolean[] = [false, false, false, false, false, false];
 
   constructor(private lp: LandingPageComponent, private imgUploadService: UploadService, private toast: HotToastService) {
-    
-  }
-  choseAvatar(index: number){
-    for(let i = 0 ; i < this.avatars.length ; i++){
-      this.avatars[i]= false
-    }
-    this.avatars[index] = true
-    this.profileImg = `assets/img/landing-page/men${index}.svg`;
+    this.authService.subscribeUser();
   }
 
-  backToSignUp(){
-    this.lp.$avatar = false
-    this.lp.$signUp = true
+  choseAvatar(index: number) {
+    this.avatars = this.avatars.map((_, i) => i === index);
+    this.profileImg = `assets/img/landing-page/men${index}.svg`; // Setze die Avatar-URL
+  }
+
+  backToSignUp() {
+    this.lp.$avatar = false;
+    this.lp.$signUp = true;
   }
 
   uploadImage(event: Event) {
@@ -57,50 +45,40 @@ userService = inject(UserLoggedService)
     const file = input.files?.[0];
     
     if (file) {
-        this.imgUploadService.uploadeImg(file, `assets/img/landing-page/user-profile`).pipe(
-            this.toast.observe({
-                success: 'Bild erfolgreich hochgeladen!',
-                loading: 'Bild wird hochgeladen...',
-                error: 'Fehler beim Hochladen des Bildes',
-            })
+      const currentUser = this.authService.currentUserSig();
+      if (currentUser) {
+        this.imgUploadService.uploadImg(currentUser.userId,file).pipe(
         ).subscribe({
-            next: (photoURL: string) => {
-                this.profileImg = photoURL;
-                console.log('Bild erfolgreich hochgeladen:', photoURL);
-            },
-            error: (err) => {
-                console.error('Fehler beim Hochladen des Bildes:', err);
-            }
+          next: (photoURL: string) => {
+            this.profileImg = photoURL;
+            console.log('Bild erfolgreich hochgeladen:', photoURL);
+          },
+          error: (err: any) => {
+            console.error('Fehler beim Hochladen des Bildes:', err);
+          }
         });
+      }
     }
   }
 
-  // This function is called when the upload button is clicked
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
   }
 
-  saveProfileAndContinue() {
-    const currentUser = this.authService.firebaseAuth.currentUser; 
+  async saveProfileAndContinue() {
+    if (this.profileImg && this.currentUser) {
+      try {
+        await this.userService.updateUserImg(this.currentUser.userId!, this.profileImg);
+        
+        this.lp.$avatar = false;
+        this.lp.$login = true;
 
-    if (this.profileImg && currentUser) {
-        this.authService.updateProfileData({ photoURL: this.profileImg }).subscribe({
-            next: () => {
-                this.userService.updateUserImg(currentUser.uid,this.profileImg)
-                this.lp.$avatar = false;
-                this.lp.$login = true; 
-                 
-            },
-            error: (err) => console.error('Error updating profile:', err)
-        });
+        this.authService.logout()
+      } catch (err) {
+        console.error('Error updating user image:', err);
+      }
     } else {
-        console.error('No profile image selected or user not found.');
+      console.error('No profile image selected or user not found.');
     }
+  }
 }
-
-
-}
-
-
-
-

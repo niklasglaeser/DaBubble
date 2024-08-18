@@ -24,7 +24,7 @@ export class LoginComponent {
   router = inject(Router);
   http = inject(HttpClient);
   isSubmited: boolean = false;
-  errorM: string | null = null; // Ändere zu string | null für spezifische Fehlermeldungen
+  errorM: string | null = null; 
 
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -43,7 +43,6 @@ export class LoginComponent {
         this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
-        // console.error('Login error:', err);
         this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
       }
     });

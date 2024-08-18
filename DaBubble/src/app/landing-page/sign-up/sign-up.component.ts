@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 import { UserLogged } from '../../models/user-logged.model';
+import { UserInterface } from '../../models/user.interface';
 
 
 @Component({
@@ -41,40 +42,47 @@ export class SignUpComponent {
     checkbox: ['', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private lp: LandingPageComponent) {}
+  constructor(private fb: FormBuilder, private lp: LandingPageComponent) {
+    this.authService.subscribeUser();
+  }
 
   onSubmit(): void {
     const rawForm = this.registerForm.getRawValue();
-    
-    // Sicherstellen, dass `username` und `email` nicht null sind
     const username = rawForm.username ?? '';
     const email = rawForm.email ?? '';
 
-    this.authService.register(email, username, rawForm.password!).subscribe({
-      next: async () => {
-        const currentUser = this.authService.firebaseAuth.currentUser;
-        const user = new UserLogged({
-          uid: currentUser?.uid,
-          username: username,
-          email: email,
-          photoURL: '',
-          joinedChannels: [], 
-          directMessage: [], 
-          onlineStatus: false
-        });
-       
-        try {
-          await this.userService.addUser(user);
-          this.lp.$signUp = false;
-          this.lp.$avatar = true;
-        } catch (err) {
-          console.error('Error adding user: ', err);
-        }
-      },
-      error: () => {
-        this.alreadyUsed = true;
-      }
+    this.registerUser(email, username, rawForm.password!)
+      .then(() => this.navigateToAvatarSelection())
+      .catch(() => this.alreadyUsed = true);
+  }
+
+  private async registerUser(email: string, username: string, password: string): Promise<void> {
+    await this.authService.register(email, username, password).toPromise();
+
+    const currentUser = this.authService.currentUserSig(); 
+    if (currentUser) {
+      const user = this.createUserObject(currentUser.userId, username, email);
+      await this.userService.addUser(user);
+    } else {
+      throw new Error('No current user found after registration.');
+    }
+  }
+
+  private createUserObject(userId: string, username: string, email: string): UserLogged {
+    return new UserLogged({
+      uid: userId,
+      username: username,
+      email: email,
+      photoURL: '',
+      joinedChannels: [],
+      directMessage: [],
+      onlineStatus: false,
     });
+  }
+
+  private navigateToAvatarSelection(): void {
+    this.lp.$signUp = false;
+    this.lp.$avatar = true;
   }
 
   errorFc(id: string) {
