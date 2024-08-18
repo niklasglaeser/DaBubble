@@ -10,7 +10,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../../app/models/channel.class';
-import { ChannelService } from '../../models/channel.service';
+import { ChannelService } from '../../services/channel.service';
 import { UserService } from '../../services/user.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
@@ -127,13 +127,10 @@ export class DialogAddChannelComponent implements OnInit {
     }
   }
 
-  private async updateUserProfilesWithChannel(
-    userIds: string[],
-    channelId: string
-  ): Promise<void> {
+  async updateUserProfilesWithChannel(userIds: string[], channelId: string) {
     try {
       for (const userId of userIds) {
-        const userRef = doc(this.firestore, 'Users', userId);
+        const userRef = this.userService.getSingleUser(userId);
         await updateDoc(userRef, {
           joinedChannels: arrayUnion(channelId),
         });

@@ -6,6 +6,7 @@ import {
   where,
   collectionData,
   onSnapshot,
+  doc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserLogged } from '../models/user-logged.model';
@@ -38,6 +39,10 @@ export class UserService {
       });
       this.usersSubject.next(users);
     });
+  }
+
+  getSingleUser(docId: string) {
+    return doc(collection(this.firestore, 'Users'), docId);
   }
 
   getUsersRef() {

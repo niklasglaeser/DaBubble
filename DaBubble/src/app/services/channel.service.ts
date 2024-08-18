@@ -11,8 +11,9 @@ import {
   getDocs,
   QuerySnapshot,
   query,
+  setDoc,
 } from '@angular/fire/firestore';
-import { Channel } from './channel.class';
+import { Channel } from '../models/channel.class';
 
 @Injectable({
   providedIn: 'root',
@@ -49,12 +50,11 @@ export class ChannelService {
   }
   async createChannel(channel: Channel) {
     try {
-      const docRef = await addDoc(this.getChannelsRef(), {
-        name: channel.name,
-        description: channel.description,
-        creator: channel.creator,
-      });
-      return docRef.id;
+      const channelDocRef = doc(this.getChannelsRef());
+      channel.id = channelDocRef.id;
+
+      await setDoc(channelDocRef, { ...channel });
+      return channel.id;
     } catch (error) {
       console.error('error adding channel' + error);
       return null;

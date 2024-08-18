@@ -6,6 +6,7 @@ export class Channel {
   description: string;
   creator: string;
   members?: User[];
+  messages?: [];
 
   constructor(data: {
     id?: string;
@@ -13,11 +14,13 @@ export class Channel {
     description?: string;
     creator?: string;
     members?: User[];
+    messages?: [];
   }) {
     this.id = data.id || '';
     this.name = data.name || '';
     this.description = data.description || '';
     this.creator = data.creator || 'Demo User';
     this.members = data.members || [];
+    this.messages = data.messages || [];
   }
 }
