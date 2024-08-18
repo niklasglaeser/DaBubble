@@ -11,12 +11,13 @@ export class UploadService {
   constructor(private storage: Storage) { }
 
 
-  uploadeImg(image:File, path: string):Observable<string>{
-    const storageRef = ref(this.storage, path)
-    const uploadTask = from(uploadBytes(storageRef,image))
-    return uploadTask.pipe(
-      switchMap((result) => getDownloadURL(result.ref))
-    )
+  uploadImg(userId: string, image: File): Observable<string> {
+    const storagePath = `user-profile-images/${userId}/${image.name}`;
+    const storageRef = ref(this.storage, storagePath);
+    
+    return from(uploadBytes(storageRef, image)).pipe(
+      switchMap(result => getDownloadURL(result.ref))
+    );
   }
 
 }
