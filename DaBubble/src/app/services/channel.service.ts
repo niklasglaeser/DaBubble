@@ -12,6 +12,7 @@ import {
   QuerySnapshot,
   query,
   setDoc,
+  getDoc,
 } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.class';
 
@@ -24,20 +25,13 @@ export class ChannelService {
 
   /*onSnapshot variablen*/
   unsubList;
-  unsubSingle;
 
   constructor() {
     this.unsubList = this.channelsList();
-
-    this.unsubSingle = onSnapshot(
-      this.getSingleChannel('channels', 'dfsdf'),
-      (element) => {}
-    );
   }
 
   ngOnDestroy(): void {
     this.unsubList(); // snapshot unsubscribe
-    this.unsubSingle(); // snapshot unsubscribe
   }
 
   channelsList() {
@@ -48,11 +42,22 @@ export class ChannelService {
       });
     });
   }
+  async loadChannelData(channelId: string): Promise<Channel> {
+    const channelDocRef = this.getSingleChannel(channelId);
+    const docSnap = await getDoc(channelDocRef);
+
+    if (docSnap.exists()) {
+      return new Channel({ ...docSnap.data(), id: docSnap.id });
+    } else {
+      console.error('No such document!');
+      return new Channel({});
+    }
+  }
+
   async createChannel(channel: Channel) {
     try {
       const channelDocRef = doc(this.getChannelsRef());
       channel.id = channelDocRef.id;
-
       await setDoc(channelDocRef, { ...channel });
       return channel.id;
     } catch (error) {
@@ -63,7 +68,7 @@ export class ChannelService {
 
   async addUsersToChannel(channelId: string, userIds: string[]): Promise<void> {
     try {
-      const channelDocRef = this.getSingleChannel('channels', channelId);
+      const channelDocRef = this.getSingleChannel(channelId);
       await updateDoc(channelDocRef, {
         members: userIds,
       });
@@ -74,7 +79,7 @@ export class ChannelService {
 
   async updateChannel(channelId: string, channel: Channel) {
     try {
-      const channelDocRef = this.getSingleChannel('channels', channelId);
+      const channelDocRef = this.getSingleChannel(channelId);
       await updateDoc(channelDocRef, {
         name: channel.name,
         description: channel.description,
@@ -88,7 +93,7 @@ export class ChannelService {
 
   async deleteChannel(channelId: string) {
     try {
-      const channelDocRef = this.getSingleChannel('channels', channelId);
+      const channelDocRef = this.getSingleChannel(channelId);
       await deleteDoc(channelDocRef);
       console.log('Channel deleted with ID: ', channelId);
     } catch (e) {
@@ -112,8 +117,8 @@ export class ChannelService {
     };
   }
 
-  getSingleChannel(colId: string, docId: string) {
-    return doc(collection(this.firestore, colId), docId);
+  getSingleChannel(docId: string) {
+    return doc(collection(this.firestore, 'channels'), docId);
   }
 
   getChannelsRef() {

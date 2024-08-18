@@ -7,6 +7,7 @@ import {
   collectionData,
   onSnapshot,
   doc,
+  getDoc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserLogged } from '../models/user-logged.model';
@@ -39,6 +40,18 @@ export class UserService {
       });
       this.usersSubject.next(users);
     });
+  }
+
+  async getSingleUserObj(docId: string): Promise<UserLogged | null> {
+    const userDocRef = doc(this.firestore, 'Users', docId);
+    const docSnap = await getDoc(userDocRef);
+
+    if (docSnap.exists()) {
+      return { uid: docSnap.id, ...docSnap.data() } as UserLogged;
+    } else {
+      console.error('No such user!');
+      return null;
+    }
   }
 
   getSingleUser(docId: string) {

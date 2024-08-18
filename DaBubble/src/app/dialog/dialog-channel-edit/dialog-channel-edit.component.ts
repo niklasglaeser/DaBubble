@@ -47,7 +47,6 @@ export class DialogChannelEditComponent {
   async loadChannel() {
     if (this.data.channelId) {
       const channelDoc = this.channelService.getSingleChannel(
-        'channels',
         this.data.channelId
       );
       const channelData = (await getDoc(channelDoc)).data();
