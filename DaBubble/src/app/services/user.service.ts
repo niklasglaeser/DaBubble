@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { User } from '../models/user.model';
 import {
   collection,
   Firestore,
@@ -8,61 +7,52 @@ import {
   collectionData,
   onSnapshot,
 } from '@angular/fire/firestore';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { UserLogged } from '../models/user-logged.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private firestore = inject(Firestore);
+  private usersSubject = new BehaviorSubject<UserLogged[]>([]);
 
-  users: User[] = [];
-  unsubList;
+  users$ = this.usersSubject.asObservable();
+  unsubList: () => void;
+
   constructor() {
     this.unsubList = this.getUsersList();
   }
 
-  getUsersList(): Observable<User[]> {
-    const usersCollection = collection(this.firestore, 'usersMarco');
-
-    return collectionData(usersCollection, { idField: 'id' }) as Observable<
-      User[]
-    >;
+  ngOnDestroy(): void {
+    if (this.unsubList) {
+      this.unsubList();
+    }
   }
 
-  setUsersObject(obj: any, id: string): User {
-    return {
-      id: id,
-      name: obj.name,
-    };
+  getUsersList() {
+    return onSnapshot(this.getUsersRef(), (snapshot) => {
+      const users: UserLogged[] = [];
+      snapshot.forEach((doc) => {
+        users.push(doc.data() as UserLogged);
+      });
+      this.usersSubject.next(users);
+    });
   }
 
   getUsersRef() {
-    return collection(this.firestore, 'usersMarco');
+    return collection(this.firestore, 'Users');
   }
 
-  ngOnDestroy(): void {}
-
-  searchUsers(queryText: string): Observable<User[]> {
-    const usersCollection = collection(this.firestore, 'usersMarco');
+  searchUsers(queryText: string): Observable<UserLogged[]> {
+    const usersCollection = this.getUsersRef();
     const endText = queryText + '\uf8ff';
     const usersQuery = query(
       usersCollection,
-      where('name', '>=', queryText),
-      where('name', '<=', endText)
+      where('username', '>=', queryText),
+      where('username', '<=', endText)
     );
 
-    return collectionData(usersQuery, { idField: 'id' }) as Observable<User[]>;
+    return collectionData(usersQuery) as Observable<UserLogged[]>;
   }
-
-  // searchUsers(queryText: string): Observable<User[]> {
-  //   const usersCollection = collection(this.firestore, 'usersMarco');
-  //   const usersQuery = query(
-  //     usersCollection,
-  //     where('name', '>=', queryText),
-  //     where('name', '<=', queryText + '\uf8ff')
-  //   );
-
-  //   return collectionData(usersQuery, { idField: 'id' }) as Observable<User[]>;
-  // }
 }

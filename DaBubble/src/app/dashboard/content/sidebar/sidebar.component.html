@@ -33,7 +33,7 @@
   </div>
   <div class="dropdown" [class.show]="isChannelsDropdownOpen">
     @for (channel of getList(); track $index) {
-    <div class="channel" (click)="channel.id ? openEditDialog(channel.id) : null">
+    <div class="channel" (click)="channel.id ? openChannel(channel.id) : null">
       <div [class.active]="isActive">
         <svg width="24" height="24" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -85,17 +85,20 @@
     </div>
   </div>
   <div class="dropdown" [class.show]="isMessagesDropdownOpen">
-    @for (user of allUsers; track $index) {
-    <div class="directUser" (click)="openDirectmessage(user.id)">
+    @for (user of users; track $index) {
+    <div class="directUser" (click)="openDirectmessage(user.uid)">
       <div [class.active]="isDirectChat">
         <div class="avatarStatus">
-          <img src="../../assets/img/landing-page/men1.svg">
-          <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <img [src]="user.photoURL ? user.photoURL : '../../assets/img/landing-page/men1.svg'">
+          <img
+            [src]="user.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+
+          <!-- <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="8.66683" cy="8.66683" r="7.33333" [attr.fill]="isOnline ? '#92C83E' : '#686868'"
               stroke="#ECEEFE" stroke-width="2" />
-          </svg>
+          </svg> -->
         </div>
-        <span class="directUserName fs-18">{{user.name}}</span>
+        <span class="directUserName fs-18">{{user.username}}</span>
       </div>
     </div>
     }

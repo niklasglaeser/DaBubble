@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
@@ -14,8 +14,8 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { User } from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
+import { UserLogged } from '../../../models/user-logged.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -44,7 +44,7 @@ import { UserService } from '../../../services/user.service';
     ]),
   ],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @ViewChild('dialogAddChannel')
   dialogAddChannelComponent!: DialogAddChannelComponent;
 
@@ -61,7 +61,7 @@ export class SidebarComponent {
   channelsSubscription!: Subscription;
 
   // directUser = Array(5).fill(0);
-  allUsers: User[] = [];
+  users: UserLogged[] = [];
   unsubscribe: any;
 
   constructor(
@@ -77,18 +77,13 @@ export class SidebarComponent {
   }
 
   ngOnInit(): void {
-    this.unsubscribe = this.loadAllUsers();
-  }
-
-  loadAllUsers(): void {
-    this.userService.getUsersList().subscribe((users) => {
-      this.allUsers = users;
-      console.log('all users' + this.allUsers);
+    this.userService.users$.subscribe((users) => {
+      this.users = users;
+      console.log(this.users);
     });
   }
 
   addChannel() {
-    console.log('add channel');
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -112,10 +107,10 @@ export class SidebarComponent {
 
   toggleWorkspace() {
     this.workspaceVisible = !this.workspaceVisible;
-    console.log(this.workspaceVisible);
   }
 
-  openChannel() {
+  openChannel(channelId: string) {
+    console.log(channelId);
     console.log('open channel');
   }
   openDirectmessage(userId: string) {

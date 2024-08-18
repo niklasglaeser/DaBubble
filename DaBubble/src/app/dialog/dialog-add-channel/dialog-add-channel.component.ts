@@ -11,12 +11,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../../app/models/channel.class';
 import { ChannelService } from '../../models/channel.service';
-import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
+import { UserLogged } from '../../models/user-logged.model';
 
 @Component({
   selector: 'app-dialog-add-channel',
@@ -42,9 +42,9 @@ export class DialogAddChannelComponent implements OnInit {
 
   isPanelOpen!: boolean;
   userControl = new FormControl();
-  allUsers: User[] = [];
-  filteredUsers: User[] = [];
-  selectedUsers: User[] = [];
+  users: UserLogged[] = [];
+  filteredUsers: UserLogged[] = [];
+  selectedUsers: UserLogged[] = [];
 
   unsubscribe: any;
   createdChannel: any;
@@ -68,19 +68,9 @@ export class DialogAddChannelComponent implements OnInit {
     });
   }
 
-  get selectedUsersDisplay(): string {
-    return this.selectedUsers.map((user) => user.name).join(', ');
-  }
-
   ngOnInit(): void {
-    this.unsubscribe = this.loadAllUsers();
-  }
-
-  loadAllUsers(): void {
-    this.userService.getUsersList().subscribe((users) => {
-      this.allUsers = users;
-      this.filteredUsers = users;
-      console.log('all users' + this.allUsers);
+    this.userService.users$.subscribe((users) => {
+      this.users = users;
     });
   }
 
@@ -120,9 +110,9 @@ export class DialogAddChannelComponent implements OnInit {
     if (this.addUserForm.valid && this.createdChannel) {
       let userIds: string[];
       if (this.addUserForm.get('selection')?.value === 'all') {
-        userIds = this.allUsers.map((user) => user.id);
+        userIds = this.users.map((user) => user.uid);
       } else {
-        userIds = this.selectedUsers.map((user) => user.id);
+        userIds = this.selectedUsers.map((user) => user.uid);
       }
       try {
         await this.channelService.addUsersToChannel(
@@ -137,10 +127,10 @@ export class DialogAddChannelComponent implements OnInit {
     }
   }
 
-  removeUser(user: User): void {
+  removeUser(user: UserLogged): void {
     this.selectedUsers = this.selectedUsers.filter((u) => u !== user);
     this.filteredUsers.push(user);
-    this.filteredUsers.sort((a, b) => a.name.localeCompare(b.name));
+    this.filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
   }
   close() {
     this.dialogRef.close();

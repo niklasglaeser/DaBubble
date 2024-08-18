@@ -3,9 +3,10 @@
     class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen" (input)="handleUserSearch($event)" />
   <mat-autocomplete #auto="matAutocomplete" (opened)="isPanelOpen = true" (closed)="isPanelOpen = false"
     (closed)="onAutocompleteClosed()">
-    <mat-option *ngFor="let user of filteredUsers" [value]="user.name" (onSelectionChange)="addUserToSelection(user)">
+    <mat-option *ngFor="let user of filteredUsers" [value]="user.username"
+      (onSelectionChange)="addUserToSelection(user)">
       <img src="../../../assets/img/general/avatars/Avatar.svg" alt="" />
-      <p class="fs-18">{{ user.name }}</p>
+      <p class="fs-18">{{ user.username }}</p>
     </mat-option>
   </mat-autocomplete>
 
@@ -15,7 +16,7 @@
       <mat-chip-row *ngFor="let user of selectedUsers" [removable]="true" (removed)="removeSelectedUser(user)">
         <div class="chip-subcontainer">
           <img src="../../../assets/img/general/avatars/Avatar.svg" alt="" />
-          <p>{{ user.name }}</p>
+          <p>{{ user.username }}</p>
         </div>
         <button matChipRemove>
           <img src="../../../assets/img/main-page/thread/cross.svg" />

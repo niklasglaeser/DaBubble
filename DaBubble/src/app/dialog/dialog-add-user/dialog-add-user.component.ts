@@ -1,17 +1,10 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  HostListener,
-} from '@angular/core';
-import { User } from '../../models/user.model';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { UserLogged } from '../../models/user-logged.model';
 
 @Component({
   selector: 'app-dialog-add-user',
@@ -27,10 +20,10 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './dialog-add-user.component.scss',
 })
 export class DialogAddUserComponent {
-  @Input() allUsers: User[] = [];
-  @Input() selectedUsers: User[] = [];
-  @Input() filteredUsers: User[] = [];
-  @Output() removeUser = new EventEmitter<User>();
+  @Input() users: UserLogged[] = [];
+  @Input() selectedUsers: UserLogged[] = [];
+  @Input() filteredUsers: UserLogged[] = [];
+  @Output() removeUser = new EventEmitter<UserLogged>();
 
   userControl = new FormControl();
   isPanelOpen!: boolean;
@@ -42,23 +35,23 @@ export class DialogAddUserComponent {
   }
 
   filterUsers(query: string): void {
-    this.filteredUsers = this.allUsers.filter((user) =>
-      user.name.toLowerCase().includes(query)
+    this.filteredUsers = this.users.filter((user) =>
+      user.username.toLowerCase().includes(query)
     );
   }
 
-  addUserToSelection(user: User): void {
+  addUserToSelection(user: UserLogged): void {
     if (!this.selectedUsers.includes(user)) {
       this.selectedUsers.push(user);
-      this.filteredUsers = this.filteredUsers.filter((u) => u.id !== user.id);
+      this.filteredUsers = this.filteredUsers.filter((u) => u.uid !== user.uid);
       this.userControl.setValue('');
     }
   }
 
-  removeSelectedUser(user: User): void {
+  removeSelectedUser(user: UserLogged): void {
     this.removeUser.emit(user);
     this.filteredUsers.push(user);
-    this.filteredUsers.sort((a, b) => a.name.localeCompare(b.name));
+    this.filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
   }
 
   onAutocompleteClosed(): void {

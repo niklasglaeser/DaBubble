@@ -127,6 +127,18 @@
     align-items: center;
     gap: 14px;
     padding: 4px 26px;
+    > span {
+      // max-width: 250px;
+      display: inline-block;
+      max-width: 190px;
+      overflow-wrap: break-word;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
     &:hover {
       color: var(--purple3);
       background-color: var(--lighterPurple);
@@ -143,13 +155,6 @@
 
       svg path {
         fill: var(--purple3);
-      }
-
-      span {
-        max-width: 250px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
     }
   }
@@ -200,15 +205,17 @@
   }
 }
 
-// .directUserName {
-//   display: inline-block;
-//   max-width: 200px;
-//   line-height: 1.2em;
-//   height: 2.4em;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   white-space: normal;
-// }
+.directUserName {
+  display: inline-block;
+  max-width: 190px;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 
 .avatarStatus {
   position: relative;
