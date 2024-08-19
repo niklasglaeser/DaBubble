@@ -42,17 +42,24 @@ export class ChannelService {
       });
     });
   }
-  async loadChannelData(channelId: string): Promise<Channel> {
-    const channelDocRef = this.getSingleChannel(channelId);
-    const docSnap = await getDoc(channelDocRef);
 
-    if (docSnap.exists()) {
-      return new Channel({ ...docSnap.data(), id: docSnap.id });
-    } else {
-      console.error('No such document!');
-      return new Channel({});
-    }
+  /*TESTING*/
+  loadChannelData(
+    channelId: string,
+    callback: (channel: Channel | null) => void
+  ): () => void {
+    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    return onSnapshot(channelDocRef, (doc) => {
+      if (doc.exists()) {
+        const channelData = doc.data() as Channel;
+        channelData.id = doc.id;
+        callback(channelData);
+      } else {
+        callback(null);
+      }
+    });
   }
+  /*TESTING*/
 
   async createChannel(channel: Channel) {
     try {

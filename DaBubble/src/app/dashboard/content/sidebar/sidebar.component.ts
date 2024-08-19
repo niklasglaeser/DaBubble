@@ -16,6 +16,7 @@ import {
 } from '@angular/animations';
 import { UserService } from '../../../services/user.service';
 import { UserLogged } from '../../../models/user-logged.model';
+import { ChannelStateService } from '../../../services/channel-state.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -67,7 +68,8 @@ export class SidebarComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private channelService: ChannelService,
-    private userService: UserService
+    private userService: UserService,
+    private channelStateService: ChannelStateService
   ) {
     this.checkWindowSize();
   }
@@ -110,6 +112,7 @@ export class SidebarComponent implements OnInit {
   }
 
   openChannel(channelId: string) {
+    this.channelStateService.setSelectedChannelId(channelId);
     console.log(channelId);
     console.log('open channel');
   }
