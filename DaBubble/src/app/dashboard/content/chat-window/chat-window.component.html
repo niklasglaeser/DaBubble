@@ -1,5 +1,5 @@
 <div class="chat-window-container">
     <app-chat-header [channel]="channel" [members]="members"></app-chat-header>
-    <app-chat-messages class="messages"></app-chat-messages>
-    <app-chat-footer class="footer"></app-chat-footer>
+    <app-chat-messages [channel]="channel" class="messages"></app-chat-messages>
+    <app-chat-footer [channel]="channel" class="footer"></app-chat-footer>
 </div>
