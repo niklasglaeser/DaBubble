@@ -30,31 +30,21 @@ export class ChatWindowComponent implements OnInit {
   ngOnInit() {
     this.channelStateService.selectedChannelId$.subscribe((channelId) => {
       if (channelId) {
+        if (this.unsubscribe) {
+          this.unsubscribe();
+        }
         this.channelId = channelId;
-        this.subscribeToChannelData();
+        const subscription = this.channelService
+          .loadChannelData(this.channelId)
+          .subscribe((channel) => {
+            this.channel = channel;
+            if (this.channel && this.channel.members) {
+              this.loadChannelMembers(this.channel.members);
+            }
+          });
+        this.unsubscribe = () => subscription.unsubscribe();
       }
     });
-  }
-
-  ngOnDestroy() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  }
-
-  subscribeToChannelData() {
-    if (this.channelId) {
-      this.unsubscribe = this.channelService.loadChannelData(
-        this.channelId,
-        (channel) => {
-          this.channel = channel;
-          if (this.channel && this.channel.members) {
-            this.loadChannelMembers(this.channel.members);
-            console.log(this.channel.members);
-          }
-        }
-      );
-    }
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {
@@ -70,4 +60,45 @@ export class ChatWindowComponent implements OnInit {
     this.members = members;
     console.log('Loaded user:', this.members);
   }
+
+  ngOnDestroy() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  /*subscribe observable - zeile 49 channel.service*/
+  /*
+  subscribeToChannelData() {
+    if (this.channelId) {
+      const subscription = this.channelService
+        .loadChannelData(this.channelId)
+        .subscribe((channel) => {
+          this.channel = channel;
+          if (this.channel && this.channel.members) {
+            this.loadChannelMembers(this.channel.members);
+            console.log(this.channel.members);
+          }
+        });
+
+      this.unsubscribe = () => subscription.unsubscribe();
+    }
+  }
+  */
+  /*subscribe observable - zeile 49 channel.service*/
+
+  // subscribeToChannelData() {
+  //   if (this.channelId) {
+  //     this.unsubscribe = this.channelService.loadChannelData(
+  //       this.channelId,
+  //       (channel) => {
+  //         this.channel = channel;
+  //         if (this.channel && this.channel.members) {
+  //           this.loadChannelMembers(this.channel.members);
+  //           console.log(this.channel.members);
+  //         }
+  //       }
+  //     );
+  //   }
+  // }
 }

@@ -18,6 +18,7 @@ import { Reaction } from '../models/reaction.model';
 })
 export class MessageService {
   constructor(private firestore: Firestore) {}
+
   async addMessage(channelId: string, message: Message) {
     const messagesRef = collection(
       this.firestore,

@@ -9,7 +9,6 @@ export class ChannelStateService {
   selectedChannelId$ = this.selectedChannelIdSource.asObservable();
 
   setSelectedChannelId(channelId: string) {
-    console.log(channelId + 'from state sercice');
     this.selectedChannelIdSource.next(channelId);
   }
 }
