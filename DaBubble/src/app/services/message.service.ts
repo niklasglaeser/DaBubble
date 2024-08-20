@@ -20,15 +20,32 @@ export class MessageService {
   constructor(private firestore: Firestore) {}
 
   async addMessage(channelId: string, message: Message) {
-    const messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
+    const messagesRef = collection(
+      this.firestore,
+      'channels',
+      channelId,
+      'messages'
+    );
     await addDoc(messagesRef, {
       ...message,
       created_at: Timestamp.now(),
     });
   }
 
+  // getMessages(channelId: string) {
+  //   const messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
+  //   return collectionData(messagesRef, { idField: 'id' }) as Observable<
+  //     Message[]
+  //   >;
+  // }
   getMessages(channelId: string) {
-    const messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
+    const messagesRef = collection(
+      this.firestore,
+      'channels',
+      channelId,
+      'messages'
+    );
+    console.log('Fetching messages for channel:', channelId); // Debug Log
     return collectionData(messagesRef, { idField: 'id' }) as Observable<
       Message[]
     >;
