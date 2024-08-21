@@ -1,11 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-
-
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-
-import { CommonModule, DatePipe} from '@angular/common';
-
-
+import { CommonModule} from '@angular/common';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { AuthService } from './services/lp-services/auth.service';
 import { UserLoggedService } from './services/lp-services/user-logged.service';

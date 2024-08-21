@@ -101,7 +101,7 @@ export class LandingPageComponent implements OnInit {
   }
 
   toCreatAcc(): void {
-    this.router.navigate(['/signUp']);
+    this.router.navigate(['/landing-page/signUp']);
   }
 
   toImprint(): void {
