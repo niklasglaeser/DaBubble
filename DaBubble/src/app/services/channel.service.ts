@@ -15,7 +15,6 @@ import {
   getDoc,
 } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.class';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -44,28 +43,7 @@ export class ChannelService {
     });
   }
 
-  /*Observable*/
-
-  loadChannelData(channelId: string): Observable<Channel | null> {
-    const channelDocRef = doc(this.firestore, 'channels', channelId);
-    return new Observable<Channel | null>((observer) => {
-      const unsubscribe = onSnapshot(channelDocRef, (doc) => {
-        if (doc.exists()) {
-          const channelData = doc.data() as Channel;
-          channelData.id = doc.id;
-          observer.next(channelData);
-        } else {
-          observer.next(null);
-        }
-      });
-      return () => unsubscribe();
-    });
-  }
-
-  /*Observable*/
-
   /*TESTING*/
-  /*
   loadChannelData(
     channelId: string,
     callback: (channel: Channel | null) => void
@@ -81,7 +59,6 @@ export class ChannelService {
       }
     });
   }
-    */
   /*TESTING*/
 
   async createChannel(channel: Channel) {
@@ -89,23 +66,10 @@ export class ChannelService {
       const channelDocRef = doc(this.getChannelsRef());
       channel.id = channelDocRef.id;
       await setDoc(channelDocRef, { ...channel });
-      // await this.createMessageSubcollection(channel.id);
       return channel.id;
     } catch (error) {
       console.error('error adding channel' + error);
       return null;
-    }
-  }
-
-  async createMessageSubcollection(channelId: string) {
-    try {
-      const messagesRef = collection(
-        this.firestore,
-        `channels/${channelId}/messages`
-      );
-      await addDoc(messagesRef, { initial: true });
-    } catch (e) {
-      console.error('Error: ', e);
     }
   }
 

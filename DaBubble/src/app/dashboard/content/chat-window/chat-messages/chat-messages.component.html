@@ -1,6 +1,7 @@
 <div class="chat-content">
     <div *ngIf="messages$ | async as messages" id="chat-messages-container">
-        <div *ngFor="let message of messages" [ngClass]="message.senderName === currentUser ? 'user-send-message' : 'message'">
+        <div *ngFor="let message of messages"
+            [ngClass]="message.senderId === currentUser?.uid ? 'user-send-message' : 'message'">
             <div class="message-date">{{ formatDate(message.created_at) }}</div>
             <div class="message-section">
                 <div class="reaction-bar">
@@ -11,7 +12,7 @@
                     <div class="option-reaction"></div>
                 </div>
                 <div class="message-content">
-                    <img class="author-picture" src="/assets/img/general/avatars/avatar3.svg">
+                    <img class="author-picture" [src]="message.photoURL">
                     <div class="details">
                         <div class="author">
                             <div class="author-name fs-18-700">{{message.senderName}} </div>

@@ -8,28 +8,31 @@ import { Channel } from '../../../../models/channel.class';
   selector: 'app-chat-footer',
   standalone: true,
   templateUrl: './chat-footer.component.html',
-  styleUrls: ['./chat-footer.component.scss']
+  styleUrls: ['./chat-footer.component.scss'],
 })
 export class ChatFooterComponent {
   @Input() channel: Channel | null = null;
   constructor(private messageService: MessageService) {}
 
   sendMessage(): void {
-    const textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      'chat-message-input'
+    ) as HTMLTextAreaElement;
     const messageText = textarea.value;
-  
+
     if (messageText.trim()) {
       const message: Message = {
         message: messageText,
         senderId: '',
-        senderName: '',
+        // senderName: '',
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       };
-  
+
       const channelId = this.channel?.id;
-      
-      if (channelId) { // Ensure channelId is a valid string
+
+      if (channelId) {
+        // Ensure channelId is a valid string
         this.messageService.addMessage(channelId, message).then(() => {
           textarea.value = '';
         });

@@ -7,9 +7,10 @@ import { UserService } from '../../../services/user.service';
 import { ChannelService } from '../../../services/channel.service';
 import { Channel } from '../../../models/channel.class';
 import { UserLogged } from '../../../models/user-logged.model';
-import { Observable } from 'rxjs';
+import { forkJoin, from, map, Observable, switchMap } from 'rxjs';
 import { Message } from '../../../models/message.model';
 import { MessageService } from '../../../services/message.service';
+import { AuthService } from '../../../services/lp-services/auth.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -23,21 +24,30 @@ export class ChatWindowComponent implements OnInit {
   channel: Channel | null = null;
   members: UserLogged[] = [];
   messages$: Observable<Message[]> | undefined;
+  currentUser: UserLogged | null = null;
+
+  userId: string | null = null;
+
   unsubscribe: (() => void) | undefined;
 
   constructor(
     private channelService: ChannelService,
     private userService: UserService,
     private messageService: MessageService,
-    private channelStateService: ChannelStateService
+    private channelStateService: ChannelStateService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.channelStateService.selectedChannelId$.subscribe((channelId) => {
+    this.channelStateService.selectedChannelId$.subscribe(async (channelId) => {
       if (channelId) {
         this.channelId = channelId;
         this.subscribeToChannelData();
         this.loadMessages(channelId);
+        await this.getCurrentUserId();
+        if (this.userId) {
+          this.loadCurrentUser(this.userId);
+        }
       }
     });
   }
@@ -64,8 +74,23 @@ export class ChatWindowComponent implements OnInit {
   }
 
   loadMessages(channelId: string) {
-    this.messages$ = this.messageService.getMessages(channelId);
-    console.log('Loaded messages for channel:', channelId);
+    this.messages$ = this.messageService.getMessages(channelId).pipe(
+      switchMap((messages) =>
+        forkJoin(
+          messages.map(async (message) => {
+            const user = await this.userService.getSingleUserObj(
+              message.senderId
+            );
+            return {
+              ...message,
+              senderName: user?.username || 'Unbekannt',
+              photoURL:
+                user?.photoURL || '/assets/img/general/avatars/avatar3.svg',
+            };
+          })
+        )
+      )
+    );
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {
@@ -80,5 +105,19 @@ export class ChatWindowComponent implements OnInit {
     }
     this.members = members;
     console.log('Loaded user:', this.members);
+  }
+
+  async loadCurrentUser(userId: string) {
+    let user = await this.userService.getSingleUserObj(userId);
+    if (user) {
+      this.currentUser = user;
+    }
+  }
+
+  async getCurrentUserId() {
+    const currentUser = this.authService.currentUserSig();
+    if (currentUser) {
+      this.userId = currentUser.userId;
+    }
   }
 }

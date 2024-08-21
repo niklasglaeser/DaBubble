@@ -36,7 +36,8 @@ export class MessageService {
       ...message,
       created_at: Date.now(),
       updated_at: Date.now(),
-      senderName: currentUser?.username || 'Unknown User',
+      // senderName: currentUser?.username || 'Unknown User',
+      senderId: currentUser?.userId || 'Unknown User',
     });
   }
 

@@ -43,16 +43,38 @@ export class UserService {
   }
 
   async getSingleUserObj(docId: string): Promise<UserLogged | null> {
-    const userDocRef = doc(this.firestore, 'Users', docId);
-    const docSnap = await getDoc(userDocRef);
+    if (!docId) {
+      console.error('Invalid document ID!');
+      return null;
+    }
 
-    if (docSnap.exists()) {
-      return { uid: docSnap.id, ...docSnap.data() } as UserLogged;
-    } else {
-      console.error('No such user!');
+    try {
+      const userDocRef = doc(this.firestore, `Users/${docId}`);
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        return { uid: docSnap.id, ...docSnap.data() } as UserLogged;
+      } else {
+        console.error('No such user!');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching user document:', error);
       return null;
     }
   }
+
+  // async getSingleUserObj(docId: string): Promise<UserLogged | null> {
+  //   const userDocRef = doc(this.firestore, 'Users', docId);
+  //   const docSnap = await getDoc(userDocRef);
+
+  //   if (docSnap.exists()) {
+  //     return { uid: docSnap.id, ...docSnap.data() } as UserLogged;
+  //   } else {
+  //     console.error('No such user!');
+  //     return null;
+  //   }
+  // }
 
   getSingleUser(docId: string) {
     return doc(collection(this.firestore, 'Users'), docId);
