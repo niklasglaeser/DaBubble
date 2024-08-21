@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { LandingPageComponent } from '../landing-page.component';
 import { UploadService } from '../../services/lp-services/upload.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-avatar',
@@ -22,6 +23,7 @@ export class AvatarComponent {
   profileImg: string | null = null;  // TypeScript-typischer Ansatz
   authService = inject(AuthService);
   userService = inject(UserLoggedService);
+  router = inject(Router)
   currentUser = this.authService.currentUserSig();
 
   avatars: boolean[] = [false, false, false, false, false, false];
@@ -36,8 +38,7 @@ export class AvatarComponent {
   }
 
   backToSignUp() {
-    this.lp.$avatar = false;
-    this.lp.$signUp = true;
+    this.router.navigate(['/landing-page/login']);
   }
 
   uploadImage(event: Event) {
@@ -69,10 +70,7 @@ export class AvatarComponent {
     if (this.profileImg && this.currentUser) {
       try {
         await this.userService.updateUserImg(this.currentUser.userId!, this.profileImg);
-        
-        this.lp.$avatar = false;
-        this.lp.$login = true;
-
+        this.router.navigate(['/landing-page/login']);
         this.authService.logout()
       } catch (err) {
         console.error('Error updating user image:', err);

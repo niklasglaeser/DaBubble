@@ -1,28 +1,56 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/lp-services/auth.service';
 import { LandingPageComponent } from '../landing-page.component';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     MatIconModule,
   ],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.scss'
+  styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent {
- 
-  constructor(private lp: LandingPageComponent){}
+  isSubmited: boolean = false;
+  authService = inject(AuthService);
+  lp = inject(LandingPageComponent);
+  resetForm: FormGroup;
 
-  backToLogin(){
-    this.lp.$resetPW = false
-    this.lp.$login = true
+  constructor(private fb: FormBuilder,private route: ActivatedRoute,
+    private router: Router) {
+    this.resetForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+    });
   }
 
+  backToLogin() {
+    this.router.navigate(['/landing-page/login']);
+  }
+
+  errorFc(id: string) {
+    const control = this.resetForm.get(id);
+    return control && control.invalid && (control.dirty || control.touched || this.isSubmited);
+  }
+
+  resetPassword() {
+    if (this.resetForm.valid) {
+      const email = this.resetForm.get('email')?.value;
+      this.authService.resetPassword(email).subscribe({
+        next: () => {
+          this.router.navigate(['/landing-page/login']);
+          console.log('Password reset email sent.');
+        },
+        error: (err) => {
+          console.error('Error sending password reset email:', err);
+        }
+      });
+    }
+  }
 }
