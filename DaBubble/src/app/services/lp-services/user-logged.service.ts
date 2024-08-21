@@ -24,17 +24,16 @@ export class UserLoggedService {
     }
   }
 
-  // async addUser(user: UserLogged) {
-  //   try {
-  //     const docRef = await addDoc(this.CRMcollection, user.toJSON());
-    
-  //     user.uid = docRef.id;
-  //     await updateDoc(docRef, user.toJSON());
-  //   } catch (err) {
-  //     console.error('Error adding document: ', err);
-  //   }
-  // }
-
+  async updateUserStatus(id: string, status: boolean) {
+    const docRef: DocumentReference = doc(this.CRMcollection, id);
+    try {
+      await updateDoc(docRef, { onlineStatus: status });
+      console.log('Document successfully updated.');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  }
+  
   async addUser(user: UserLogged) {
     try {
       const userDocRef = doc(this.CRMcollection, user.uid); 

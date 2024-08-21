@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { LandingPageComponent } from '../landing-page.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-imprint',
@@ -14,12 +15,12 @@ import { LandingPageComponent } from '../landing-page.component';
   styleUrl: './imprint.component.scss'
 })
 export class ImprintComponent {
+  router = inject(Router)
 
   constructor (private lp: LandingPageComponent){}
 
   backToLogin(){
-    this.lp.$imprint = false
-    this.lp.$login = true
+    this.router.navigate(['/landing-page/login']);
   }
 
 }

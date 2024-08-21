@@ -54,7 +54,6 @@ export class LoginComponent {
   }
 
   resetPW() {
-    this.lp.$login = false;
-    this.lp.$resetPW = true;
+    this.router.navigate(['/landing-page/resetPassword']);
   }
 }

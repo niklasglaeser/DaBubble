@@ -7,6 +7,9 @@ import { UserService } from '../../../services/user.service';
 import { ChannelService } from '../../../services/channel.service';
 import { Channel } from '../../../models/channel.class';
 import { UserLogged } from '../../../models/user-logged.model';
+import { Observable } from 'rxjs';
+import { Message } from '../../../models/message.model';
+import { MessageService } from '../../../services/message.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -19,32 +22,50 @@ export class ChatWindowComponent implements OnInit {
   channelId: string | null = null;
   channel: Channel | null = null;
   members: UserLogged[] = [];
+  messages$: Observable<Message[]> | undefined;
   unsubscribe: (() => void) | undefined;
 
   constructor(
     private channelService: ChannelService,
     private userService: UserService,
+    private messageService: MessageService,
     private channelStateService: ChannelStateService
   ) {}
 
   ngOnInit() {
     this.channelStateService.selectedChannelId$.subscribe((channelId) => {
       if (channelId) {
-        if (this.unsubscribe) {
-          this.unsubscribe();
-        }
         this.channelId = channelId;
-        const subscription = this.channelService
-          .loadChannelData(this.channelId)
-          .subscribe((channel) => {
-            this.channel = channel;
-            if (this.channel && this.channel.members) {
-              this.loadChannelMembers(this.channel.members);
-            }
-          });
-        this.unsubscribe = () => subscription.unsubscribe();
+        this.subscribeToChannelData();
+        this.loadMessages(channelId);
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  subscribeToChannelData() {
+    if (this.channelId) {
+      this.unsubscribe = this.channelService.loadChannelData(
+        this.channelId,
+        (channel) => {
+          this.channel = channel;
+          if (this.channel && this.channel.members) {
+            this.loadChannelMembers(this.channel.members);
+            console.log(this.channel.members);
+          }
+        }
+      );
+    }
+  }
+
+  loadMessages(channelId: string) {
+    this.messages$ = this.messageService.getMessages(channelId);
+    console.log('Loaded messages for channel:', channelId);
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {
@@ -60,45 +81,4 @@ export class ChatWindowComponent implements OnInit {
     this.members = members;
     console.log('Loaded user:', this.members);
   }
-
-  ngOnDestroy() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  }
-
-  /*subscribe observable - zeile 49 channel.service*/
-  /*
-  subscribeToChannelData() {
-    if (this.channelId) {
-      const subscription = this.channelService
-        .loadChannelData(this.channelId)
-        .subscribe((channel) => {
-          this.channel = channel;
-          if (this.channel && this.channel.members) {
-            this.loadChannelMembers(this.channel.members);
-            console.log(this.channel.members);
-          }
-        });
-
-      this.unsubscribe = () => subscription.unsubscribe();
-    }
-  }
-  */
-  /*subscribe observable - zeile 49 channel.service*/
-
-  // subscribeToChannelData() {
-  //   if (this.channelId) {
-  //     this.unsubscribe = this.channelService.loadChannelData(
-  //       this.channelId,
-  //       (channel) => {
-  //         this.channel = channel;
-  //         if (this.channel && this.channel.members) {
-  //           this.loadChannelMembers(this.channel.members);
-  //           console.log(this.channel.members);
-  //         }
-  //       }
-  //     );
-  //   }
-  // }
 }

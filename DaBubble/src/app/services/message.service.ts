@@ -6,36 +6,47 @@ import {
   collectionData,
   doc,
   Firestore,
+  orderBy,
+  query,
   Timestamp,
   updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { Reaction } from '../models/reaction.model';
+import { AuthService } from './lp-services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private authService: AuthService) {}
 
   async addMessage(channelId: string, message: Message) {
     const messagesRef = collection(
       this.firestore,
-      `channels/${channelId}/messages`
+      'channels',
+      channelId,
+      'messages'
     );
+
+    const currentUser = this.authService.currentUserSig();
+
     await addDoc(messagesRef, {
       ...message,
-      created_at: Timestamp.now(),
+      created_at: Date.now(),
+      updated_at: Date.now(),
+      senderName: currentUser?.username || 'Unknown User',
     });
   }
 
-  getMessages(channelId: string) {
+  getMessages(channelId: string): Observable<Message[]> {
     const messagesRef = collection(
       this.firestore,
       `channels/${channelId}/messages`
     );
-    return collectionData(messagesRef, { idField: 'id' }) as Observable<
+    const messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
+    return collectionData(messagesQuery, { idField: 'id' }) as Observable<
       Message[]
     >;
   }

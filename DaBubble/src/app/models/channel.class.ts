@@ -1,5 +1,3 @@
-import { User } from './user.model';
-
 export class Channel {
   id?: string;
   name: string;

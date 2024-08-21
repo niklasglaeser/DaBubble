@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { LandingPageComponent } from '../landing-page.component';
 import { AuthService } from '../../services/lp-services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 import { UserLogged } from '../../models/user-logged.model';
@@ -37,12 +37,13 @@ export class SignUpComponent {
   registerForm = this.fb.group({
     username: ['', [Validators.required,
       Validators.pattern(/^[a-zA-Z]+ [a-zA-Z]+$/) ]],
-    email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required,Validators.minLength(6)]],
     checkbox: ['', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private lp: LandingPageComponent) {
+  constructor(private fb: FormBuilder, private lp: LandingPageComponent,private route: ActivatedRoute,
+   ) {
     this.authService.subscribeUser();
   }
 
@@ -81,8 +82,7 @@ export class SignUpComponent {
   }
 
   private navigateToAvatarSelection(): void {
-    this.lp.$signUp = false;
-    this.lp.$avatar = true;
+    this.router.navigate(['/landing-page/avatar']);
   }
 
   errorFc(id: string) {
@@ -91,7 +91,6 @@ export class SignUpComponent {
   }
 
   backToLogin(){
-    this.lp.$signUp = false
-    this.lp.$login = true
+    this.router.navigate(['/landing-page/login']);
   }
 }

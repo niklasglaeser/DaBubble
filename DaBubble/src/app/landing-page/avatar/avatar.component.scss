@@ -52,7 +52,9 @@
 
 .profile-img{
     height: 168px;
-    width: auto;
+    width: 168px;
+    object-fit: contain;
+    border-radius: 50%;
 }
 
 .list{
