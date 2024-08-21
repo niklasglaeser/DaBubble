@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
-import { ChannelService } from '../../../models/channel.service';
+import { ChannelService } from '../../../services/channel.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { WorkspaceToggleComponent } from '../../../dialog/workspace-toggle/workspace-toggle.component';
@@ -16,6 +16,7 @@ import {
 } from '@angular/animations';
 import { UserService } from '../../../services/user.service';
 import { UserLogged } from '../../../models/user-logged.model';
+import { ChannelStateService } from '../../../services/channel-state.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -67,7 +68,8 @@ export class SidebarComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private channelService: ChannelService,
-    private userService: UserService
+    private userService: UserService,
+    private channelStateService: ChannelStateService
   ) {
     this.checkWindowSize();
   }
@@ -110,6 +112,7 @@ export class SidebarComponent implements OnInit {
   }
 
   openChannel(channelId: string) {
+    this.channelStateService.setSelectedChannelId(channelId);
     console.log(channelId);
     console.log('open channel');
   }

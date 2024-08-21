@@ -11,8 +11,10 @@ import {
   getDocs,
   QuerySnapshot,
   query,
+  setDoc,
+  getDoc,
 } from '@angular/fire/firestore';
-import { Channel } from './channel.class';
+import { Channel } from '../models/channel.class';
 
 @Injectable({
   providedIn: 'root',
@@ -23,20 +25,13 @@ export class ChannelService {
 
   /*onSnapshot variablen*/
   unsubList;
-  unsubSingle;
 
   constructor() {
     this.unsubList = this.channelsList();
-
-    this.unsubSingle = onSnapshot(
-      this.getSingleChannel('channels', 'dfsdf'),
-      (element) => {}
-    );
   }
 
   ngOnDestroy(): void {
     this.unsubList(); // snapshot unsubscribe
-    this.unsubSingle(); // snapshot unsubscribe
   }
 
   channelsList() {
@@ -47,14 +42,31 @@ export class ChannelService {
       });
     });
   }
+
+  /*TESTING*/
+  loadChannelData(
+    channelId: string,
+    callback: (channel: Channel | null) => void
+  ): () => void {
+    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    return onSnapshot(channelDocRef, (doc) => {
+      if (doc.exists()) {
+        const channelData = doc.data() as Channel;
+        channelData.id = doc.id;
+        callback(channelData);
+      } else {
+        callback(null);
+      }
+    });
+  }
+  /*TESTING*/
+
   async createChannel(channel: Channel) {
     try {
-      const docRef = await addDoc(this.getChannelsRef(), {
-        name: channel.name,
-        description: channel.description,
-        creator: channel.creator,
-      });
-      return docRef.id;
+      const channelDocRef = doc(this.getChannelsRef());
+      channel.id = channelDocRef.id;
+      await setDoc(channelDocRef, { ...channel });
+      return channel.id;
     } catch (error) {
       console.error('error adding channel' + error);
       return null;
@@ -63,11 +75,10 @@ export class ChannelService {
 
   async addUsersToChannel(channelId: string, userIds: string[]): Promise<void> {
     try {
-      const channelDocRef = this.getSingleChannel('channels', channelId);
+      const channelDocRef = this.getSingleChannel(channelId);
       await updateDoc(channelDocRef, {
         members: userIds,
       });
-      console.log('Users added to Channel ID:', channelId);
     } catch (e) {
       console.error('Error adding users to channel: ', e);
     }
@@ -75,7 +86,7 @@ export class ChannelService {
 
   async updateChannel(channelId: string, channel: Channel) {
     try {
-      const channelDocRef = this.getSingleChannel('channels', channelId);
+      const channelDocRef = this.getSingleChannel(channelId);
       await updateDoc(channelDocRef, {
         name: channel.name,
         description: channel.description,
@@ -89,7 +100,7 @@ export class ChannelService {
 
   async deleteChannel(channelId: string) {
     try {
-      const channelDocRef = this.getSingleChannel('channels', channelId);
+      const channelDocRef = this.getSingleChannel(channelId);
       await deleteDoc(channelDocRef);
       console.log('Channel deleted with ID: ', channelId);
     } catch (e) {
@@ -113,8 +124,8 @@ export class ChannelService {
     };
   }
 
-  getSingleChannel(colId: string, docId: string) {
-    return doc(collection(this.firestore, colId), docId);
+  getSingleChannel(docId: string) {
+    return doc(collection(this.firestore, 'channels'), docId);
   }
 
   getChannelsRef() {

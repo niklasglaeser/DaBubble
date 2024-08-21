@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef, Input, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ChannelService } from '../../models/channel.service';
+import { ChannelService } from '../../services/channel.service';
 import { Channel } from '../../models/channel.class';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { getDoc } from '@angular/fire/firestore';
@@ -47,7 +47,6 @@ export class DialogChannelEditComponent {
   async loadChannel() {
     if (this.data.channelId) {
       const channelDoc = this.channelService.getSingleChannel(
-        'channels',
         this.data.channelId
       );
       const channelData = (await getDoc(channelDoc)).data();

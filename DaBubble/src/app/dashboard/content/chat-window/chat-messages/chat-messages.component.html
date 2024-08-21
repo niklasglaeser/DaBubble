@@ -1,7 +1,7 @@
 <div class="chat-content">
-    <div id="chat-messages-container">
-        <div class="message">
-            <div class="message-date">Mittwoch, 14 August</div>
+    <div *ngIf="messages$ | async as messages" id="chat-messages-container">
+        <div *ngFor="let message of messages" [ngClass]="message.senderName === currentUser ? 'user-send-message' : 'message'">
+            <div class="message-date">{{ formatDate(message.created_at) }}</div>
             <div class="message-section">
                 <div class="reaction-bar">
                     <div class="checkmark-reaction"></div>
@@ -14,48 +14,10 @@
                     <img class="author-picture" src="/assets/img/general/avatars/avatar3.svg">
                     <div class="details">
                         <div class="author">
-                            <div class="author-name fs-18-700">Message author</div>
-                            <div class="message-send-time fs-14">14:00 Uhr</div>
+                            <div class="author-name fs-18-700">{{message.senderName}} </div>
+                            <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                         </div>
-                        <div class="text fs-18">JUNGE JUNGE gibt es hier viele Details</div>
-                        <div class="open-thread">
-                            <div class="open-answers fs-18">2 Antworten</div>
-                            <div class="fs-14">Letzte Antwort 14:30</div>
-                            <div class="reactions">
-                                <div class="emoji-container">
-                                    <div class="emoji"></div>
-                                    <div class="emoji-counter">1</div>
-                                </div>
-                                <div class="emoji-container">
-                                    <div class="emoji"></div>
-                                    <div class="emoji-counter">1</div>
-                                </div>
-                                <div class="add-reaction"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="message-files" style="display: none;"></div>
-        </div>
-        <div class="user-send-message">
-            <div class="message-date">Mittwoch, 14 August</div>
-            <div class="message-section">
-                <div class="reaction-bar">
-                    <div class="checkmark-reaction"></div>
-                    <div class="applaud-reaction"></div>
-                    <div class="emoji-reaction"></div>
-                    <div class="comment-reaction"></div>
-                    <div class="option-reaction"></div>
-                </div>
-                <div class="message-content">
-                    <img class="author-picture" src="/assets/img/general/avatars/avatar3.svg">
-                    <div class="details">
-                        <div class="author">
-                            <div class="author-name fs-18-700">Message author</div>
-                            <div class="message-send-time fs-14">14:00 Uhr</div>
-                        </div>
-                        <div class="text fs-18">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</div>
+                        <div class="text fs-18">{{message.message}}</div>
                         <div class="open-thread">
                             <div class="open-answers fs-18">2 Antworten</div>
                             <div class="fs-14 last-answer">Letzte Antwort 14:30</div>
@@ -74,94 +36,6 @@
                     </div>
                 </div>
             </div>
-            <div class="message-files" style="display: none;"></div>
         </div>
-        <div class="message">
-            <div class="message-date">Mittwoch, 14 August</div>
-            <div class="message-section">
-                <div class="reaction-bar">
-                    <div class="checkmark-reaction"></div>
-                    <div class="applaud-reaction"></div>
-                    <div class="emoji-reaction"></div>
-                    <div class="comment-reaction"></div>
-                    <div class="option-reaction"></div>
-                </div>
-                <div class="message-content">
-                    <img class="author-picture" src="/assets/img/general/avatars/avatar3.svg">
-                    <div class="details">
-                        <div class="author">
-                            <div class="author-name fs-18-700">Message author</div>
-                            <div class="message-send-time fs-14">14:00 Uhr</div>
-                        </div>
-                        <div class="text fs-18">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
-
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
-                            
-                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
-                            
-                            Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>
-                        <div class="open-thread">
-                            <div class="open-answers fs-18">2 Antworten</div>
-                            <div class="fs-14">Letzte Antwort 14:30</div>
-                            <div class="reactions">
-                                <div class="emoji-container">
-                                    <div class="emoji"></div>
-                                    <div class="emoji-counter">1</div>
-                                </div>
-                                <div class="emoji-container">
-                                    <div class="emoji"></div>
-                                    <div class="emoji-counter">1</div>
-                                </div>
-                                <div class="add-reaction"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="message-files" style="display: none;"></div>
-        </div>
-        <div class="message">
-            <div class="message-date">Mittwoch, 14 August</div>
-            <div class="message-section">
-                <div class="reaction-bar">
-                    <div class="checkmark-reaction"></div>
-                    <div class="applaud-reaction"></div>
-                    <div class="emoji-reaction"></div>
-                    <div class="comment-reaction"></div>
-                    <div class="option-reaction"></div>
-                </div>
-                <div class="message-content">
-                    <img class="author-picture" src="/assets/img/general/avatars/avatar3.svg">
-                    <div class="details">
-                        <div class="author">
-                            <div class="author-name fs-18-700">Message author</div>
-                            <div class="message-send-time fs-14">14:00 Uhr</div>
-                        </div>
-                        <div class="text fs-18">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
-
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
-                            
-                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
-                            
-                            Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>
-                        <div class="open-thread">
-                            <div class="open-answers fs-18">2 Antworten</div>
-                            <div class="fs-14">Letzte Antwort 14:30</div>
-                            <div class="reactions">
-                                <div class="emoji-container">
-                                    <div class="emoji"></div>
-                                    <div class="emoji-counter">1</div>
-                                </div>
-                                <div class="emoji-container">
-                                    <div class="emoji"></div>
-                                    <div class="emoji-counter">1</div>
-                                </div>
-                                <div class="add-reaction"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="message-files" style="display: none;"></div>
-        </div>
+    </div>
 </div>
