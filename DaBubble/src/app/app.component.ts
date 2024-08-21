@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe} from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { AuthService } from './services/lp-services/auth.service';
@@ -13,7 +13,7 @@ import { AuthService } from './services/lp-services/auth.service';
     LandingPageComponent
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit{
   title = 'DaBubble';
