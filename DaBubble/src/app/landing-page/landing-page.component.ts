@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/lp-services/auth.service';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { AvatarComponent } from './avatar/avatar.component';
@@ -22,49 +24,91 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
     PrivacyPolicyComponent
   ],
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.scss'
+  styleUrls: ['./landing-page.component.scss']
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit {
 
-  $login: boolean = true;
-  $signUp: boolean = false;
-  $avatar: boolean = false;
-  $resetPW: boolean = false;
-  $setPW: boolean = false;
-  $imprint: boolean = false;
-  $privacy: boolean = false;
-  $userId: string = '';
-  animated: boolean = false;
+  $login = false;
+  $signUp = false;
+  $avatar = false;
+  $resetPW = false;
+  $setPW = false;
+  $imprint = false;
+  $privacy = false;
+  animated = false;
+  oobCode: string | null = null;
+
+  constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
+  this.route.params.subscribe(params => {
+    const action = params['action'];
+    this.route.queryParams.subscribe(params => {
+      this.oobCode = params['oobCode']
+    })
+
+    console.log('Action:', action);
+    console.log('oobCode', this.oobCode);
+    this.handleAction(action)
+  });
+  }
+
+  private handleAction(action: string): void {
+    this.resetAllStates();
+    switch(action) {
+      case 'setPassword':
+        this.$setPW = true;
+        break;
+      case 'resetPassword':
+        this.$resetPW = true;
+        break;
+      case 'login':
+        this.$login = true;
+        break;
+      case 'signUp':
+        this.$signUp = true;
+        break;
+      case 'avatar':
+        this.$avatar = true;
+        break;
+      case 'imprint':
+        this.$imprint = true;
+        break;
+      case 'privacy':
+        this.$privacy = true;
+        break;
+      default:
+        this.$login = true;
+    }
+
+    this.startAnimationWithDelay();
+  }
+
+  private resetAllStates(): void {
+    this.$login = false;
+    this.$signUp = false;
+    this.$avatar = false;
+    this.$resetPW = false;
+    this.$setPW = false;
+    this.$imprint = false;
+    this.$privacy = false;
+  }
+
+  private startAnimationWithDelay(): void {
     setTimeout(() => {
-      this.animated = true
-    }, 3000);
-    
+      this.animated = true;
+    }, 2500);
   }
 
-  toCreatAcc(){
-    this.$login = false
-    this.$signUp = true
+  toCreatAcc(): void {
+    this.router.navigate(['/signUp']);
   }
 
-  toImprint(){
-    this.$signUp = false
-    this.$setPW = false
-    this.$resetPW = false
-    this.$privacy = false
-    this.$avatar = false
-    this.$login = false
-    this.$imprint = true
+  toImprint(): void {
+    this.router.navigate(['/landing-page/imprint']);
   }
 
-  toPrivacy(){
-    this.$signUp = false
-    this.$setPW = false
-    this.$resetPW = false
-    this.$imprint = false
-    this.$avatar = false
-    this.$login = false
-    this.$privacy = true
+  toPrivacy(): void {
+    this.router.navigate(['/landing-page/privacy']); 
   }
 }

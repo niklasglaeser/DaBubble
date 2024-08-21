@@ -10,7 +10,6 @@ export class UploadService {
 
   constructor(private storage: Storage) { }
 
-
   uploadImg(userId: string, image: File): Observable<string> {
     const storagePath = `user-profile-images/${userId}/${image.name}`;
     const storageRef = ref(this.storage, storagePath);
