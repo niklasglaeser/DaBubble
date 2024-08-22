@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { linkWithPhoneNumber } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/lp-services/auth.service';
+import { LandingPageComponent } from '../landing-page.component';
 
 @Component({
   selector: 'app-set-password',
@@ -17,8 +19,8 @@ import { AuthService } from '../../services/lp-services/auth.service';
   templateUrl: './set-password.component.html',
   styleUrls: ['./set-password.component.scss']
 })
-export class SetPasswordComponent implements OnInit {
-
+export class SetPasswordComponent {
+  lp = inject(LandingPageComponent)
   setPasswordForm: FormGroup;
   
   errorMessage: string | null = null;
@@ -33,29 +35,12 @@ export class SetPasswordComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
+    
   ) {
     this.setPasswordForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     });
-  }
-
-  ngOnInit(): void {
-
-    this.route.queryParams.subscribe(params => {
-      this.oobCode = params['oobCode'];
-      console.log('oobCode', this.oobCode)
-    });
-    
-    // this.route.queryParams.subscribe(params => {
-    //   this.oobCode = params['oobCode'];
-    //   if (this.oobCode) {
-    //     // Verarbeite den oobCode, wie in der vorherigen Erklärung beschrieben
-    //     console.log('OobCode:', this.oobCode);
-    //   } else {
-    //     console.error('OobCode fehlt in der URL');
-    //   }
-    // });
   }
 
   setPassword(): void {
@@ -65,7 +50,7 @@ export class SetPasswordComponent implements OnInit {
         this.authService.confirmPassword(this.oobCode, newPassword).subscribe({
           next: () => {
             console.log('Password has been set successfully');
-            this.router.navigate(['/landing-page/login']);
+            this.backToLogin()
           },
           error: (error) => {
             console.error('Error setting password:', error);
@@ -83,6 +68,6 @@ export class SetPasswordComponent implements OnInit {
   }
 
   backToLogin(): void {
-    this.router.navigate(['/landing-page/login']);
+    this.router.navigate([''])
   }
 }

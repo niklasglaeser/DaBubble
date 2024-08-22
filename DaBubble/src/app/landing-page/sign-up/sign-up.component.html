@@ -28,10 +28,9 @@
                 >
                 <mat-icon>mail_outline</mat-icon>
                 <span class="fs-14" *ngIf="errorFc('email')">*Diese E-Mail-Adresse ist leider ungültig.</span>
-                <span class="fs-14" *ngIf="alreadyUsed">*Diese E-Mail-Adresse ist bereits vergeben.</span>
             </div>
             <div class="input-container">
-               
+              
                 <input 
                 class="fs-18"
                 formControlName="password"
@@ -40,7 +39,7 @@
                 placeholder="Passwort"
                  >
                  <mat-icon>lock_outline</mat-icon>
-                 <span class="fs-14" *ngIf="errorFc('password')">*Gültiges Passwort mit mindestens 6 Zeichen, einem Großbuchstaben, einem Kleinbuchstaben und einem Sonderzeichen eingeben.</span>
+                 <span class="fs-14" *ngIf="errorPW('password')">*Gültiges Passwort mit mindestens 6 Zeichen, einem Großbuchstaben, einem Kleinbuchstaben und einem Sonderzeichen eingeben.</span>
             </div>
 
             <div class="input-checkbox">
@@ -54,15 +53,13 @@
                 </div>
                 
                  <span>Ich stimme der <a>Datenschutzerkärung</a> zu.</span>
-                 <span *ngIf="errorFc('checkbox')">*</span>
             </div>
 
             <div class="futer-box">
                 <div class="futer-btn">
-                    <button type="submit" [disabled]="!registerForm.valid">
+                    <button type="submit" [disabled]="!registerForm.valid || isSubmited">
                         <span class="fs-18-b">Weiter</span>
                     </button>
-                    
                 </div>
             </div>
 

@@ -30,9 +30,10 @@ export class ResetPasswordComponent {
     });
   }
 
-  backToLogin() {
-    this.router.navigate(['/landing-page/login']);
-  }
+  backToLogin(){
+    this.lp.resetAllStates()
+     this.lp.$login = true
+   }
 
   errorFc(id: string) {
     const control = this.resetForm.get(id);
@@ -44,7 +45,7 @@ export class ResetPasswordComponent {
       const email = this.resetForm.get('email')?.value;
       this.authService.resetPassword(email).subscribe({
         next: () => {
-          this.router.navigate(['/landing-page/login']);
+          this.backToLogin()
           console.log('Password reset email sent.');
         },
         error: (err) => {

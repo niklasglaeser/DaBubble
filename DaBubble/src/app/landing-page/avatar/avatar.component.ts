@@ -29,7 +29,6 @@ export class AvatarComponent {
   avatars: boolean[] = [false, false, false, false, false, false];
 
   constructor(private lp: LandingPageComponent, private imgUploadService: UploadService, private toast: HotToastService) {
-    this.authService.subscribeUser();
   }
 
   choseAvatar(index: number) {
@@ -38,7 +37,8 @@ export class AvatarComponent {
   }
 
   backToSignUp() {
-    this.router.navigate(['/landing-page/login']);
+    this.lp.resetAllStates()
+    this.lp.$signUp = true
   }
 
   uploadImage(event: Event) {
@@ -69,9 +69,9 @@ export class AvatarComponent {
   async saveProfileAndContinue() {
     if (this.profileImg && this.currentUser) {
       try {
-        await this.userService.updateUserImg(this.currentUser.userId!, this.profileImg);
-        this.router.navigate(['/landing-page/login']);
+        await this.userService.updateUserImg(this.authService.uid, this.profileImg);
         this.authService.logout()
+        this.backToLogin()
       } catch (err) {
         console.error('Error updating user image:', err);
       }
@@ -79,4 +79,10 @@ export class AvatarComponent {
       console.error('No profile image selected or user not found.');
     }
   }
+
+  backToLogin(){
+    this.authService.uid = ''
+    this.lp.resetAllStates()
+     this.lp.$login = true
+   }
 }

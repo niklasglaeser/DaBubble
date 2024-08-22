@@ -40,7 +40,21 @@ export class LoginComponent {
     this.authService.login(rawForm.email!, rawForm.password!).subscribe({
       next: () => {
         this.errorM = null; 
-        this.router.navigateByUrl('/dashboard');
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
+      }
+    });
+  }
+
+  guestLogin(): void {
+    this.isSubmited = true; 
+    
+    this.authService.login('guest@guest.com', 'Safa123').subscribe({
+      next: () => {
+        this.errorM = null; 
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
@@ -54,6 +68,30 @@ export class LoginComponent {
   }
 
   resetPW() {
-    this.router.navigate(['/landing-page/resetPassword']);
+    this.lp.resetAllStates()
+    this.lp.$resetPW = true
   }
+
+  googleLogin(): void {
+    this.isSubmited = true;
+    
+    this.authService.googleLogin().subscribe({
+      next: async (userCredential) => {
+        const email = userCredential.user.email!;
+        const emailExists = await this.authService.userService.isEmailTaken(email);
+        
+        if (emailExists) {
+          this.router.navigate(['/dashboard']);
+        } else {
+         this.lp.resetAllStates()
+         this.lp.$avatar = true
+        }
+      },
+      error: (err) => {
+        this.errorM = 'Google Anmeldung fehlgeschlagen. Bitte versuchen Sie es noch einmal.';
+        console.error('Error during Google login:', err);
+      }
+    });
+  }
+
 }

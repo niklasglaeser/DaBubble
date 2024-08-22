@@ -5,11 +5,11 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { LandingPageComponent } from '../landing-page.component';
 import { AuthService } from '../../services/lp-services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 import { UserLogged } from '../../models/user-logged.model';
-import { UserInterface } from '../../models/user.interface';
+import { user } from '@angular/fire/auth';
 
 
 @Component({
@@ -35,39 +35,68 @@ export class SignUpComponent {
   isSubmited: boolean = false
 
   registerForm = this.fb.group({
-    username: ['', [Validators.required,
-      Validators.pattern(/^[a-zA-Z]+ [a-zA-Z]+$/) ]],
-      email: ['', [Validators.required, Validators.email]],
+    username: ['', [
+      Validators.required,
+      Validators.pattern(/^[\p{L}\p{M}]+(?: [\p{L}\p{M}]+)$/u)
+    ]],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required,Validators.minLength(6)]],
     checkbox: ['', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private lp: LandingPageComponent,private route: ActivatedRoute,
-   ) {
-    this.authService.subscribeUser();
+  constructor(private fb: FormBuilder, private lp: LandingPageComponent) {
   }
 
   onSubmit(): void {
     const rawForm = this.registerForm.getRawValue();
     const username = rawForm.username ?? '';
     const email = rawForm.email ?? '';
+    this.isSubmited = true
 
     this.registerUser(email, username, rawForm.password!)
-      .then(() => this.navigateToAvatarSelection())
+      .then(() => {
+        this.navigateToAvatarSelection()
+      })
       .catch(() => this.alreadyUsed = true);
+      this.isSubmited = false
   }
 
   private async registerUser(email: string, username: string, password: string): Promise<void> {
-    await this.authService.register(email, username, password).toPromise();
-
-    const currentUser = this.authService.currentUserSig(); 
-    if (currentUser) {
-      const user = this.createUserObject(currentUser.userId, username, email);
-      await this.userService.addUser(user);
-    } else {
-      throw new Error('No current user found after registration.');
+    try {
+      const userCredential = await this.authService.register(email, username, password).toPromise();
+      
+      if (userCredential) {
+        const user = userCredential.user;
+        const uid = user.uid;
+        
+        const userObject = this.createUserObject(uid, username, email);
+  
+        await this.userService.addUser(userObject);
+  
+        
+        this.authService.uid = uid;
+        console.log('User ID:', this.lp.$uid);
+      } else {
+        throw new Error('No user credentials received after registration.');
+      }
+    } catch (err) {
+      console.error('Error during user registration or Firestore update:', err);
     }
   }
+  
+  // private async registerUser(email: string, username: string, password: string): Promise<void> {
+  //   this.authService.register(email, username, password);
+
+  //   const currentUser = this.authService.currentUserSig(); 
+  //   if (currentUser) {
+  //     const user = this.createUserObject(currentUser.userId, username, email);
+  //     await this.userService.addUser(user);
+  //     this.lp.$uid = currentUser.uid!
+  //     console.log('userid:',this.lp.$uid)
+  //   } else {
+  //     throw new Error('No current user found after registration.');
+  //   }
+  // }
 
   private createUserObject(userId: string, username: string, email: string): UserLogged {
     return new UserLogged({
@@ -82,15 +111,21 @@ export class SignUpComponent {
   }
 
   private navigateToAvatarSelection(): void {
-    this.router.navigate(['/landing-page/avatar']);
+    this.lp.$signUp = false
+    this.lp.$avatar = true
   }
 
   errorFc(id: string) {
+    const control = this.registerForm.get(id);
+    return control && control.invalid && (control.dirty || control.touched || this.isSubmited || this.alreadyUsed);
+  }
+  errorPW(id: string) {
     const control = this.registerForm.get(id);
     return control && control.invalid && (control.dirty || control.touched || this.isSubmited);
   }
 
   backToLogin(){
-    this.router.navigate(['/landing-page/login']);
+    this.lp.$signUp = false
+    this.lp.$login = true
   }
 }

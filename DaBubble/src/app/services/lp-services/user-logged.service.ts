@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, Firestore, updateDoc, doc, DocumentReference, setDoc } from '@angular/fire/firestore';
+import { addDoc, collection, Firestore, updateDoc, doc, DocumentReference, setDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { UserLogged } from '../../models/user-logged.model';
 
 
@@ -9,13 +9,19 @@ import { UserLogged } from '../../models/user-logged.model';
 })
 export class UserLoggedService {
   firestore = inject(Firestore);
-  CRMcollection = collection(this.firestore, 'Users');
+  userCollection = collection(this.firestore, 'Users');
   id = '';
 
   constructor(){}
 
+  async isEmailTaken(email: string): Promise<boolean> {
+    const q = query(this.userCollection, where('email', '==', email));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty; 
+  }
+
   async updateUserImg(id: string, photoURL: string) {
-    const docRef: DocumentReference = doc(this.CRMcollection, id);
+    const docRef: DocumentReference = doc(this.userCollection, id);
     try {
       await updateDoc(docRef,  { photoURL } ); 
       console.log("Document successfully updated.");
@@ -25,7 +31,8 @@ export class UserLoggedService {
   }
 
   async updateUserStatus(id: string, status: boolean) {
-    const docRef: DocumentReference = doc(this.CRMcollection, id);
+    if(id){
+    const docRef: DocumentReference = doc(this.userCollection, id);
     try {
       await updateDoc(docRef, { onlineStatus: status });
       console.log('Document successfully updated.');
@@ -33,10 +40,11 @@ export class UserLoggedService {
       console.error('Error updating document:', error);
     }
   }
-  
+  }
+
   async addUser(user: UserLogged) {
     try {
-      const userDocRef = doc(this.CRMcollection, user.uid); 
+      const userDocRef = doc(this.userCollection, user.uid); 
       await setDoc(userDocRef, user.toJSON()); 
       console.log("User document successfully created with UID:", user.uid);
     } catch (err) {

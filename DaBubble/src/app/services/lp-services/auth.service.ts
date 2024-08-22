@@ -1,9 +1,11 @@
 
 import { inject, Injectable, signal } from "@angular/core";
-import { Auth, confirmPasswordReset, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile, user, verifyPasswordResetCode } from "@angular/fire/auth";
+import { Auth, AuthProvider, confirmPasswordReset, createUserWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, user, UserCredential, verifyPasswordResetCode } from "@angular/fire/auth";
 import { concatMap, from, Observable, of } from 'rxjs';
 import { UserInterface } from '../../models/user.interface';
 import { UserLoggedService } from "./user-logged.service";
+import { doc, getDoc } from '@angular/fire/firestore';
+import { UserLogged } from "../../models/user-logged.model";
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +15,7 @@ export class AuthService {
     user$ = user(this.firebaseAuth);
     userService = inject(UserLoggedService);
     currentUserSig = signal<UserInterface | null | undefined>(undefined);
+    uid: string = ''
 
     subscribeUser() {
         this.user$.subscribe(async (user) => {
@@ -22,15 +25,10 @@ export class AuthService {
                     username: user.displayName!,
                     userId: user.uid!
                 });
-
-                await this.updateUserStatus(user.uid, true);
+                
             } else {
-                if (this.currentUserSig()) {
-                    await this.updateUserStatus(this.currentUserSig()!.userId, false);
-                }
                 this.currentUserSig.set(null);
             }
-            console.log(this.currentUserSig());
         });
     }
 
@@ -43,31 +41,53 @@ export class AuthService {
         }
     }
 
-    register(email: string, username: string, password: string): Observable<void> {
+    register(email: string, username: string, password: string): Observable<UserCredential> {
         const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-            .then(response => updateProfile(response.user, { displayName: username }))
-            .catch(error => {
-                console.error('Error verifying signUp code:', error);
-                throw error;
-            });
-
-        return from(promise);
-    }
-
-    login(email: string, password: string): Observable<void> {
-        const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
-        .then(() => {})
-        .catch(error => {
-            console.error('Error verifying login code:', error);
+          .then(response => {
+            return updateProfile(response.user, { displayName: username }).then(() => response);
+          })
+          .catch(error => {
+            console.error('Error during registration or profile update:', error);
             throw error;
-        });
+          });
+    
         return from(promise);
-    }
+      }
 
-    logout(): Observable<void> {
-        const promise = signOut(this.firebaseAuth);
+      login(email: string, password: string): Observable<UserCredential> {
+        const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
+          .then(async (userCredential) => {
+            this.uid = userCredential.user.uid;
+            console.log('Logged UserID:', this.uid);
+    
+            await this.updateUserStatus(this.uid, true);
+    
+            return userCredential; 
+          })
+          .catch((error) => {
+            console.error('Error during login:', error);
+            throw error; 
+          });
+    
         return from(promise);
     }
+    
+      logout(): Observable<void> {
+        const promise = signOut(this.firebaseAuth)
+          .then(async () => {
+            
+            await this.updateUserStatus(this.uid, false);
+    
+            this.uid = '';
+          })
+          .catch((error) => {
+            console.error('Error during logout:', error);
+            throw error;
+          });
+    
+        return from(promise);
+    }
+    
 
     resetPassword(email: string): Observable<void> {
         const promise = sendPasswordResetEmail(this.firebaseAuth, email)
@@ -98,6 +118,47 @@ export class AuthService {
             });
         return from(promise);
     }
+
+    googleLogin(): Observable<UserCredential> {
+      const provider: AuthProvider = new GoogleAuthProvider();
+      const promise = signInWithPopup(this.firebaseAuth, provider)
+          .then(async (userCredential) => {
+              const user = userCredential.user;
+              this.uid = user.uid;
+              console.log('Logged in with Google. UserID:', this.uid);
+
+              // Überprüfe, ob der Benutzer bereits existiert
+              const emailExists = await this.userService.isEmailTaken(user.email!);
+              if (!emailExists) {
+                  // Benutzer existiert nicht - neue Benutzerinformationen speichern
+                  const newUser = new UserLogged({
+                      username: user.displayName!,
+                      email: user.email!,
+                      uid: user.uid,
+                      photoURL: user.photoURL || '',
+                      joinedChannels: [],
+                      directMessage: [],
+                      onlineStatus: true
+                  });
+                  await this.userService.addUser(newUser);
+                  // Logik zum Anzeigen des Avatar-Auswahl-Bildschirms hinzufügen
+                  // Beispiel: this.router.navigate(['/choose-avatar']);
+              } else {
+                  // Benutzer existiert - Status auf online setzen und zum Dashboard navigieren
+                  await this.userService.updateUserStatus(user.uid, true);
+                  // Beispiel: this.router.navigate(['/dashboard']);
+              }
+
+              return userCredential;
+          })
+          .catch((error) => {
+              console.error('Error during Google login:', error);
+              throw error;
+          });
+
+      return from(promise);
+  }
+
 }
 
 

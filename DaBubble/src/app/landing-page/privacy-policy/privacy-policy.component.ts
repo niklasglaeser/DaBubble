@@ -21,6 +21,7 @@ export class PrivacyPolicyComponent {
   constructor(private lp: LandingPageComponent){}
 
   backToLogin(){
-    this.router.navigate(['/landing-page/login']);
-  }
+    this.lp.resetAllStates()
+     this.lp.$login = true
+   }
 }

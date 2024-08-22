@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/lp-services/auth.service';
@@ -27,71 +27,51 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
+  authService = inject(AuthService)
+  router = inject(Router)
+  route = inject(ActivatedRoute)
 
-  $login = false;
+  $login = true;
   $signUp = false;
   $avatar = false;
   $resetPW = false;
-  $setPW = false;
   $imprint = false;
   $privacy = false;
+  $setPW = false;
+  $uid = '';
   animated = false;
   oobCode: string | null = null;
 
-  constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
+  constructor() {}
 
   ngOnInit(): void {
-  this.route.params.subscribe(params => {
-    const action = params['action'];
-    this.route.queryParams.subscribe(params => {
-      this.oobCode = params['oobCode']
-    })
-
-    console.log('Action:', action);
-    console.log('oobCode', this.oobCode);
-    this.handleAction(action)
-  });
-  }
-
-  private handleAction(action: string): void {
-    this.resetAllStates();
-    switch(action) {
-      case 'setPassword':
-        this.$setPW = true;
-        break;
-      case 'resetPassword':
-        this.$resetPW = true;
-        break;
-      case 'login':
-        this.$login = true;
-        break;
-      case 'signUp':
-        this.$signUp = true;
-        break;
-      case 'avatar':
-        this.$avatar = true;
-        break;
-      case 'imprint':
-        this.$imprint = true;
-        break;
-      case 'privacy':
-        this.$privacy = true;
-        break;
-      default:
-        this.$login = true;
-    }
-
+    this.route.params.subscribe((params) => {
+      const action = params['action'];
+      if (action === 'set-password') {
+        this.route.queryParams.subscribe((queryParams) => {
+          const oobCode = queryParams['oobCode'];
+          console.log('oobCode:', oobCode);
+          this.router.navigate(['/set-password'], { queryParams: { oobCode: oobCode } });
+          this.resetAllStates()
+          this.$setPW= true
+        });
+      } else {
+        this.router.navigate(['']); 
+      }
+    });
+  
     this.startAnimationWithDelay();
   }
+  
 
-  private resetAllStates(): void {
+   resetAllStates(): void {
     this.$login = false;
     this.$signUp = false;
     this.$avatar = false;
     this.$resetPW = false;
-    this.$setPW = false;
     this.$imprint = false;
     this.$privacy = false;
+    this.$setPW = false;
   }
 
   private startAnimationWithDelay(): void {
@@ -101,14 +81,17 @@ export class LandingPageComponent implements OnInit {
   }
 
   toCreatAcc(): void {
-    this.router.navigate(['/landing-page/signUp']);
+    this.resetAllStates()
+    this.$signUp = true
   }
 
   toImprint(): void {
-    this.router.navigate(['/landing-page/imprint']);
+    this.resetAllStates()
+    this.$imprint = true
   }
-
+  
   toPrivacy(): void {
-    this.router.navigate(['/landing-page/privacy']); 
+    this.resetAllStates()
+    this.$privacy = true
   }
 }
