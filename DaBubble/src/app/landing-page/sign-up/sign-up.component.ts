@@ -84,20 +84,6 @@ export class SignUpComponent {
     }
   }
   
-  // private async registerUser(email: string, username: string, password: string): Promise<void> {
-  //   this.authService.register(email, username, password);
-
-  //   const currentUser = this.authService.currentUserSig(); 
-  //   if (currentUser) {
-  //     const user = this.createUserObject(currentUser.userId, username, email);
-  //     await this.userService.addUser(user);
-  //     this.lp.$uid = currentUser.uid!
-  //     console.log('userid:',this.lp.$uid)
-  //   } else {
-  //     throw new Error('No current user found after registration.');
-  //   }
-  // }
-
   private createUserObject(userId: string, username: string, email: string): UserLogged {
     return new UserLogged({
       uid: userId,
