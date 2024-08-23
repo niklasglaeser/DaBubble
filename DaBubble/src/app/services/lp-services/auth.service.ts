@@ -127,10 +127,9 @@ export class AuthService {
               this.uid = user.uid;
               console.log('Logged in with Google. UserID:', this.uid);
 
-              // Überprüfe, ob der Benutzer bereits existiert
               const emailExists = await this.userService.isEmailTaken(user.email!);
               if (!emailExists) {
-                  // Benutzer existiert nicht - neue Benutzerinformationen speichern
+                  
                   const newUser = new UserLogged({
                       username: user.displayName!,
                       email: user.email!,
@@ -141,12 +140,9 @@ export class AuthService {
                       onlineStatus: true
                   });
                   await this.userService.addUser(newUser);
-                  // Logik zum Anzeigen des Avatar-Auswahl-Bildschirms hinzufügen
-                  // Beispiel: this.router.navigate(['/choose-avatar']);
+                  
               } else {
-                  // Benutzer existiert - Status auf online setzen und zum Dashboard navigieren
                   await this.userService.updateUserStatus(user.uid, true);
-                  // Beispiel: this.router.navigate(['/dashboard']);
               }
 
               return userCredential;

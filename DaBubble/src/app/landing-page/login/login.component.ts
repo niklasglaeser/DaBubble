@@ -49,8 +49,6 @@ export class LoginComponent {
   }
 
   guestLogin(): void {
-    this.isSubmited = true; 
-    
     this.authService.login('guest@guest.com', 'Safa123').subscribe({
       next: () => {
         this.errorM = null; 
@@ -73,7 +71,7 @@ export class LoginComponent {
   }
 
   googleLogin(): void {
-    this.isSubmited = true;
+    
     
     this.authService.googleLogin().subscribe({
       next: async (userCredential) => {

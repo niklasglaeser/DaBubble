@@ -41,6 +41,10 @@ export class SetPasswordComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     });
+
+    this.route.queryParams.subscribe((queryParams) => {
+      this.oobCode = queryParams['oobCode'];
+    })
   }
 
   setPassword(): void {
