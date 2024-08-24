@@ -4,6 +4,8 @@ import {
   collection,
   collectionData,
   Firestore,
+  onSnapshot,
+  query,
   Timestamp,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
@@ -89,5 +91,24 @@ export class ThreadService {
     originMessage: Message
   ) {
     this.selectedMessageSource.next({ channelId, messageId, originMessage });
+  }
+
+  getThreadMessageCount(
+    channelId: string,
+    messageId: string
+  ): Observable<number> {
+    return new Observable<number>((observer) => {
+      const threadRef = collection(
+        this.firestore,
+        `channels/${channelId}/messages/${messageId}/thread`
+      );
+      const threadQuery = query(threadRef);
+
+      // Verwende onSnapshot, um die Anzahl der Dokumente in der Subcollection zu überwachen
+      onSnapshot(threadQuery, (snapshot) => {
+        const countWithoutOrigin = Math.max(snapshot.size - 1, 0);
+        observer.next(countWithoutOrigin);
+      });
+    });
   }
 }

@@ -7,13 +7,13 @@
                     <div class="option-reaction"></div>
                 </div>
                 <div class="message-content">
-                    <img class="author-picture" src={{originMessage?.photoURL}}>
+                    <img class="author-picture" [src]="originMessage?.photoURL">
                     <div class="details">
                         <div class="author">
-                            <div class="author-name fs-18-700">{{originMessage?.senderName}}</div>
+                            <div class="author-name fs-18-700">{{ originMessage?.senderName }}</div>
                             <div class="message-send-time fs-14">14:00 Uhr</div>
                         </div>
-                        <div class="text fs-18">{{originMessage?.message}}</div>
+                        <div class="text fs-18">{{ originMessage?.message }}</div>
                         <div class="reactions">
                             <div class="emoji-container">
                                 <div class="emoji"></div>
@@ -27,23 +27,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="open-answers fs-18">2 Antworten</div>
+                <div class="open-answers fs-18">{{ threadMessageCount$ | async }} Antworten</div>
                 <div class="line"></div>
             </div>
             <div class="message-files" style="display: none;"></div>
         </div>
 
 
-        <!-- <div *ngIf="messages$ | async as messages" id="chat-messages-container">
+        <div *ngIf="threadMessages$ | async as messages" id="chat-messages-container">
             <div *ngFor="let message of messages"
-                [ngClass]="message.senderId === currentUser?.uid ? 'user-send-message' : 'message'">
-                <div class="message-date">{{ formatDate(message.created_at) }}</div>
+                [ngClass]="message.senderId === currentUserId ? 'user-send-message' : 'message'">
+                <!-- <div class="message-date">{{ formatDate(message.created_at) }}</div> -->
                 <div class="message-section">
                     <div class="reaction-bar">
                         <div class="checkmark-reaction"></div>
                         <div class="applaud-reaction"></div>
                         <div class="emoji-reaction"></div>
-                        <div class="comment-reaction" (click)="openThread(message)"></div>
+                        <!-- <div class="comment-reaction" (click)="openThread(message)"></div> -->
                         <div class="option-reaction"></div>
                     </div>
                     <div class="message-content">
@@ -51,11 +51,11 @@
                         <div class="details">
                             <div class="author">
                                 <div class="author-name fs-18-700">{{message.senderName}} </div>
-                                <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
+                                <!-- <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div> -->
                             </div>
                             <div class="text fs-18">{{message.message}}</div>
                             <div class="open-thread">
-                                <div class="open-answers fs-18" (click)="openThread()">2 Antworten</div>
+                                <!-- <div class="open-answers fs-18" (click)="openThread()">2 Antworten</div> -->
                                 <div class="fs-14 last-answer">Letzte Antwort 14:30</div>
                                 <div class="reactions">
                                     <div class="emoji-container">
@@ -73,6 +73,6 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
 </div>

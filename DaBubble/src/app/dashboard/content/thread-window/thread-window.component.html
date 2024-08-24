@@ -1,5 +1,6 @@
 <div class="thread-window-container">
     <app-thread-header></app-thread-header>
-    <app-thread-messages [originMessage]="originMessage" class="messages"></app-thread-messages>
+    <app-thread-messages [originMessage]="originMessage" [threadMessages$]="threadMessages$"
+        [threadMessageCount$]="threadMessageCount$" class="messages"></app-thread-messages>
     <app-thread-footer class="footer"></app-thread-footer>
 </div>
