@@ -3,12 +3,12 @@ import { ThreadHeaderComponent } from './thread-header/thread-header.component';
 import { ThreadMessagesComponent } from './thread-messages/thread-messages.component';
 import { ThreadFooterComponent } from './thread-footer/thread-footer.component';
 import { Message } from '../../../models/message.model';
-import { combineLatest, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ThreadService } from '../../../services/thread.service';
-import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { MessageService } from '../../../services/message.service';
+import { ChannelService } from '../../../services/channel.service';
 
 @Component({
   selector: 'app-thread-window',
@@ -22,8 +22,9 @@ import { MessageService } from '../../../services/message.service';
   styleUrl: './thread-window.component.scss',
 })
 export class ThreadWindowComponent implements OnInit {
-  channelId: string | null = null;
-  messageId: string | null = null;
+  channelId: string = '';
+  channelName: string | undefined = '';
+  messageId: string = '';
   originMessage: Message | null = null;
   threadMessages$: Observable<Message[]> | undefined;
   threadMessageCount$: Observable<number> | undefined;
@@ -33,7 +34,8 @@ export class ThreadWindowComponent implements OnInit {
     private threadService: ThreadService,
     private authService: AuthService,
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private channelService: ChannelService
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +44,7 @@ export class ThreadWindowComponent implements OnInit {
         this.channelId = data.channelId;
         this.messageId = data.messageId;
         this.originMessage = data.originMessage;
+        this.loadChannelName();
         this.loadThreadMessages();
         this.getCurrentUserId();
         this.loadThreadMessageCount();
@@ -70,6 +73,18 @@ export class ThreadWindowComponent implements OnInit {
         this.channelId,
         this.messageId
       );
+    }
+  }
+
+  loadChannelName() {
+    if (this.channelId) {
+      this.channelService.loadChannelData(this.channelId, (channel) => {
+        if (channel) {
+          this.channelName = channel.name;
+        } else {
+          this.channelName = 'Unbekannter Kanal';
+        }
+      });
     }
   }
 

@@ -10,6 +10,7 @@ import {
 } from '@angular/fire/firestore';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Message } from '../models/message.model';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,39 +24,52 @@ export class ThreadService {
   selectedMessage$ = this.selectedMessageSource.asObservable();
   selectedMessage: Message | null = null;
 
-  constructor(private firestore: Firestore) {}
+  constructor(
+    private firestore: Firestore,
+    private messageService: MessageService
+  ) {}
 
-  async addThreadMessage(
-    channelId: string,
-    messageId: string,
-    threadMessage: Message
-  ): Promise<void> {
-    try {
-      const threadRef = collection(
-        this.firestore,
-        `channels/${channelId}/messages/${messageId}/thread`
-      );
-      await addDoc(threadRef, {
-        ...threadMessage,
-        created_at: Timestamp.now(),
-      });
-      console.log('Thread-Nachricht erfolgreich hinzugefügt.');
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen der Nachricht zum Thread:', error);
-    }
-  }
+  // async addThreadMessage(
+  //   channelId: string,
+  //   messageId: string,
+  //   threadMessage: Message
+  // ): Promise<void> {
+  //   try {
+  //     const threadRef = collection(
+  //       this.firestore,
+  //       `channels/${channelId}/messages/${messageId}/thread`
+  //     );
+  //     await addDoc(threadRef, {
+  //       ...threadMessage,
+  //       created_at: Timestamp.now(),
+  //     });
+  //     console.log('Thread-Nachricht erfolgreich hinzugefügt.');
+  //   } catch (error) {
+  //     console.error('Fehler beim Hinzufügen der Nachricht zum Thread:', error);
+  //   }
+  // }
 
   getThreadMessages(
     channelId: string,
     messageId: string
   ): Observable<Message[]> {
-    const threadRef = collection(
-      this.firestore,
-      `channels/${channelId}/messages/${messageId}/thread`
-    );
-    return collectionData(threadRef, { idField: 'id' }) as Observable<
-      Message[]
-    >;
+    return new Observable<Message[]>((observer) => {
+      const threadRef = collection(
+        this.firestore,
+        `channels/${channelId}/messages/${messageId}/thread`
+      );
+      const threadQuery = query(threadRef);
+
+      // Verwende onSnapshot, um Echtzeit-Updates der Nachrichten zu erhalten
+      onSnapshot(threadQuery, (snapshot) => {
+        const messages = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Message[];
+
+        observer.next(messages);
+      });
+    });
   }
 
   async checkAndCreateThread(
@@ -63,26 +77,27 @@ export class ThreadService {
     messageId: string,
     originMessage: Message
   ) {
-    // Überprüfe, ob bereits Thread-Nachrichten existieren
-    const threadMessages$ = this.getThreadMessages(channelId, messageId);
-    const threadMessages = await firstValueFrom(threadMessages$);
+    try {
+      const threadMessages$ = this.getThreadMessages(channelId, messageId);
+      const threadMessages = await firstValueFrom(threadMessages$);
 
-    if (!threadMessages || threadMessages.length === 0) {
-      console.log(
-        'Kein Thread vorhanden. Erstelle neuen Thread mit originMessage.'
-      );
+      if (threadMessages.length === 0) {
+        // Die ursprüngliche Nachricht als erste Nachricht im neuen Thread hinzufügen
+        await this.messageService.addMessageThread(
+          channelId,
+          originMessage,
+          messageId
+        );
+      }
 
-      // Die ursprüngliche Nachricht als erste Nachricht im neuen Thread hinzufügen
-      await this.addThreadMessage(channelId, messageId, originMessage);
-    } else {
-      console.log(
-        'Thread existiert bereits oder es wurden Nachrichten gefunden:',
-        threadMessages
+      // Setze die ausgewählte Nachricht als aktuell ausgewählte Nachricht
+      this.setSelectedMessage(channelId, messageId, originMessage);
+    } catch (error) {
+      console.error(
+        'Fehler beim Überprüfen oder Erstellen des Threads:',
+        error
       );
     }
-
-    // Setze die ausgewählte Nachricht als aktuell ausgewählte Nachricht
-    this.setSelectedMessage(channelId, messageId, originMessage);
   }
 
   setSelectedMessage(

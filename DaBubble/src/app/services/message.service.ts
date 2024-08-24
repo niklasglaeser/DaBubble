@@ -39,7 +39,29 @@ export class MessageService {
       ...message,
       created_at: Date.now(),
       updated_at: Date.now(),
-      // senderName: currentUser?.username || 'Unknown User',
+      senderId: currentUser?.userId || 'Unknown User',
+    });
+  }
+  async addMessageThread(
+    channelId: string,
+    message: Message,
+    messageId: string
+  ) {
+    const messagesRef = collection(
+      this.firestore,
+      'channels',
+      channelId,
+      'messages',
+      messageId,
+      'thread'
+    );
+
+    const currentUser = this.authService.currentUserSig();
+
+    await addDoc(messagesRef, {
+      ...message,
+      created_at: Date.now(),
+      updated_at: Date.now(),
       senderId: currentUser?.userId || 'Unknown User',
     });
   }

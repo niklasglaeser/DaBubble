@@ -18,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 import { UserLogged } from '../../models/user-logged.model';
 import { arrayUnion, doc, Firestore, updateDoc } from '@angular/fire/firestore';
+import { AuthService } from '../../services/lp-services/auth.service';
 
 @Component({
   selector: 'app-dialog-add-channel',
@@ -47,6 +48,8 @@ export class DialogAddChannelComponent implements OnInit {
   filteredUsers: UserLogged[] = [];
   selectedUsers: UserLogged[] = [];
 
+  currentUser: UserLogged | null = null;
+
   unsubscribe: any;
   createdChannel: any;
 
@@ -57,7 +60,8 @@ export class DialogAddChannelComponent implements OnInit {
     private fbUser: FormBuilder,
     public dialogRef: MatDialogRef<DialogAddChannelComponent>,
     private channelService: ChannelService,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {
     this.addChannelForm = this.fbChannel.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -90,9 +94,11 @@ export class DialogAddChannelComponent implements OnInit {
             return;
           }
         }
+        const currentUser = this.authService.currentUserSig();
         let newChannel = new Channel({
           name: formData.name,
           description: formData.description,
+          creator: currentUser?.username,
         });
         let channelId = await this.channelService.createChannel(newChannel);
         if (channelId) {
