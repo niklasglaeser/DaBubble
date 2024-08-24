@@ -9,4 +9,11 @@ import { Component } from '@angular/core';
 })
 export class ThreadHeaderComponent {
 
+  closeThread() {
+    const threadWindow = document.querySelector('.thread-window') as HTMLElement;
+    if (threadWindow) {
+      threadWindow.classList.remove('open');
+    }
+  }
+
 }

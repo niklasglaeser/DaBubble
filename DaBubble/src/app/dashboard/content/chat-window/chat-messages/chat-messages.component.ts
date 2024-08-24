@@ -56,4 +56,11 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';
     }
   }
+
+  openThread() {
+    const threadWindow = document.querySelector('.thread-window') as HTMLElement;
+    if (threadWindow) {
+      threadWindow.classList.add('open');
+    }
+  }
 }
