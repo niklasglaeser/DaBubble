@@ -1,14 +1,24 @@
 .chat-window {
-  width: 65%;
+  width: 100%;
   padding-right: 30px;
   padding-left: 30px;
 }
 
 .thread-window {
-  width: 35%;
-  display: flex;
+  max-width: 0;  
+  width: 0;
+  transition: max-width 0.3s;
   padding-right: 50px;
+  visibility: hidden;
 }
+
+.thread-window.open {
+  width: 40%;
+  max-width: 40%;
+  visibility: visible;
+}
+
+
 
 .sidebar-window {
   padding-left: 50px;
