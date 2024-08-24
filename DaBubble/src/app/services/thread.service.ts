@@ -6,13 +6,19 @@ import {
   Firestore,
   Timestamp,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThreadService {
+  private selectedMessageSource = new BehaviorSubject<{
+    channelId: string;
+    messageId: string;
+    originMessage: Message;
+  } | null>(null);
+  selectedMessage$ = this.selectedMessageSource.asObservable();
   selectedMessage: Message | null = null;
 
   constructor(private firestore: Firestore) {}
@@ -45,13 +51,38 @@ export class ThreadService {
     >;
   }
 
-  checkAndCreateThread(
+  async checkAndCreateThread(
     channelId: string,
     messageId: string,
     originMessage: Message
   ) {
-    console.log('channelId: ' + channelId);
-    console.log('message ID: ' + messageId);
-    console.log('originMessage ID: ' + originMessage);
+    // Überprüfe, ob bereits Thread-Nachrichten existieren
+    const threadMessages$ = this.getThreadMessages(channelId, messageId);
+    const threadMessages = await firstValueFrom(threadMessages$);
+
+    if (!threadMessages || threadMessages.length === 0) {
+      console.log(
+        'Kein Thread vorhanden. Erstelle neuen Thread mit originMessage.'
+      );
+
+      // Die ursprüngliche Nachricht als erste Nachricht im neuen Thread hinzufügen
+      await this.addThreadMessage(channelId, messageId, originMessage);
+    } else {
+      console.log(
+        'Thread existiert bereits oder es wurden Nachrichten gefunden:',
+        threadMessages
+      );
+    }
+
+    // Setze die ausgewählte Nachricht als aktuell ausgewählte Nachricht
+    this.setSelectedMessage(channelId, messageId, originMessage);
+  }
+
+  setSelectedMessage(
+    channelId: string,
+    messageId: string,
+    originMessage: Message
+  ) {
+    this.selectedMessageSource.next({ channelId, messageId, originMessage });
   }
 }

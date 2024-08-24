@@ -7,13 +7,13 @@
                     <div class="option-reaction"></div>
                 </div>
                 <div class="message-content">
-                    <img class="author-picture" src="/assets/img/general/avatars/avatar3.svg">
+                    <img class="author-picture" src={{originMessage?.photoURL}}>
                     <div class="details">
                         <div class="author">
-                            <div class="author-name fs-18-700">Message author</div>
+                            <div class="author-name fs-18-700">{{originMessage?.senderName}}</div>
                             <div class="message-send-time fs-14">14:00 Uhr</div>
                         </div>
-                        <div class="text fs-18">JUNGE JUNGE gibt es hier viele Details</div>
+                        <div class="text fs-18">{{originMessage?.message}}</div>
                         <div class="reactions">
                             <div class="emoji-container">
                                 <div class="emoji"></div>

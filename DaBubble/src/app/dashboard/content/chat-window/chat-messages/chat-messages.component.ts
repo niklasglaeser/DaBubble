@@ -65,7 +65,6 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';
     }
   }
-
   openThread(channelId: string, messageId: string, originMessage: Message) {
     this.threadService.checkAndCreateThread(
       channelId,
