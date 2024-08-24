@@ -1,5 +1,5 @@
 <div class="chat-footer">
-    <textarea type="text" name="message-input" id="chat-message-input" placeholder="Antworten..."></textarea>
+    <textarea type="text" name="message-input" id="chat-message-input-thread" placeholder="Antworten..."></textarea>
     <div class="chat-message-toolbar">
         <div class="chat-toolbar-left">
             <div>
@@ -15,7 +15,7 @@
         </div>
         <div class="chat-toolbar-right">
             <div>
-                <div class="send-message"></div>
+                <div class="send-message" (click)="sendMessage()"></div>
             </div>
         </div>
     </div>

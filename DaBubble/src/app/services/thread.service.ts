@@ -13,7 +13,7 @@ import { Message } from '../models/message.model';
   providedIn: 'root',
 })
 export class ThreadService {
-  private selectedMessageSource = new BehaviorSubject<{
+  public selectedMessageSource = new BehaviorSubject<{
     channelId: string;
     messageId: string;
     originMessage: Message;
@@ -27,15 +27,20 @@ export class ThreadService {
     channelId: string,
     messageId: string,
     threadMessage: Message
-  ) {
-    const threadRef = collection(
-      this.firestore,
-      `channels/${channelId}/messages/${messageId}/thread`
-    );
-    await addDoc(threadRef, {
-      ...threadMessage,
-      created_at: Timestamp.now(),
-    });
+  ): Promise<void> {
+    try {
+      const threadRef = collection(
+        this.firestore,
+        `channels/${channelId}/messages/${messageId}/thread`
+      );
+      await addDoc(threadRef, {
+        ...threadMessage,
+        created_at: Timestamp.now(),
+      });
+      console.log('Thread-Nachricht erfolgreich hinzugefügt.');
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen der Nachricht zum Thread:', error);
+    }
   }
 
   getThreadMessages(
