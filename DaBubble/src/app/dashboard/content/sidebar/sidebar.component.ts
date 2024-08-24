@@ -81,16 +81,13 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     this.userService.users$.subscribe((users) => {
       this.users = users;
-      console.log(this.users);
     });
   }
 
   addChannel() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('Dialog closed', result);
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   /*TESTING*/
@@ -113,8 +110,6 @@ export class SidebarComponent implements OnInit {
 
   openChannel(channelId: string) {
     this.channelStateService.setSelectedChannelId(channelId);
-    console.log(channelId);
-    console.log('open channel');
   }
   openDirectmessage(userId: string) {
     console.log('open Directmessage for User' + userId);

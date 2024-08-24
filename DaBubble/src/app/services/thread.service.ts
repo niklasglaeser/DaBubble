@@ -13,9 +13,15 @@ import { Message } from '../models/message.model';
   providedIn: 'root',
 })
 export class ThreadService {
+  selectedMessage: Message | null = null;
+
   constructor(private firestore: Firestore) {}
 
-  async addThreadMessage(channelId: string, messageId: string, threadMessage: Message) {
+  async addThreadMessage(
+    channelId: string,
+    messageId: string,
+    threadMessage: Message
+  ) {
     const threadRef = collection(
       this.firestore,
       `channels/${channelId}/messages/${messageId}/thread`
@@ -26,11 +32,26 @@ export class ThreadService {
     });
   }
 
-  getThreadMessages(channelId: string, messageId: string): Observable<Message[]> {
+  getThreadMessages(
+    channelId: string,
+    messageId: string
+  ): Observable<Message[]> {
     const threadRef = collection(
       this.firestore,
       `channels/${channelId}/messages/${messageId}/thread`
     );
-    return collectionData(threadRef, { idField: 'id' }) as Observable<Message[]>;
+    return collectionData(threadRef, { idField: 'id' }) as Observable<
+      Message[]
+    >;
+  }
+
+  checkAndCreateThread(
+    channelId: string,
+    messageId: string,
+    originMessage: Message
+  ) {
+    console.log('channelId: ' + channelId);
+    console.log('message ID: ' + messageId);
+    console.log('originMessage ID: ' + originMessage);
   }
 }

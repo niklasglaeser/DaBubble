@@ -11,16 +11,22 @@ import { forkJoin, from, map, Observable, switchMap } from 'rxjs';
 import { Message } from '../../../models/message.model';
 import { MessageService } from '../../../services/message.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chat-window',
   standalone: true,
-  imports: [ChatHeaderComponent, ChatMessagesComponent, ChatFooterComponent],
+  imports: [
+    ChatHeaderComponent,
+    ChatMessagesComponent,
+    ChatFooterComponent,
+    CommonModule,
+  ],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.scss',
 })
 export class ChatWindowComponent implements OnInit {
-  channelId: string | null = null;
+  channelId: string = '';
   channel: Channel | null = null;
   members: UserLogged[] = [];
   messages$: Observable<Message[]> | undefined;
@@ -66,7 +72,7 @@ export class ChatWindowComponent implements OnInit {
           this.channel = channel;
           if (this.channel && this.channel.members) {
             this.loadChannelMembers(this.channel.members);
-            console.log(this.channel.members);
+            console.log('aktuell user im chat' + this.channel.members);
           }
         }
       );
@@ -88,7 +94,6 @@ export class ChatWindowComponent implements OnInit {
       }
     }
     this.members = members;
-    console.log('Loaded user:', this.members);
   }
 
   async loadCurrentUser(userId: string) {
