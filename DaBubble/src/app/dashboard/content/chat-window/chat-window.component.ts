@@ -74,23 +74,7 @@ export class ChatWindowComponent implements OnInit {
   }
 
   loadMessages(channelId: string) {
-    this.messages$ = this.messageService.getMessages(channelId).pipe(
-      switchMap((messages) =>
-        forkJoin(
-          messages.map(async (message) => {
-            const user = await this.userService.getSingleUserObj(
-              message.senderId
-            );
-            return {
-              ...message,
-              senderName: user?.username || 'Unbekannt',
-              photoURL:
-                user?.photoURL || '/assets/img/general/avatars/avatar3.svg',
-            };
-          })
-        )
-      )
-    );
+    this.messages$ = this.messageService.getMessagesWithUsers(channelId);
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {

@@ -6,6 +6,8 @@ import {
   collectionData,
   doc,
   Firestore,
+  getDoc,
+  onSnapshot,
   orderBy,
   query,
   Timestamp,
@@ -15,6 +17,7 @@ import { Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { Reaction } from '../models/reaction.model';
 import { AuthService } from './lp-services/auth.service';
+import { UserLogged } from '../models/user-logged.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,15 +44,42 @@ export class MessageService {
     });
   }
 
-  getMessages(channelId: string): Observable<Message[]> {
-    const messagesRef = collection(
-      this.firestore,
-      `channels/${channelId}/messages`
-    );
-    const messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
-    return collectionData(messagesQuery, { idField: 'id' }) as Observable<
-      Message[]
-    >;
+  getMessagesWithUsers(channelId: string): Observable<Message[]> {
+    return new Observable((observer) => {
+      let messagesRef = collection(
+        this.firestore,
+        `channels/${channelId}/messages`
+      );
+      let messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
+
+      onSnapshot(messagesQuery, async (message) => {
+        let messages = message.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Message[];
+
+        let addUser = messages.map(async (message) => {
+          let userDocRef = doc(this.firestore, `Users/${message.senderId}`);
+          let userDoc = await getDoc(userDocRef);
+
+          let userData: UserLogged | null = null;
+          if (userDoc.exists()) {
+            let userObj = userDoc.data();
+            userData = new UserLogged(userObj as UserLogged);
+          }
+
+          return {
+            ...message,
+            senderName: userData!.username,
+            photoURL: userData!.photoURL,
+          };
+        });
+
+        let messagesWithUserData = await Promise.all(addUser);
+
+        observer.next(messagesWithUserData);
+      });
+    });
   }
 
   async addReaction(channelId: string, messageId: string, reaction: Reaction) {
