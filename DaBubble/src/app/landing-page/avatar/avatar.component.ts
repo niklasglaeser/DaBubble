@@ -70,8 +70,11 @@ export class AvatarComponent {
     if (this.profileImg && this.currentUser) {
       try {
         await this.userService.updateUserImg(this.authService.uid, this.profileImg);
+        this.lp.showPopUp('regist')
         this.authService.logout()
-        this.backToLogin()
+        setTimeout(() => {
+          this.backToLogin()
+        }, 1500);
       } catch (err) {
         console.error('Error updating user image:', err);
       }

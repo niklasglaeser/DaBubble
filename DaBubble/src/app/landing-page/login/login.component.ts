@@ -71,24 +71,15 @@ export class LoginComponent {
   }
 
   googleLogin(): void {
-    
-    
     this.authService.googleLogin().subscribe({
-      next: async (userCredential) => {
-        const email = userCredential.user.email!;
-        const emailExists = await this.authService.userService.isEmailTaken(email);
-        
-        if (emailExists) {
-          this.router.navigate(['/dashboard']);
-        } else {
-         this.lp.resetAllStates()
-         this.lp.$avatar = true
-        }
+      next: () => {
+        this.lp.resetAllStates();
+        this.lp.$avatar = true;
       },
       error: (err) => {
         this.errorM = 'Google Anmeldung fehlgeschlagen. Bitte versuchen Sie es noch einmal.';
         console.error('Error during Google login:', err);
-      }
+      },
     });
   }
 

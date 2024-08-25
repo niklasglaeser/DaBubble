@@ -9,6 +9,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { SetPasswordComponent } from './set-password/set-password.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { PopUpComponent } from '../pop-up/pop-up.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -21,7 +22,8 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
     ResetPasswordComponent,
     SetPasswordComponent,
     ImprintComponent,
-    PrivacyPolicyComponent
+    PrivacyPolicyComponent,
+    PopUpComponent
   ],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
@@ -38,6 +40,9 @@ export class LandingPageComponent implements OnInit {
   $imprint = false;
   $privacy = false;
   $setPW = false;
+  $registration = false;
+  $emailSend = false;
+  $setNewPW = false;
   $uid = '';
   animated = false;
   oobCode: string | null = null;
@@ -63,7 +68,6 @@ export class LandingPageComponent implements OnInit {
     this.startAnimationWithDelay();
   }
   
-
    resetAllStates(): void {
     this.$login = false;
     this.$signUp = false;
@@ -94,4 +98,24 @@ export class LandingPageComponent implements OnInit {
     this.resetAllStates()
     this.$privacy = true
   }
+
+  showPopUp(show: string){
+    if(show === 'regist'){
+      this.$registration = true
+      setTimeout(() => {
+        this.$registration = false
+      },1500);
+    }else if(show === 'setPw'){
+      this.$setPW = true
+      setTimeout(() => {
+        this.$setPW = false
+      },1500);
+    }else if(show === 'email'){
+      this.$emailSend = true
+      setTimeout(() => {
+        this.$emailSend = false
+      },1500);
+    }
+  }
+
 }

@@ -45,7 +45,10 @@ export class ResetPasswordComponent {
       const email = this.resetForm.get('email')?.value;
       this.authService.resetPassword(email).subscribe({
         next: () => {
-          this.backToLogin()
+          this.lp.showPopUp('email')
+          setTimeout(() => {
+            this.backToLogin()
+          }, 1500);
           console.log('Password reset email sent.');
         },
         error: (err) => {
