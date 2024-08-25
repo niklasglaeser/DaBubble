@@ -1,4 +1,5 @@
 <div class="container">
+    <app-pop-up *ngIf="$registration || $emailSend || $setNewPW"></app-pop-up>
 
     <div class="content">
 
@@ -23,8 +24,9 @@
             <a (click)="toImprint()" ><span class="fs-18 link">Impressum</span></a>
             <a (click)="toPrivacy()" ><span class="fs-18 link">Datenschutz</span></a>
         </div>
-
+        
     </div>
+
 
      <div *ngIf="$login && !animated" class="intro-animation">
         <div class="intro content">
@@ -36,7 +38,8 @@
             </div>
         </div>
     </div>
+    
 </div>
- 
+
         
-   
+  

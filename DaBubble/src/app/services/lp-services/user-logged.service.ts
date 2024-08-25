@@ -48,7 +48,7 @@ export class UserLoggedService {
       await setDoc(userDocRef, user.toJSON()); 
       console.log("User document successfully created with UID:", user.uid);
     } catch (err) {
-      console.error('Error adding document: ', err);
+      // console.error('Error adding document: ', err);
     }
   }
 }

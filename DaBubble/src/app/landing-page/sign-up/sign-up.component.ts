@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 import { UserLogged } from '../../models/user-logged.model';
 import { user } from '@angular/fire/auth';
+import { FirebaseError } from '@angular/fire/app';
 
 
 @Component({
@@ -51,50 +52,33 @@ export class SignUpComponent {
     const rawForm = this.registerForm.getRawValue();
     const username = rawForm.username ?? '';
     const email = rawForm.email ?? '';
-    this.isSubmited = true
-
+    this.isSubmited = true;
+  
     this.registerUser(email, username, rawForm.password!)
-      .then(() => {
-        this.navigateToAvatarSelection()
+      .then((successful) => {
+        if (successful) {
+          this.navigateToAvatarSelection();
+        }
       })
-      .catch(() => this.alreadyUsed = true);
-      this.isSubmited = false
+      .catch(() => this.alreadyUsed = true)
+      .finally(() => this.isSubmited = false);
   }
-
-  private async registerUser(email: string, username: string, password: string): Promise<void> {
+  
+  private async registerUser(email: string, username: string, password: string): Promise<boolean> {
     try {
       const userCredential = await this.authService.register(email, username, password).toPromise();
-      
-      if (userCredential) {
-        const user = userCredential.user;
-        const uid = user.uid;
-        
-        const userObject = this.createUserObject(uid, username, email);
-  
-        await this.userService.addUser(userObject);
-  
-        
-        this.authService.uid = uid;
-        console.log('User ID:', this.lp.$uid);
-      } else {
-        throw new Error('No user credentials received after registration.');
-      }
+      return true;  
     } catch (err) {
-      console.error('Error during user registration or Firestore update:', err);
+      // console.error('Error during user registration or Firestore update:', err);
+      this.alreadyUsed = true
+      if (err instanceof FirebaseError && err.code === 'auth/email-already-in-use') {
+        this.alreadyUsed = true;  
+      }
+      return false;  
     }
   }
   
-  private createUserObject(userId: string, username: string, email: string): UserLogged {
-    return new UserLogged({
-      uid: userId,
-      username: username,
-      email: email,
-      photoURL: '',
-      joinedChannels: [],
-      directMessage: [],
-      onlineStatus: false,
-    });
-  }
+  
 
   private navigateToAvatarSelection(): void {
     this.lp.$signUp = false
