@@ -28,4 +28,14 @@
         font-size: 36px;
         font-weight: 700;
     }
+    animation: slid-in 0.75s ease-in forwards;
+}
+
+@keyframes slid-in {
+    0% {
+        transform: translateX(1000%);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }

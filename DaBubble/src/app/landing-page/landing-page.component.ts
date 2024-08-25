@@ -104,17 +104,17 @@ export class LandingPageComponent implements OnInit {
       this.$registration = true
       setTimeout(() => {
         this.$registration = false
-      },1500);
+      },2000);
     }else if(show === 'setPw'){
-      this.$setPW = true
+      this.$setNewPW = true
       setTimeout(() => {
-        this.$setPW = false
-      },1500);
+        this.$setNewPW= false
+      },2000);
     }else if(show === 'email'){
       this.$emailSend = true
       setTimeout(() => {
         this.$emailSend = false
-      },1500);
+      },2000);
     }
   }
 
