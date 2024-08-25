@@ -15,6 +15,7 @@ import {
   getDoc,
 } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.class';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ import { Channel } from '../models/channel.class';
 export class ChannelService {
   private firestore = inject(Firestore);
   channels: Channel[] = [];
+  channels$ = new BehaviorSubject<Channel[]>([]);
 
   /*onSnapshot variablen*/
   unsubList;
@@ -40,6 +42,7 @@ export class ChannelService {
       list.forEach((element) => {
         this.channels.push(this.setChannelObject(element.data(), element.id));
       });
+      this.channels$.next(this.channels);
     });
   }
 

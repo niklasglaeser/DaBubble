@@ -72,7 +72,6 @@ export class ChatWindowComponent implements OnInit {
           this.channel = channel;
           if (this.channel && this.channel.members) {
             this.loadChannelMembers(this.channel.members);
-            console.log('aktuell user im chat' + this.channel.members);
           }
         }
       );

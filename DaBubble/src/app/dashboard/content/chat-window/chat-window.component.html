@@ -1,4 +1,4 @@
-<div class="chat-window-container" *ngIf="channelId">
+<div class="chat-window-container">
     <app-chat-header [channel]="channel" [members]="members"></app-chat-header>
     <app-chat-messages [messages$]="messages$" [currentUser]="currentUser" [channelId]="channelId"
         class="messages"></app-chat-messages>

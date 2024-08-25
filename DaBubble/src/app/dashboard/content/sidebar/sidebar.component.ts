@@ -60,8 +60,8 @@ export class SidebarComponent implements OnInit {
 
   channels: any = [];
   channelsSubscription!: Subscription;
+  selectedChannelId: string | null = null;
 
-  // directUser = Array(5).fill(0);
   users: UserLogged[] = [];
   unsubscribe: any;
 
@@ -74,14 +74,24 @@ export class SidebarComponent implements OnInit {
     this.checkWindowSize();
   }
 
-  getList(): Channel[] {
-    return this.channelService.channels;
-  }
-
   ngOnInit(): void {
     this.userService.users$.subscribe((users) => {
       this.users = users;
     });
+
+    this.channelService.channels$.subscribe((channels) => {
+      this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
+
+      if (this.channels.length > 0) {
+        this.openChannel(this.channels[0].id);
+      }
+    });
+  }
+
+  getList(): Channel[] {
+    return this.channelService.channels.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
   }
 
   addChannel() {
@@ -92,15 +102,11 @@ export class SidebarComponent implements OnInit {
 
   /*TESTING*/
   openEditDialog(channelId: string) {
-    console.log(channelId);
-
     const dialogRef = this.dialog.open(DialogChannelEditComponent, {
       data: { channelId: channelId },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
   /*TESTING*/
 
@@ -109,6 +115,7 @@ export class SidebarComponent implements OnInit {
   }
 
   openChannel(channelId: string) {
+    this.selectedChannelId = channelId;
     this.channelStateService.setSelectedChannelId(channelId);
   }
   openDirectmessage(userId: string) {

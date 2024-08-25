@@ -28,7 +28,7 @@ export class ThreadWindowComponent implements OnInit {
   originMessage: Message | null = null;
   threadMessages$: Observable<Message[]> | undefined;
   threadMessageCount$: Observable<number> | undefined;
-  currentUserId: string | undefined = '';
+  currentUserId: string | null = null;
 
   constructor(
     private threadService: ThreadService,
@@ -90,6 +90,6 @@ export class ThreadWindowComponent implements OnInit {
 
   getCurrentUserId() {
     const currentUser = this.authService.currentUserSig();
-    this.currentUserId = currentUser?.userId;
+    this.currentUserId = currentUser?.userId ?? null;
   }
 }
