@@ -1,56 +1,65 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  collection,
-  Firestore,
-  doc,
-  addDoc,
-  updateDoc,
-  onSnapshot,
-  deleteDoc,
-  where,
-  getDocs,
-  QuerySnapshot,
-  query,
-  setDoc,
-  getDoc,
-} from '@angular/fire/firestore';
+import { collection, Firestore, doc, addDoc, updateDoc, onSnapshot, deleteDoc, where, getDocs, QuerySnapshot, query, setDoc } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.class';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from './lp-services/auth.service';
+import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ChannelService {
   private firestore = inject(Firestore);
   channels: Channel[] = [];
   channels$ = new BehaviorSubject<Channel[]>([]);
+  currentUserId$ = new BehaviorSubject<string | null>(null);
 
   /*onSnapshot variablen*/
-  unsubList;
+  unsubList: any;
 
-  constructor() {
-    this.unsubList = this.channelsList();
+  constructor(private auth: Auth = inject(Auth)) {
+    this.initializeService();
   }
 
-  ngOnDestroy(): void {
-    this.unsubList(); // snapshot unsubscribe
-  }
-
-  channelsList() {
-    return onSnapshot(this.getChannelsRef(), (list) => {
-      this.channels = [];
-      list.forEach((element) => {
-        this.channels.push(this.setChannelObject(element.data(), element.id));
-      });
-      this.channels$.next(this.channels);
+  initializeService() {
+    this.getCurrentUserId();
+    this.currentUserId$.subscribe((userId) => {
+      if (userId) {
+        this.loadChannelsForCurrentUser(userId);
+      } else {
+        this.channels$.next([]);
+      }
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.unsubList) {
+      this.unsubList();
+    }
+  }
+
+  loadChannelsForCurrentUser(userId: string) {
+    if (this.unsubList) {
+      this.unsubList();
+    }
+    let filter = query(this.getChannelsRef(), where('members', 'array-contains', userId));
+    this.unsubList = onSnapshot(
+      filter,
+      (snapshot) => {
+        this.channels = [];
+        snapshot.forEach((doc) => {
+          this.channels.push(this.setChannelObject(doc.data(), doc.id));
+        });
+        this.channels$.next(this.channels);
+      },
+      (error) => {
+        console.error('Fehler bei der Abfrage:', error);
+      }
+    );
+  }
+
   /*TESTING*/
-  loadChannelData(
-    channelId: string,
-    callback: (channel: Channel | null) => void
-  ): () => void {
+  loadChannelData(channelId: string, callback: (channel: Channel | null) => void): () => void {
     const channelDocRef = doc(this.firestore, 'channels', channelId);
     return onSnapshot(channelDocRef, (doc) => {
       if (doc.exists()) {
@@ -80,7 +89,7 @@ export class ChannelService {
     try {
       const channelDocRef = this.getSingleChannel(channelId);
       await updateDoc(channelDocRef, {
-        members: userIds,
+        members: userIds
       });
     } catch (e) {
       console.error('Error adding users to channel: ', e);
@@ -93,7 +102,7 @@ export class ChannelService {
       await updateDoc(channelDocRef, {
         name: channel.name,
         description: channel.description,
-        creator: channel.creator,
+        creator: channel.creator
       });
       console.log('Channel updated with ID: ', channelId);
     } catch (e) {
@@ -123,7 +132,7 @@ export class ChannelService {
       id: id,
       name: obj.name,
       description: obj.description || '',
-      creator: obj.creator,
+      creator: obj.creator
     };
   }
 
@@ -133,5 +142,11 @@ export class ChannelService {
 
   getChannelsRef() {
     return collection(this.firestore, 'channels');
+  }
+
+  getCurrentUserId() {
+    onAuthStateChanged(this.auth, (user) => {
+      this.currentUserId$.next(user ? user.uid : null);
+    });
   }
 }

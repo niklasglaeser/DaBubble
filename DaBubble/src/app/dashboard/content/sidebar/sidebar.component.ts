@@ -7,13 +7,7 @@ import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { WorkspaceToggleComponent } from '../../../dialog/workspace-toggle/workspace-toggle.component';
 import { CommonModule } from '@angular/common';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { UserService } from '../../../services/user.service';
 import { UserLogged } from '../../../models/user-logged.model';
 import { ChannelStateService } from '../../../services/channel-state.service';
@@ -30,20 +24,20 @@ import { ChannelStateService } from '../../../services/channel-state.service';
         'in',
         style({
           transform: 'translateX(0%)',
-          display: 'flex',
+          display: 'flex'
         })
       ),
       state(
         'out',
         style({
           transform: 'translateX(-100%)',
-          display: 'none',
+          display: 'none'
         })
       ),
       transition('in => out', animate('125ms ease-in')),
-      transition('out => in', animate('125ms ease-out')),
-    ]),
-  ],
+      transition('out => in', animate('125ms ease-out'))
+    ])
+  ]
 })
 export class SidebarComponent implements OnInit {
   @ViewChild('dialogAddChannel')
@@ -65,12 +59,7 @@ export class SidebarComponent implements OnInit {
   users: UserLogged[] = [];
   unsubscribe: any;
 
-  constructor(
-    public dialog: MatDialog,
-    private channelService: ChannelService,
-    private userService: UserService,
-    private channelStateService: ChannelStateService
-  ) {
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService) {
     this.checkWindowSize();
   }
 
@@ -80,7 +69,8 @@ export class SidebarComponent implements OnInit {
     });
 
     this.channelService.channels$.subscribe((channels) => {
-      this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
+      this.channels = channels;
+      // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
 
       if (this.channels.length > 0) {
         this.openChannel(this.channels[0].id);
@@ -89,9 +79,8 @@ export class SidebarComponent implements OnInit {
   }
 
   getList(): Channel[] {
-    return this.channelService.channels.sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
+    return this.channelService.channels;
+    // return this.channelService.channels.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   addChannel() {
@@ -103,7 +92,7 @@ export class SidebarComponent implements OnInit {
   /*TESTING*/
   openEditDialog(channelId: string) {
     const dialogRef = this.dialog.open(DialogChannelEditComponent, {
-      data: { channelId: channelId },
+      data: { channelId: channelId }
     });
 
     dialogRef.afterClosed().subscribe((result) => {});
