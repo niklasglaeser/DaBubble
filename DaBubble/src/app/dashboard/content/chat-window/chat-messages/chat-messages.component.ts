@@ -18,7 +18,9 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   @Input() messages$: Observable<Message[]> | undefined;
   @Input() currentUser: UserLogged | null = null;
   @Input() channelId: string = '';
-  @Input() threadMessageCount$: Observable<number> | undefined;
+  @Input() threadCounts: Map<string, number> = new Map<string, number>();
+  @Input() lastThreadMessageTimes: Map<string, Date | null> = new Map<string, Date | null>();
+
 
   selectedMessage: Message | null = null;
   private userSubscription: Subscription | undefined;
@@ -55,6 +57,17 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     } else {
       return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';
     }
+  }
+
+  getReplayCount(messageId: string): boolean {
+    const count = this.threadCounts.get(messageId);
+    return count !== undefined && count > 0;
+  }
+  
+  getAnswerTime(messageId: string): Date | null {
+    console.log(this.lastThreadMessageTimes.get(messageId));
+    
+    return this.lastThreadMessageTimes.get(messageId) || null;
   }
 
   openThread(channelId: string, messageId: string, originMessage: Message) {

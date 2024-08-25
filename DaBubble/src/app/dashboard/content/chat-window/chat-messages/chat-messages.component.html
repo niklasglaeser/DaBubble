@@ -21,8 +21,16 @@
                         </div>
                         <div class="text fs-18">{{message.message}}</div>
                         <div class="open-thread">
-                            <div class="open-answers fs-18" (click)="openThread(channelId, message.id!, message)">{{ threadMessageCount$ | async }} Antworten</div>
-                            <div class="fs-14 last-answer">Letzte Antwort 14:30</div>
+                            <div class="open-answers fs-18" (click)="openThread(channelId, message.id!, message)">
+                                <span *ngIf="getReplayCount(message.id!)">
+                                    {{ threadCounts.get(message.id!) }} Antworten
+                                </span>
+                            </div>
+                            <div class="fs-14 last-answer">
+                                <span *ngIf="getAnswerTime(message.id!) as answerTime">
+                                    Letzte Antwort: {{ formatTime(answerTime) }}
+                                </span>
+                            </div>
                             <div class="reactions">
                                 <div class="emoji-container">
                                     <div class="emoji"></div>

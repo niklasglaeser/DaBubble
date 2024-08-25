@@ -26,13 +26,7 @@ export class MessageService {
   constructor(private firestore: Firestore, private authService: AuthService) {}
 
   async addMessage(channelId: string, message: Message) {
-    const messagesRef = collection(
-      this.firestore,
-      'channels',
-      channelId,
-      'messages'
-    );
-
+    const messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
     const currentUser = this.authService.currentUserSig();
 
     await addDoc(messagesRef, {
@@ -42,20 +36,8 @@ export class MessageService {
       senderId: currentUser?.userId || 'Unknown User',
     });
   }
-  async addMessageThread(
-    channelId: string,
-    message: Message,
-    messageId: string
-  ) {
-    const messagesRef = collection(
-      this.firestore,
-      'channels',
-      channelId,
-      'messages',
-      messageId,
-      'thread'
-    );
-
+  async addMessageThread(channelId: string, message: Message, messageId: string) {
+    const messagesRef = collection(this.firestore,'channels', channelId,'messages', messageId,'thread');
     const currentUser = this.authService.currentUserSig();
 
     await addDoc(messagesRef, {
@@ -104,38 +86,22 @@ export class MessageService {
     });
   }
 
-  getThreadMessagesWithUsers(
-    channelId: string,
-    messageId: string
-  ): Observable<Message[]> {
+  getThreadMessagesWithUsers(channelId: string, messageId: string): Observable<Message[]> {
     return new Observable((observer) => {
-      let threadRef = collection(
-        this.firestore,
-        `channels/${channelId}/messages/${messageId}/thread`
-      );
+      let threadRef = collection(this.firestore,`channels/${channelId}/messages/${messageId}/thread`);
       let threadQuery = query(threadRef, orderBy('created_at', 'asc'));
 
       onSnapshot(threadQuery, async (snapshot) => {
-        let messages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Message[];
-
+        let messages = snapshot.docs.map((doc) => ({id: doc.id,...doc.data(),})) as Message[];
         let addUser = messages.map(async (message) => {
           let userDocRef = doc(this.firestore, `Users/${message.senderId}`);
           let userDoc = await getDoc(userDocRef);
-
           let userData: UserLogged | null = null;
           if (userDoc.exists()) {
             let userObj = userDoc.data();
             userData = new UserLogged(userObj as UserLogged);
           }
-
-          return {
-            ...message,
-            senderName: userData!.username,
-            photoURL: userData!.photoURL,
-          };
+          return {...message, senderName: userData!.username, photoURL: userData!.photoURL,};
         });
 
         let messagesWithUserData = await Promise.all(addUser);
@@ -146,10 +112,7 @@ export class MessageService {
   }
 
   async addReaction(channelId: string, messageId: string, reaction: Reaction) {
-    const messageDocRef = doc(
-      this.firestore,
-      `channels/${channelId}/messages/${messageId}`
-    );
+    const messageDocRef = doc(this.firestore,`channels/${channelId}/messages/${messageId}`);
     await updateDoc(messageDocRef, {
       reactions: arrayUnion(reaction),
     });
