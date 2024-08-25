@@ -21,8 +21,7 @@
                         </div>
                         <div class="text fs-18">{{message.message}}</div>
                         <div class="open-thread">
-                            <div class="open-answers fs-18" (click)="openThread(channelId, message.id!, message)">2
-                                Antworten</div>
+                            <div class="open-answers fs-18" (click)="openThread(channelId, message.id!, message)">{{ threadMessageCount$ | async }} Antworten</div>
                             <div class="fs-14 last-answer">Letzte Antwort 14:30</div>
                             <div class="reactions">
                                 <div class="emoji-container">

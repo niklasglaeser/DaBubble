@@ -2,10 +2,9 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Message } from '../../../../models/message.model';
 import { Observable, Subscription } from 'rxjs';
-import { AuthService } from '../../../../services/lp-services/auth.service';
 import { UserLogged } from '../../../../models/user-logged.model';
 import { ThreadService } from '../../../../services/thread.service';
-import { Channel } from '../../../../models/channel.class';
+
 
 @Component({
   selector: 'app-chat-messages',
@@ -19,25 +18,17 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   @Input() messages$: Observable<Message[]> | undefined;
   @Input() currentUser: UserLogged | null = null;
   @Input() channelId: string = '';
+  @Input() threadMessageCount$: Observable<number> | undefined;
 
   selectedMessage: Message | null = null;
   private userSubscription: Subscription | undefined;
 
   constructor(
     private datePipe: DatePipe,
-    private authService: AuthService,
     private threadService: ThreadService
   ) {}
 
-  ngOnInit(): void {
-    // this.userSubscription = this.authService.user$.subscribe((user) => {
-    //   if (user) {
-    //     this.currentUser = user.displayName || null;
-    //   } else {
-    //     this.currentUser = null;
-    //   }
-    // });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
@@ -65,17 +56,10 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';
     }
   }
+
   openThread(channelId: string, messageId: string, originMessage: Message) {
-    this.threadService.checkAndCreateThread(
-      channelId,
-      messageId,
-      originMessage
-    );
-    const threadWindow = document.querySelector(
-      '.thread-window'
-    ) as HTMLElement;
-    if (threadWindow) {
-      threadWindow.classList.add('open');
-    }
+    this.threadService.checkAndCreateThread(channelId, messageId, originMessage);
+    const threadWindow = document.querySelector('.thread-window') as HTMLElement;
+    if (threadWindow) {threadWindow.classList.add('open');}
   }
 }

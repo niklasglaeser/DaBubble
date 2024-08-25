@@ -30,6 +30,7 @@
     display: flex;
     position: relative;
     flex-direction: column;
+    padding-top: 10px;
     &:hover {
         .message-content {
             background-color: #EDEEFE;
@@ -50,7 +51,7 @@
     display: flex;
     visibility: hidden;
     position: absolute;
-    top: -35px;
+    top: -30px;
     z-index: 500;
     margin-right: 40px;
     align-self: flex-end;
@@ -232,6 +233,7 @@
     }
 
     .message-content {
+        justify-content: flex-end;
 
         .author-picture {
             order: 2;
