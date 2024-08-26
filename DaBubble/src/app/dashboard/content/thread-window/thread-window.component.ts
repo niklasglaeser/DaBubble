@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ThreadHeaderComponent } from './thread-header/thread-header.component';
 import { ThreadMessagesComponent } from './thread-messages/thread-messages.component';
 import { ThreadFooterComponent } from './thread-footer/thread-footer.component';
@@ -22,6 +22,8 @@ import { ChannelService } from '../../../services/channel.service';
   styleUrl: './thread-window.component.scss',
 })
 export class ThreadWindowComponent implements OnInit {
+  @ViewChild(ThreadMessagesComponent)
+  threadMessagesComponent!: ThreadMessagesComponent;
   channelId: string = '';
   channelName: string | undefined = '';
   messageId: string = '';
@@ -87,7 +89,20 @@ export class ThreadWindowComponent implements OnInit {
       });
     }
   }
+  onCloseThread() {
+    // Bearbeitungsmodus in ThreadMessagesComponent deaktivieren
+    if (this.threadMessagesComponent) {
+      this.threadMessagesComponent.closeEditMode();
+    }
 
+    // Thread-Fenster schließen
+    const threadWindow = document.querySelector(
+      '.thread-window'
+    ) as HTMLElement;
+    if (threadWindow) {
+      threadWindow.classList.remove('open');
+    }
+  }
   getCurrentUserId() {
     const currentUser = this.authService.currentUserSig();
     this.currentUserId = currentUser?.userId ?? null;

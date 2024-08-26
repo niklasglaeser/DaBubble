@@ -10,7 +10,8 @@
                     <div class="emoji-reaction"></div>
                     <div class="comment-reaction" (click)="openThread(channelId, message.id!, message)">
                     </div>
-                    <div class="option-reaction"></div>
+                    <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction"
+                        (click)="editMessage(message)"></div>
                 </div>
                 <div class="message-content">
                     <img class="author-picture" [src]="message.photoURL">
@@ -19,7 +20,17 @@
                             <div class="author-name fs-18-700">{{message.senderName}} </div>
                             <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                         </div>
-                        <div class="text fs-18">{{message.message}}</div>
+                        <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
+                            class="text fs-18">
+                            {{message.message}}
+                        </div>
+                        <ng-template #editTemplate>
+                            <div class="edit-channel">
+                                <textarea class="text fs-18" [(ngModel)]="editMessageText"></textarea>
+                            </div>
+                            <span class="edit" (click)="saveEditedMessage()">Speichern</span>
+                            <span class="edit" (click)="cancelEdit()">Abbrechen</span>
+                        </ng-template>
                         <div class="open-thread">
                             <div class="open-answers fs-18" (click)="openThread(channelId, message.id!, message)">
                                 <span *ngIf="getReplayCount(message.id!)">
