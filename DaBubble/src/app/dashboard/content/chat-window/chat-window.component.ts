@@ -70,19 +70,18 @@ export class ChatWindowComponent implements OnInit {
   }
 
   loadMessages(channelId: string) {
-    // this.messages$ = this.messageService.getMessagesWithUsers(channelId);
-
-    // this.messages$.subscribe((messages) => {
-    //   messages.forEach((message) => {
-    //     const messageId = message.id;
-    //     this.threadService.getThreadMessageCount(this.channelId, messageId!).subscribe((count) => {
-    //       this.threadCounts.set(messageId!, count);
-    //     });
-    //     this.threadService.getLastThreadMessageTime(this.channelId, messageId!).subscribe((lastMessageTime) => {
-    //       this.lastThreadMessageTimes.set(messageId!, lastMessageTime);
-    //     });
-    //   });
-    // });
+    this.messages$ = this.messageService.getMessagesWithUsers(channelId);
+    this.messages$.subscribe((messages) => {
+      messages.forEach((message) => {
+        const messageId = message.id;
+        this.threadService.getThreadMessageCount(this.channelId, messageId!).subscribe((count) => {
+          this.threadCounts.set(messageId!, count);
+        });
+        this.threadService.getLastThreadMessageTime(this.channelId, messageId!).subscribe((lastMessageTime) => {
+          this.lastThreadMessageTimes.set(messageId!, lastMessageTime);
+        });
+      });
+    });
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {

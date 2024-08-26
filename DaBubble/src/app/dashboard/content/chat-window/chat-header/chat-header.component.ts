@@ -10,7 +10,7 @@ import { DialogOverviewUsersComponent } from '../../../../dialog/dialog-overview
   standalone: true,
   imports: [],
   templateUrl: './chat-header.component.html',
-  styleUrl: './chat-header.component.scss',
+  styleUrl: './chat-header.component.scss'
 })
 export class ChatHeaderComponent {
   @Input() channel: Channel | null = null;
@@ -21,8 +21,9 @@ export class ChatHeaderComponent {
   openEditChannel(): void {
     if (this.channel && this.channel.id) {
       const dialogRef = this.dialog.open(DialogChannelEditComponent, {
-        data: { channelId: this.channel.id },
+        data: { channelId: this.channel.id }
       });
+
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           console.log('Dialog result:', result);
@@ -36,7 +37,7 @@ export class ChatHeaderComponent {
   openOverviewChannel(): void {
     if (this.members) {
       const dialogRef = this.dialog.open(DialogOverviewUsersComponent, {
-        data: { members: this.members },
+        data: { members: this.members }
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {

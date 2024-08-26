@@ -1,78 +1,78 @@
 .chat-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
-    background-color: transparent;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+  background-color: transparent;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .chat-header-left {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+
+  .arrow-down {
+    height: 40px;
+    width: 40px;
+    background-image: url('/assets/img/main-page/chat/arrow_down.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  > div {
     display: flex;
-    gap: 10px;
-    padding: 10px;
-
+    align-items: center;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: #edeefe;
+    border-radius: 20px;
+    > div {
+      color: #535af1;
+    }
     .arrow-down {
-        height: 40px;
-        width: 40px;
-        background-image: url('/assets/img/main-page/chat/arrow_down.svg');
-        background-repeat: no-repeat;
-        background-position: center;
+      background-image: url('/assets/img/main-page/chat/arrow_down_hover.svg');
     }
-
-    >div {
-        display: flex;
-        align-items: center;
-    }
-    &:hover {
-        cursor: pointer;
-        background-color: #EDEEFE;
-        border-radius: 20px;
-        >div {
-            color: #535af1;
-        }
-        .arrow-down {
-            background-image: url('/assets/img/main-page/chat/arrow_down_hover.svg');
-        }
-    }
+  }
 }
 
 .chat-header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .user-pictures {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    >img {
-        height: 40px;
-        width: 40px;
-        border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  > img {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: #edeefe;
+    border-radius: 40px;
+    > div {
+      color: #535af1;
     }
-    &:hover {
-        cursor: pointer;
-        background-color: #EDEEFE;
-        border-radius: 40px;
-        >div {
-            color: #535af1;
-        }
-    }
+  }
 }
 
 .add-members {
-    height: 40px;
-    width: 40px;
-    background-image: url('/assets/img/main-page/chat/add-members-button.svg');
-    &:hover {
-        cursor: pointer;
-        background-image: url('/assets/img/main-page/chat/add-members-button-hover.svg');
-    }
+  height: 40px;
+  width: 40px;
+  background-image: url('/assets/img/main-page/chat/add-members-button.svg');
+  &:hover {
+    cursor: pointer;
+    background-image: url('/assets/img/main-page/chat/add-members-button-hover.svg');
+  }
 }

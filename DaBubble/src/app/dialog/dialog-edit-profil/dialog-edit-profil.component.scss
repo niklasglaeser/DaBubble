@@ -168,3 +168,8 @@
 .error-message {
   color: red;
 }
+
+a:focus {
+  outline: none;
+  border: none;
+}
