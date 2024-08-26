@@ -9,7 +9,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { SetPasswordComponent } from './set-password/set-password.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
-import { PopUpComponent } from '../pop-up/pop-up.component';
+import { PopUpComponent } from './pop-up/pop-up.component';
 
 @Component({
   selector: 'app-landing-page',

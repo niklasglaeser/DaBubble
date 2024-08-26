@@ -1,19 +1,19 @@
 <div class="thread-content">
     <div id="thread-messages-container">
-        <div class="origin-message">
+        <div class="origin-message" *ngIf="originMessage">
             <div class="message-section">
                 <div class="reaction-bar">
                     <div class="emoji-reaction"></div>
                     <div class="option-reaction"></div>
                 </div>
                 <div class="message-content">
-                    <img class="author-picture" [src]="originMessage?.photoURL">
+                    <img class="author-picture" [src]="originMessage.photoURL">
                     <div class="details">
                         <div class="author">
-                            <div class="author-name fs-18-700">{{ originMessage?.senderName }}</div>
-                            <div class="message-send-time fs-14">14:00 Uhr</div>
+                            <div class="author-name fs-18-700">{{ originMessage.senderName }}</div>
+                            <div class="message-send-time fs-14">{{ formatTime(originMessage!.created_at) }} Uhr</div>
                         </div>
-                        <div class="text fs-18">{{ originMessage?.message }}</div>
+                        <div class="text fs-18">{{ originMessage.message }}</div>
                         <div class="reactions">
                             <div class="emoji-container">
                                 <div class="emoji"></div>
@@ -40,16 +40,27 @@
                 <div class="message-section">
                     <div class="reaction-bar">
                         <div class="emoji-reaction"></div>
-                        <div class="option-reaction"></div>
+                        <div *ngIf="currentUserId === message.senderId" class="option-reaction"
+                            (click)="editMessage(message)"></div>
                     </div>
                     <div class="message-content">
                         <img class="author-picture" [src]="message.photoURL">
                         <div class="details">
                             <div class="author">
                                 <div class="author-name fs-18-700">{{message.senderName}} </div>
-                                <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
+                                <div class="message-send-time fs-14">{{ formatTime(message!.created_at) }} Uhr</div>
                             </div>
-                            <div class="text fs-18">{{message.message}}</div>
+                            <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
+                                class="text fs-18">
+                                {{message.message}}
+                            </div>
+                            <ng-template #editTemplate>
+                                <div class="edit-channel">
+                                    <textarea class="text fs-18" [(ngModel)]="editMessageText"></textarea>
+                                </div>
+                                <span class="edit" (click)="saveEditedMessage()">Speichern</span>
+                                <span class="edit" (click)="cancelEdit()">Abbrechen</span>
+                            </ng-template>
                             <div class="open-thread">
                                 <div class="reactions">
                                     <div class="emoji-container">

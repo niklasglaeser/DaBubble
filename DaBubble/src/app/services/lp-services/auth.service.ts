@@ -19,6 +19,10 @@ export class AuthService {
   currentUserSig = signal<UserInterface | null | undefined>(undefined);
   uid: string = '';
 
+  ngOnInit(): void {
+   
+  }
+
   subscribeUser() {
     this.user$.subscribe(async (user) => {
       if (user) {

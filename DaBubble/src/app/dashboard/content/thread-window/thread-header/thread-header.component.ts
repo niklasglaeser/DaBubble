@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-thread-header',
@@ -9,13 +9,9 @@ import { Component, Input } from '@angular/core';
 })
 export class ThreadHeaderComponent {
   @Input() channelName: string | undefined = '';
+  @Output() closeThreadEvent = new EventEmitter<void>();
 
-  closeThread() {
-    const threadWindow = document.querySelector(
-      '.thread-window'
-    ) as HTMLElement;
-    if (threadWindow) {
-      threadWindow.classList.remove('open');
-    }
+  onCloseThread() {
+    this.closeThreadEvent.emit(); // Sende das Ereignis an die Parent-Komponente
   }
 }

@@ -1,7 +1,7 @@
 <div class="thread-window-container">
-    <app-thread-header [channelName]="channelName"></app-thread-header>
+    <app-thread-header [channelName]="channelName" (closeThreadEvent)="onCloseThread()"></app-thread-header>
     <app-thread-messages [originMessage]="originMessage" [threadMessages$]="threadMessages$"
-        [threadMessageCount$]="threadMessageCount$" [currentUserId]="currentUserId"
+        [threadMessageCount$]="threadMessageCount$" [currentUserId]="currentUserId" [channelId]="channelId"
         class="messages"></app-thread-messages>
     <app-thread-footer [channelId]="channelId" [messageId]="messageId" class="footer"></app-thread-footer>
 </div>
