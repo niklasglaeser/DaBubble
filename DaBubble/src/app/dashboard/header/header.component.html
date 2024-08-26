@@ -5,9 +5,8 @@
         <img class="search-button" src="/assets/img/main-page/head/search.svg">
     </div>
     <div class="header-right">
-        <div class="fs-32-700 user-name">User Name</div>
-        <img class="user-profile" src="/assets/img/main-page/head/Profile-img.svg">
-        <div class="arrow-down"></div>
-
+        <div class="fs-32-700 user-name">{{ user?.username }}</div>
+        <img class="user-profile" src="{{ user?.photoURL }}">
+        <div class="arrow-down" (click)="openDialog()"></div>
     </div>
 </div>

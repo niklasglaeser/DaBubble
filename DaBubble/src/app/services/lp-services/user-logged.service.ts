@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, Firestore, updateDoc, doc, DocumentReference, setDoc, query, where, getDocs } from '@angular/fire/firestore';
+import { addDoc, collection, Firestore, updateDoc, doc, DocumentReference, setDoc, query, where, getDocs, getDoc, onSnapshot, DocumentData, DocumentSnapshot } from '@angular/fire/firestore';
 import { UserLogged } from '../../models/user-logged.model';
 
 
@@ -11,8 +11,27 @@ export class UserLoggedService {
   firestore = inject(Firestore);
   userCollection = collection(this.firestore, 'Users');
   id = '';
+  userData?: UserLogged
 
   constructor(){}
+
+  async subscribeUser(id: string): Promise<void> {
+    const docRef = doc(this.userCollection, id);  
+    
+    try {
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        this.userData = docSnap.data() as UserLogged;
+      } else {
+        console.log('No such document!');
+        this.userData = undefined;
+      }
+    } catch (error) {
+      console.error('Error getting document:', error);
+      this.userData = undefined;
+    }
+  }
 
   async isEmailTaken(email: string): Promise<boolean> {
     const q = query(this.userCollection, where('email', '==', email));
