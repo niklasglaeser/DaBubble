@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { LandingPageComponent } from '../landing-page/landing-page.component';
+import { LandingPageComponent } from '../landing-page.component';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
