@@ -11,6 +11,8 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { UserService } from '../../../services/user.service';
 import { UserLogged } from '../../../models/user-logged.model';
 import { ChannelStateService } from '../../../services/channel-state.service';
+import { AuthService } from '../../../services/lp-services/auth.service';
+import { DirectMessagesService } from '../../../services/direct-message.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -59,7 +61,7 @@ export class SidebarComponent implements OnInit {
   users: UserLogged[] = [];
   unsubscribe: any;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService) {
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService) {
     this.checkWindowSize();
   }
 
@@ -73,7 +75,7 @@ export class SidebarComponent implements OnInit {
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
 
       if (this.channels.length > 0) {
-        this.openChannel(this.channels[0].id);
+        // this.openChannel(this.channels[0].id);
       }
     });
   }
@@ -104,11 +106,32 @@ export class SidebarComponent implements OnInit {
   }
 
   openChannel(channelId: string) {
+    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+    if (dmWindow && chatWindow) {
+      dmWindow.style.display = 'none';
+      chatWindow.style.display = 'flex';
+    }
     this.selectedChannelId = channelId;
     this.channelStateService.setSelectedChannelId(channelId);
   }
+
+
   openDirectmessage(userId: string) {
+    let recipientId = userId;
+    let currentUser = this.authService.currentUserSig();
+    let currentUserId = currentUser?.userId;
+
+    // this.dmService.loadDmConversation(currentUserId, recipientId);
+
+
     console.log('open Directmessage for User' + userId);
+    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+    if (dmWindow && chatWindow) {
+      dmWindow.style.display = 'flex';
+      chatWindow.style.display = 'none';
+    }
   }
 
   toggleDropdown(menu: string) {
