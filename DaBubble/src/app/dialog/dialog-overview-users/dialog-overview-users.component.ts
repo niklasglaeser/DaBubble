@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { UserLogged } from '../../models/user-logged.model';
+import { DialogEditProfilComponent } from '../dialog-edit-profil/dialog-edit-profil.component';
 
 @Component({
   selector: 'app-dialog-overview-users',
@@ -12,16 +19,27 @@ export class DialogOverviewUsersComponent {
   isOpen = true;
   isOnline = true;
 
-  Users = Array(5).fill(0);
+  members: UserLogged[] = [];
 
-  openProfil() {
-    console.log('open profile');
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { members: UserLogged[] },
+    public dialogRef: MatDialogRef<DialogOverviewUsersComponent>,
+    private dialog: MatDialog
+  ) {
+    this.members = data.members;
+  }
+
+  openProfil(user: UserLogged) {
+    console.log('open profile' + user);
+    this.dialog.open(DialogEditProfilComponent, {
+      data: { user: user },
+    });
   }
   addUser() {
     console.log('add user');
   }
 
-  toggleDialog() {
-    this.isOpen = !this.isOpen;
+  close() {
+    this.dialogRef.close();
   }
 }

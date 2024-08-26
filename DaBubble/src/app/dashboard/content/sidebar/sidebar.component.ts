@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
@@ -7,10 +13,17 @@ import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { WorkspaceToggleComponent } from '../../../dialog/workspace-toggle/workspace-toggle.component';
 import { CommonModule } from '@angular/common';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 import { UserService } from '../../../services/user.service';
 import { UserLogged } from '../../../models/user-logged.model';
 import { ChannelStateService } from '../../../services/channel-state.service';
+import { DeviceService } from '../../../services/device.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,24 +37,28 @@ import { ChannelStateService } from '../../../services/channel-state.service';
         'in',
         style({
           transform: 'translateX(0%)',
-          display: 'flex'
+          display: 'flex',
         })
       ),
       state(
         'out',
         style({
           transform: 'translateX(-100%)',
-          display: 'none'
+          display: 'none',
         })
       ),
       transition('in => out', animate('125ms ease-in')),
-      transition('out => in', animate('125ms ease-out'))
-    ])
-  ]
+      transition('out => in', animate('125ms ease-out')),
+    ]),
+  ],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   @ViewChild('dialogAddChannel')
   dialogAddChannelComponent!: DialogAddChannelComponent;
+
+  isMobile: boolean = false;
+  previousIsMobile: boolean = false;
+  subscription: Subscription | undefined;
 
   workspaceVisible: boolean = true;
   showWorkspaceToggle = true;
@@ -59,7 +76,13 @@ export class SidebarComponent implements OnInit {
   users: UserLogged[] = [];
   unsubscribe: any;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService) {
+  constructor(
+    public dialog: MatDialog,
+    private channelService: ChannelService,
+    private userService: UserService,
+    private channelStateService: ChannelStateService,
+    private deviceService: DeviceService
+  ) {
     this.checkWindowSize();
   }
 
@@ -76,6 +99,21 @@ export class SidebarComponent implements OnInit {
         this.openChannel(this.channels[0].id);
       }
     });
+
+    this.subscription = this.deviceService.screenWidth.subscribe((width) => {
+      this.isMobile = this.deviceService.isMobile();
+      if (!this.isMobile && !this.workspaceVisible) {
+        this.workspaceVisible = true;
+      } else if (this.isMobile && this.workspaceVisible) {
+        this.toggleWorkspace();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   getList(): Channel[] {
@@ -92,7 +130,7 @@ export class SidebarComponent implements OnInit {
   /*TESTING*/
   openEditDialog(channelId: string) {
     const dialogRef = this.dialog.open(DialogChannelEditComponent, {
-      data: { channelId: channelId }
+      data: { channelId: channelId },
     });
 
     dialogRef.afterClosed().subscribe((result) => {});
