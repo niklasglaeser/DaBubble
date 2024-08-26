@@ -1,19 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  collection,
-  Firestore,
-  query,
-  where,
-  collectionData,
-  onSnapshot,
-  doc,
-  getDoc,
-} from '@angular/fire/firestore';
+import { collection, Firestore, query, where, collectionData, onSnapshot, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserLogged } from '../models/user-logged.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UserService {
   private firestore = inject(Firestore);
@@ -40,6 +31,18 @@ export class UserService {
       });
       this.usersSubject.next(users);
     });
+  }
+
+  async updateUser(userId: string, user: UserLogged) {
+    try {
+      const userDocRef = this.getSingleUser(userId);
+      await updateDoc(userDocRef, {
+        username: user.username,
+        email: user.email
+      });
+    } catch (e) {
+      console.error('Error updating user: ', e);
+    }
   }
 
   async getSingleUserObj(docId: string): Promise<UserLogged | null> {
@@ -87,11 +90,7 @@ export class UserService {
   searchUsers(queryText: string): Observable<UserLogged[]> {
     const usersCollection = this.getUsersRef();
     const endText = queryText + '\uf8ff';
-    const usersQuery = query(
-      usersCollection,
-      where('username', '>=', queryText),
-      where('username', '<=', endText)
-    );
+    const usersQuery = query(usersCollection, where('username', '>=', queryText), where('username', '<=', endText));
 
     return collectionData(usersQuery) as Observable<UserLogged[]>;
   }

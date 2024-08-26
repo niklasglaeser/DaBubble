@@ -48,6 +48,9 @@
       <div class="row">
         <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="profilName" minlength="3" type="text">
       </div>
+      <div *ngIf="profilName && profilName.trim().split(' ').length < 2" class="error-message">
+        Bitte geben Sie sowohl Vor- als auch Nachnamen ein.
+      </div>
       <div class="row">
         <img src="../../../assets/img/general/mail.svg" alt="" srcset="">
         <div class="fs-20-700">Vollständiger Name</div>
@@ -55,9 +58,13 @@
       <div class="row">
         <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="profilEmail" type="text">
       </div>
+      <div *ngIf="!profilEmail" class="error-message">
+        E-Mail darf nicht leer sein.
+      </div>
       <div class="dialog-actions">
         <button class="exitBtn fs-18-700" (click)="toggleDialog()">Abbrechen</button>
-        <button class="saveBtn fs-18-700" (click)="channelUpdate($event)">Speichern</button>
+        <button class="saveBtn fs-18-700" [disabled]="!profilName || !profilEmail"
+          (click)="updateUser()">Speichern</button>
       </div>
     </div>
     }
