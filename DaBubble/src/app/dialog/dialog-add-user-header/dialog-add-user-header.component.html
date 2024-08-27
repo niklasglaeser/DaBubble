@@ -1,0 +1,14 @@
+<div class="dialog">
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <h2>Mitglieder hinzufügen</h2>
+      <div class="close" (click)="close(false)"></div>
+    </div>
+    <span class="fs-18"># {{data.channel?.name}}</span>
+    <app-dialog-add-user class="custom-width-100" [allUsers]="allUsers" [selectedUsers]="selectedUsers"
+      (updatedUsers)="onUsersUpdated($event)"></app-dialog-add-user>
+    <div class="dialog-actions">
+      <button (click)="close(true)">Speichern</button>
+    </div>
+  </div>
+</div>

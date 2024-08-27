@@ -9,6 +9,7 @@
   z-index: 1000;
   max-width: 872px;
   width: 100%;
+  max-height: 600px;
   padding: 40px;
   border-radius: 30px;
   margin: 0 8px;
@@ -96,7 +97,7 @@
     margin-bottom: 20px;
   }
 
-  input[type="radio"] {
+  input[type='radio'] {
     border: 1px solid var(--lightPurple);
     box-sizing: border-box;
     padding: 18px 20px 18px 20px;
@@ -130,7 +131,7 @@ button:focus {
 }
 
 .close {
-  background-image: url("/assets/img/main-page/thread/cross.svg");
+  background-image: url('/assets/img/main-page/thread/cross.svg');
   background-repeat: no-repeat;
   height: 40px;
   width: 40px;
@@ -139,6 +140,6 @@ button:focus {
   border: none;
   cursor: pointer;
   &:hover {
-    background-image: url("/assets/img/main-page/thread/cross-hover.svg");
+    background-image: url('/assets/img/main-page/thread/cross-hover.svg');
   }
 }

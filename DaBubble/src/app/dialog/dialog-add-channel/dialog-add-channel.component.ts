@@ -1,12 +1,7 @@
 // src/app/dialog-add-channel/dialog-add-channel.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../../app/models/channel.class';
@@ -23,16 +18,9 @@ import { AuthService } from '../../services/lp-services/auth.service';
 @Component({
   selector: 'app-dialog-add-channel',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    MatAutocompleteModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    DialogAddUserComponent,
-  ],
+  imports: [ReactiveFormsModule, CommonModule, MatAutocompleteModule, MatChipsModule, MatFormFieldModule, DialogAddUserComponent],
   templateUrl: './dialog-add-channel.component.html',
-  styleUrls: ['./dialog-add-channel.component.scss'],
+  styleUrls: ['./dialog-add-channel.component.scss']
 })
 export class DialogAddChannelComponent implements OnInit {
   private firestore = inject(Firestore);
@@ -55,21 +43,14 @@ export class DialogAddChannelComponent implements OnInit {
 
   allowDuplicateNames: boolean = true;
 
-  constructor(
-    private fbChannel: FormBuilder,
-    private fbUser: FormBuilder,
-    public dialogRef: MatDialogRef<DialogAddChannelComponent>,
-    private channelService: ChannelService,
-    private userService: UserService,
-    private authService: AuthService
-  ) {
+  constructor(private fbChannel: FormBuilder, private fbUser: FormBuilder, public dialogRef: MatDialogRef<DialogAddChannelComponent>, private channelService: ChannelService, private userService: UserService, private authService: AuthService) {
     this.addChannelForm = this.fbChannel.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      description: [''],
+      description: ['']
     });
     this.addUserForm = this.fbUser.group({
       selection: ['', Validators.required],
-      specificMembers: [''],
+      specificMembers: ['']
     });
   }
 
@@ -86,9 +67,7 @@ export class DialogAddChannelComponent implements OnInit {
 
       try {
         if (!this.allowDuplicateNames) {
-          const nameExists = await this.channelService.checkChannelExists(
-            newChannelName
-          );
+          const nameExists = await this.channelService.checkChannelExists(newChannelName);
           if (nameExists) {
             console.log('Channel name already exists.');
             return;
@@ -98,7 +77,7 @@ export class DialogAddChannelComponent implements OnInit {
         let newChannel = new Channel({
           name: formData.name,
           description: formData.description,
-          creator: currentUser?.username,
+          creator: currentUser?.username
         });
         let channelId = await this.channelService.createChannel(newChannel);
         if (channelId) {
@@ -121,10 +100,7 @@ export class DialogAddChannelComponent implements OnInit {
         userIds = this.selectedUsers.map((user) => user.uid);
       }
       try {
-        await this.channelService.addUsersToChannel(
-          this.createdChannel,
-          userIds
-        );
+        await this.channelService.addUsersToChannel(this.createdChannel, userIds);
         await this.updateUserProfilesWithChannel(userIds, this.createdChannel);
         this.dialogRef.close();
       } catch (e) {
@@ -138,7 +114,7 @@ export class DialogAddChannelComponent implements OnInit {
       for (const userId of userIds) {
         const userRef = this.userService.getSingleUser(userId);
         await updateDoc(userRef, {
-          joinedChannels: arrayUnion(channelId),
+          joinedChannels: arrayUnion(channelId)
         });
       }
     } catch (e) {
@@ -149,10 +125,7 @@ export class DialogAddChannelComponent implements OnInit {
 
   removeUser(user: UserLogged): void {
     this.selectedUsers = this.selectedUsers.filter((u) => u.uid !== user.uid);
-
-    let alreadyInFilteredUsers = this.filteredUsers.some(
-      (u) => u.uid === user.uid
-    );
+    let alreadyInFilteredUsers = this.filteredUsers.some((u) => u.uid === user.uid);
 
     if (!alreadyInFilteredUsers) {
       this.filteredUsers.push(user);
