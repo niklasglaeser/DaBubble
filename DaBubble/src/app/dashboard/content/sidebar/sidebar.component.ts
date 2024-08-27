@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
@@ -44,6 +44,8 @@ import { DirectMessagesService } from '../../../services/direct-message.service'
 export class SidebarComponent implements OnInit {
   @ViewChild('dialogAddChannel')
   dialogAddChannelComponent!: DialogAddChannelComponent;
+
+  @Output() conversationSet = new EventEmitter<void>();
 
   workspaceVisible: boolean = true;
   showWorkspaceToggle = true;
@@ -117,13 +119,15 @@ export class SidebarComponent implements OnInit {
   }
 
 
-  openDirectmessage(userId: string) {
+  openDirectmessage(userId: string,) {
     let recipientId = userId;
     let currentUser = this.authService.currentUserSig();
-    let currentUserId = currentUser?.userId;
+    let currentUserId = currentUser!.userId;
 
-    // this.dmService.loadDmConversation(currentUserId, recipientId);
-
+    this.dmService.setConversationMembers(currentUserId, recipientId).then(() => {
+      // Notify the DM window that the conversation is ready to be loaded
+      this.conversationSet.emit();
+    });
 
     console.log('open Directmessage for User' + userId);
     let dmWindow = document.querySelector('.dm-window') as HTMLElement;

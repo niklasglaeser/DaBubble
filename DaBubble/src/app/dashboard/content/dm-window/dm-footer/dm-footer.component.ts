@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Message } from '../../../../models/message.model';
+import { DirectMessagesService } from '../../../../services/direct-message.service';
 
 @Component({
   selector: 'app-dm-footer',
@@ -10,6 +12,24 @@ import { Component } from '@angular/core';
 })
 export class DmFooterComponent {
 
-  constructor () {}
+  constructor (private dmService: DirectMessagesService) {}
+
+  sendMessage(): void {
+    const textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
+    const messageText = textarea.value;
+
+    if (messageText.trim()) {
+      const message: Message = {
+        message: messageText,
+        senderId: '',
+        created_at: new Date(),
+      };
+
+      this.dmService.addMessage(message).then(() => {
+        textarea.value = '';
+      });
+      console.log('send');
+    }
+  }
 
 }

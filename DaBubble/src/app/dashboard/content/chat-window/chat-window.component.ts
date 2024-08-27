@@ -70,7 +70,7 @@ export class ChatWindowComponent implements OnInit {
   }
 
   loadMessages(channelId: string) {
-    // this.messages$ = this.messageService.getMessagesWithUsers(channelId);
+    this.messages$ = this.messageService.getMessagesWithUsers(channelId);
 
     // this.messages$.subscribe((messages) => {
     //   messages.forEach((message) => {

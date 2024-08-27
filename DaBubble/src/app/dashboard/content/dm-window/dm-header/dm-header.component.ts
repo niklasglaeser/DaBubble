@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DmWindowComponent } from '../dm-window.component';
 
 @Component({
   selector: 'app-dm-header',

@@ -1,4 +1,4 @@
-<app-sidebar class="sidebar-window"></app-sidebar>
+<app-sidebar class="sidebar-window" (conversationSet)="dmWindow.loadMessages()"></app-sidebar>
 <app-chat-window class="chat-window"></app-chat-window>
-<app-dm-window class="dm-window"></app-dm-window>
+<app-dm-window class="dm-window" #dmWindow></app-dm-window>
 <app-thread-window class="thread-window"></app-thread-window>
