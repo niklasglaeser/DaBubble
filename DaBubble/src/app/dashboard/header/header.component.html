@@ -6,7 +6,12 @@
     </div>
     <div class="header-right">
         <div class="fs-32-700 user-name">{{ user?.username }}</div>
-        <img class="user-profile" src="{{ user?.photoURL }}">
-        <div class="arrow-down" (click)="openDialog()"></div>
+        <div class="avatarStatus">
+            <img src="{{ user?.photoURL }}">
+        <img
+            [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+        </div>
+        <div class="arrow-down" #arrowButton (click)="openDialog()">
+        </div>
     </div>
 </div>

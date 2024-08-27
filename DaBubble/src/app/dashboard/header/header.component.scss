@@ -55,26 +55,34 @@
     &:hover {
         cursor: pointer;
         background-color: #EDEEFE;
-        .user-name {
-            color: #535af1;
-            &:hover {
-                scale: 110%;
-            }
-        }
-
-        .user-profile:hover {
-            scale: 110%;
-        }
-
+        
         .arrow-down {
             background-image: url('/assets/img/main-page/chat/arrow_down_hover.svg');
-            &:hover {
-                scale: 130%;
-            }
-        }
+            transition: background-image 0.3s ease;
     }
 }
+}
 
+.avatarStatus {
+    position: relative;
+    display: flex;
+    align-items: center;
+  
+    > img:first-child {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  
+    > :last-child {
+      position: absolute;
+      width: 14px;
+      bottom: 0;
+      right: 0;
+    }
+  }
+  
 .arrow-down {
     height: 40px;
     width: 40px;
@@ -82,3 +90,5 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+ 
