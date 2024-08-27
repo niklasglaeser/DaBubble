@@ -9,18 +9,12 @@ import { UserLogged } from '../../models/user-logged.model';
 @Component({
   selector: 'app-dialog-add-user',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatAutocompleteModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule, MatAutocompleteModule, MatChipsModule, MatFormFieldModule, ReactiveFormsModule],
   templateUrl: './dialog-add-user.component.html',
-  styleUrl: './dialog-add-user.component.scss',
+  styleUrl: './dialog-add-user.component.scss'
 })
 export class DialogAddUserComponent implements OnInit {
-  @Input() users: UserLogged[] = [];
+  @Input() allUsers: UserLogged[] = [];
   @Input() selectedUsers: UserLogged[] = [];
   @Output() removeUser = new EventEmitter<UserLogged>();
   @Output() updatedUsers = new EventEmitter<UserLogged[]>();
@@ -30,7 +24,7 @@ export class DialogAddUserComponent implements OnInit {
   isPanelOpen!: boolean;
 
   ngOnInit(): void {
-    this.updateFilteredUsers('');
+    this.updateFilteredUsers(''); // Initiale Filterung
   }
 
   handleUserSearch(event: Event): void {
@@ -40,18 +34,13 @@ export class DialogAddUserComponent implements OnInit {
   }
 
   updateFilteredUsers(query: string): void {
-    // Filter users to exclude selected users and match the search query
-    this.filteredUsers = this.users.filter(
-      (user) =>
-        !this.selectedUsers.some((selected) => selected.uid === user.uid) && // Exclude selected users
-        user.username.toLowerCase().includes(query) // Match the search query
-    );
+    this.filteredUsers = this.allUsers.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid) && user.username.toLowerCase().includes(query));
   }
 
   addUserToSelection(user: UserLogged): void {
     if (!this.selectedUsers.some((u) => u.uid === user.uid)) {
       this.selectedUsers.push(user);
-      this.updateFilteredUsers(''); // Update filtered list after selection
+      this.updateFilteredUsers('');
       this.userControl.setValue('');
       this.emitUpdatedUsers();
     }
@@ -59,7 +48,7 @@ export class DialogAddUserComponent implements OnInit {
 
   removeSelectedUser(user: UserLogged): void {
     this.selectedUsers = this.selectedUsers.filter((u) => u.uid !== user.uid);
-    this.updateFilteredUsers(''); // Update filtered list after removal
+    this.updateFilteredUsers(''); // Aktualisiere die Liste, damit der Benutzer wieder in der Auswahl erscheint
     this.emitUpdatedUsers();
   }
 

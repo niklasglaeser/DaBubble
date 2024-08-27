@@ -5,7 +5,7 @@
       <span>{{data.channel?.name}}</span>
       <div class="close" (click)="close()"></div>
     </div>
-    <app-dialog-add-user [users]="users" [selectedUsers]="data.members" (updatedUsers)="onUsersUpdated($event)">
+    <app-dialog-add-user [allUsers]="allUsers" [selectedUsers]="selectedUsers" (updatedUsers)="onUsersUpdated($event)">
     </app-dialog-add-user>
   </div>
 </div>

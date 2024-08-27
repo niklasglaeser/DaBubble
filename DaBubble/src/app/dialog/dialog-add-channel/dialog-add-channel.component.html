@@ -48,7 +48,7 @@
           <label for="select" class="fs-18">Bestimmte Leute hinzufügen</label>
         </div>
         <ng-container *ngIf="addUserForm.get('selection')?.value === 'select'">
-          <app-dialog-add-user [selectedUsers]="selectedUsers" [users]="users"
+          <app-dialog-add-user [selectedUsers]="selectedUsers" [allUsers]="users"
             (removeUser)="removeUser($event)"></app-dialog-add-user>
         </ng-container>
 
