@@ -17,28 +17,45 @@ import { ThreadService } from '../../../services/thread.service';
 @Component({
   selector: 'app-chat-window',
   standalone: true,
-  imports: [ChatHeaderComponent, ChatMessagesComponent, ChatFooterComponent, CommonModule],
+  imports: [
+    ChatHeaderComponent,
+    ChatMessagesComponent,
+    ChatFooterComponent,
+    CommonModule,
+  ],
   templateUrl: './chat-window.component.html',
-  styleUrl: './chat-window.component.scss'
+  styleUrl: './chat-window.component.scss',
 })
 export class ChatWindowComponent implements OnInit {
   channelId: string = '';
   channel: Channel | null = null;
 
   members: UserLogged[] = [];
+  users: UserLogged[] = [];
 
   messages$: Observable<Message[]> | undefined;
   threadCounts: Map<string, number> = new Map<string, number>();
-  lastThreadMessageTimes: Map<string, Date | null> = new Map<string, Date | null>();
+  lastThreadMessageTimes: Map<string, Date | null> = new Map<
+    string,
+    Date | null
+  >();
 
   currentUser: UserLogged | null = null;
   userId: string | null = null;
 
   unsubscribe: (() => void) | undefined;
 
-  constructor(private channelService: ChannelService, private userService: UserService, private messageService: MessageService, private channelStateService: ChannelStateService, private authService: AuthService, private threadService: ThreadService) {}
+  constructor(
+    private channelService: ChannelService,
+    private userService: UserService,
+    private messageService: MessageService,
+    private channelStateService: ChannelStateService,
+    private authService: AuthService,
+    private threadService: ThreadService
+  ) {}
 
   ngOnInit() {
+    this.loadAllUsers();
     this.channelStateService.selectedChannelId$.subscribe(async (channelId) => {
       if (channelId) {
         this.channelId = channelId;
@@ -60,12 +77,15 @@ export class ChatWindowComponent implements OnInit {
 
   subscribeToChannelData() {
     if (this.channelId) {
-      this.unsubscribe = this.channelService.loadChannelData(this.channelId, (channel) => {
-        this.channel = channel;
-        if (this.channel && this.channel.members) {
-          this.loadChannelMembers(this.channel.members);
+      this.unsubscribe = this.channelService.loadChannelData(
+        this.channelId,
+        (channel) => {
+          this.channel = channel;
+          if (this.channel && this.channel.members) {
+            this.loadChannelMembers(this.channel.members);
+          }
         }
-      });
+      );
     }
   }
 
@@ -74,12 +94,16 @@ export class ChatWindowComponent implements OnInit {
     this.messages$.subscribe((messages) => {
       messages.forEach((message) => {
         const messageId = message.id;
-        this.threadService.getThreadMessageCount(this.channelId, messageId!).subscribe((count) => {
-          this.threadCounts.set(messageId!, count);
-        });
-        this.threadService.getLastThreadMessageTime(this.channelId, messageId!).subscribe((lastMessageTime) => {
-          this.lastThreadMessageTimes.set(messageId!, lastMessageTime);
-        });
+        this.threadService
+          .getThreadMessageCount(this.channelId, messageId!)
+          .subscribe((count) => {
+            this.threadCounts.set(messageId!, count);
+          });
+        this.threadService
+          .getLastThreadMessageTime(this.channelId, messageId!)
+          .subscribe((lastMessageTime) => {
+            this.lastThreadMessageTimes.set(messageId!, lastMessageTime);
+          });
       });
     });
   }
@@ -95,6 +119,12 @@ export class ChatWindowComponent implements OnInit {
       }
     }
     this.members = members;
+  }
+
+  async loadAllUsers() {
+    this.userService.users$.subscribe((users) => {
+      this.users = users;
+    });
   }
 
   async loadCurrentUser(userId: string) {

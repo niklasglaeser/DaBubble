@@ -22,47 +22,51 @@ import { UserLogged } from '../../models/user-logged.model';
 export class DialogAddUserComponent implements OnInit {
   @Input() users: UserLogged[] = [];
   @Input() selectedUsers: UserLogged[] = [];
-  @Input() filteredUsers: UserLogged[] = [];
   @Output() removeUser = new EventEmitter<UserLogged>();
+  @Output() updatedUsers = new EventEmitter<UserLogged[]>();
 
   userControl = new FormControl();
+  filteredUsers: UserLogged[] = [];
   isPanelOpen!: boolean;
 
   ngOnInit(): void {
-    this.filteredUsers = this.users.slice();
+    this.updateFilteredUsers('');
   }
 
   handleUserSearch(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const query = inputElement.value.toLowerCase();
-    this.filterUsers(query);
+    this.updateFilteredUsers(query);
   }
 
-  filterUsers(query: string): void {
-    this.filteredUsers = this.users.filter((user) =>
-      user.username.toLowerCase().includes(query)
+  updateFilteredUsers(query: string): void {
+    // Filter users to exclude selected users and match the search query
+    this.filteredUsers = this.users.filter(
+      (user) =>
+        !this.selectedUsers.some((selected) => selected.uid === user.uid) && // Exclude selected users
+        user.username.toLowerCase().includes(query) // Match the search query
     );
   }
 
   addUserToSelection(user: UserLogged): void {
     if (!this.selectedUsers.some((u) => u.uid === user.uid)) {
       this.selectedUsers.push(user);
-      this.filteredUsers = this.filteredUsers.filter((u) => u.uid !== user.uid);
+      this.updateFilteredUsers(''); // Update filtered list after selection
       this.userControl.setValue('');
+      this.emitUpdatedUsers();
     }
   }
+
   removeSelectedUser(user: UserLogged): void {
-    this.removeUser.emit(user);
-
-    let alreadyInFilteredUsers = this.filteredUsers.some(
-      (u) => u.uid === user.uid
-    );
-
-    if (!alreadyInFilteredUsers) {
-      this.filteredUsers.push(user);
-      this.filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
-    }
+    this.selectedUsers = this.selectedUsers.filter((u) => u.uid !== user.uid);
+    this.updateFilteredUsers(''); // Update filtered list after removal
+    this.emitUpdatedUsers();
   }
+
+  emitUpdatedUsers(): void {
+    this.updatedUsers.emit(this.selectedUsers);
+  }
+
   onAutocompleteClosed(): void {
     this.isPanelOpen = false;
   }
