@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +18,8 @@ export class DialogAddUserComponent implements OnInit {
   @Input() selectedUsers: UserLogged[] = [];
   @Output() removeUser = new EventEmitter<UserLogged>();
   @Output() updatedUsers = new EventEmitter<UserLogged[]>();
+
+  @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
   userControl = new FormControl();
   filteredUsers: UserLogged[] = [];

@@ -19,20 +19,22 @@ export class DialogAddUserHeaderComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: { members: UserLogged[]; channel: Channel | null; users: UserLogged[] },
     public dialogRef: MatDialogRef<DialogAddUserHeaderComponent>
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.selectedUsers = this.data.members || [];
-    this.allUsers = this.data.users || []; // Assume all users are passed in data.users
-
-    console.log('All users:', this.allUsers);
+    this.allUsers = this.data.users || [];
   }
 
-  close() {
-    this.dialogRef.close(this.selectedUsers);
+  close(save: boolean): void {
+    if (save) {
+      this.dialogRef.close(this.selectedUsers);
+    } else {
+      this.dialogRef.close();
+    }
   }
 
   onUsersUpdated(updatedUsers: UserLogged[]) {
-    this.selectedUsers = updatedUsers; // Update the selected users list
+    this.selectedUsers = updatedUsers;
   }
 }

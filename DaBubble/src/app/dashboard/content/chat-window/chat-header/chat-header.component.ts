@@ -5,6 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
 import { DialogOverviewUsersComponent } from '../../../../dialog/dialog-overview-users/dialog-overview-users.component';
 import { DialogAddUserHeaderComponent } from '../../../../dialog/dialog-add-user-header/dialog-add-user-header.component';
+import { ChannelService } from '../../../../services/channel.service';
+import { UserService } from '../../../../services/user.service';
+import { arrayUnion, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-chat-header',
@@ -18,7 +21,7 @@ export class ChatHeaderComponent {
   @Input() members: UserLogged[] = [];
   @Input() users: UserLogged[] = [];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService) { }
 
   openEditChannel(): void {
     if (this.channel && this.channel.id) {
@@ -59,17 +62,41 @@ export class ChatHeaderComponent {
           members: this.members,
           channel: this.channel,
           users: this.users
-        }
+        },
+        autoFocus: false
       });
 
-      dialogRef.afterClosed().subscribe((updatedMembers: UserLogged[]) => {
+      dialogRef.afterClosed().subscribe(async (updatedMembers: UserLogged[]) => {
         if (updatedMembers) {
-          this.members = updatedMembers; // Aktualisieren Sie die Mitgliederliste
-          console.log('Updated Members:', updatedMembers);
+          this.members = updatedMembers;
+          if (this.channel?.id) {
+            try {
+              await this.channelService.addUsersToChannel(this.channel.id, updatedMembers.map((user) => user.uid));
+              await this.updateUserProfilesWithChannel(updatedMembers.map((user) => user.uid), this.channel.id);
+            } catch (error) {
+              console.error('Error updating Firebase:', error);
+            }
+          } else {
+            console.error('Channel ID is undefined.');
+          }
         }
       });
     } else {
       console.error('No channel ID');
+    }
+  }
+
+  async updateUserProfilesWithChannel(userIds: string[], channelId: string) {
+    try {
+      for (const userId of userIds) {
+        const userRef = this.userService.getSingleUser(userId);
+        await updateDoc(userRef, {
+          joinedChannels: arrayUnion(channelId)
+        });
+      }
+      console.log('User profiles updated successfully with channel.');
+    } catch (e) {
+      console.error('Error updating user profiles with channel:', e);
     }
   }
 }

@@ -124,9 +124,7 @@ export class DialogAddChannelComponent implements OnInit {
   }
 
   removeUser(user: UserLogged): void {
-    // Stelle sicher, dass 'user' den Typ 'UserLogged' hat
     this.selectedUsers = this.selectedUsers.filter((u) => u.uid !== user.uid);
-
     let alreadyInFilteredUsers = this.filteredUsers.some((u) => u.uid === user.uid);
 
     if (!alreadyInFilteredUsers) {
