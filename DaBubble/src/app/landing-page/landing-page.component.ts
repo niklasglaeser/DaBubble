@@ -50,6 +50,7 @@ export class LandingPageComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    this.userIsLogged()
     this.route.params.subscribe((params) => {
       const action = params['action'];
       if (action === 'set-password') {
@@ -61,11 +62,27 @@ export class LandingPageComponent implements OnInit {
           this.$setPW= true
         });
       } else {
-        this.router.navigate(['']); 
+        this.checkUserStatus()
       }
     });
   
     this.startAnimationWithDelay();
+  }
+
+  userIsLogged(){
+    const uid = sessionStorage.getItem('uid') as string;
+    if(uid){
+      this.authService.uid = uid; 
+      this.router.navigate(['dashboard'])
+    }
+  }
+
+  private checkUserStatus() {
+    if (this.authService.uid) {
+      this.router.navigate(['dashboard']);
+    } else {
+      this.router.navigate(['']);
+    }
   }
   
    resetAllStates(): void {

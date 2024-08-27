@@ -4,7 +4,7 @@
         <div class="arrow-down"></div>
     </div>
     <div class="chat-header-right">
-        <div class="user-pictures">
+        <div class="user-pictures" (click)="openOverviewChannel()">
             @for (member of members; track $index) {
             <img src="{{member.photoURL}}">
             }

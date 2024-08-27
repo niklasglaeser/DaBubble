@@ -2,31 +2,32 @@
   <div class="dialog-content">
     <div class="dialog-header">
       <h2>{{title}}</h2>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-        (click)="toggleDialog()">
-        <mask id="mask0_70047_938" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24"
-          height="24">
-          <rect width="24" height="24" fill="#D9D9D9" />
-        </mask>
-        <g mask="url(#mask0_70047_938)">
-          <path
-            d="M12 13.3998L7.10005 18.2998C6.91672 18.4831 6.68338 18.5748 6.40005 18.5748C6.11672 18.5748 5.88338 18.4831 5.70005 18.2998C5.51672 18.1165 5.42505 17.8831 5.42505 17.5998C5.42505 17.3165 5.51672 17.0831 5.70005 16.8998L10.6 11.9998L5.70005 7.0998C5.51672 6.91647 5.42505 6.68314 5.42505 6.3998C5.42505 6.11647 5.51672 5.88314 5.70005 5.6998C5.88338 5.51647 6.11672 5.4248 6.40005 5.4248C6.68338 5.4248 6.91672 5.51647 7.10005 5.6998L12 10.5998L16.9 5.6998C17.0834 5.51647 17.3167 5.4248 17.6 5.4248C17.8834 5.4248 18.1167 5.51647 18.3 5.6998C18.4834 5.88314 18.575 6.11647 18.575 6.3998C18.575 6.68314 18.4834 6.91647 18.3 7.0998L13.4 11.9998L18.3 16.8998C18.4834 17.0831 18.575 17.3165 18.575 17.5998C18.575 17.8831 18.4834 18.1165 18.3 18.2998C18.1167 18.4831 17.8834 18.5748 17.6 18.5748C17.3167 18.5748 17.0834 18.4831 16.9 18.2998L12 13.3998Z"
-            fill="black" />
-        </g>
-      </svg>
+      <div class="close" (click)="close()"></div>
     </div>
     <div class="container-profil">
-      <img src="../../../assets/img/general/avatars/Avatar.svg" alt="">
+      <img src="{{data.user.photoURL}}" alt="">
     </div>
     @if (!editNameClicked) {
     <div class="container-title">
       <div class="fs-18-400">
-        <span class="fs-32-700">{{profilName}}</span>
-        <span class="edit fs-18" (click)="editProfilBtn($event)">{{editName}}</span>
+        <span class="fs-32-700">{{data.user.username}}</span>
+        <span class="edit fs-18" *ngIf="(currentUserId$ | async) === data.user.uid"
+          (click)="editProfilBtn($event)">{{editName}}</span>
       </div>
       <div class="fs-18-400">
-        Online Status
+        @if (data.user.onlineStatus) {
+        <div class="avatarStatus">
+          <img src="../../assets/img/main-page/head/Online.svg">
+          <span style="color: var(--onlineGreen);">Aktiv</span>
+        </div>
+        }@else {
+        <div class="avatarStatus">
+          <img src="../../assets/img/main-page/head/Offline.svg">
+          <span style="color: var(--textGray);">Offline</span>
+        </div>
+        }
       </div>
+
     </div>
     }
     @if (!editNameClicked) {
@@ -34,9 +35,10 @@
       <img src="../../../assets/img/general/mail.svg" alt="" srcset="">
       <div>
         <div class="fs-20-700">E-Mail-Adresse</div>
-        <a class="" href="mailto:fred.beckgmail.com">fred.beckgmail.com</a>
+        <a class="" href="mailto:{{data.user.email}}">{{data.user.email}}</a>
       </div>
     </div>
+    HIER MESSAGE BUTTON
     }@else {
     <div class="email-edit">
       <div class="row">
@@ -46,6 +48,9 @@
       <div class="row">
         <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="profilName" minlength="3" type="text">
       </div>
+      <div *ngIf="profilName && profilName.trim().split(' ').length < 2" class="error-message">
+        Bitte geben Sie sowohl Vor- als auch Nachnamen ein.
+      </div>
       <div class="row">
         <img src="../../../assets/img/general/mail.svg" alt="" srcset="">
         <div class="fs-20-700">Vollständiger Name</div>
@@ -53,9 +58,13 @@
       <div class="row">
         <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="profilEmail" type="text">
       </div>
+      <div *ngIf="!profilEmail" class="error-message">
+        E-Mail darf nicht leer sein.
+      </div>
       <div class="dialog-actions">
         <button class="exitBtn fs-18-700" (click)="toggleDialog()">Abbrechen</button>
-        <button class="saveBtn fs-18-700" (click)="channelUpdate($event)">Speichern</button>
+        <button class="saveBtn fs-18-700" [disabled]="!profilName || !profilEmail"
+          (click)="updateUser()">Speichern</button>
       </div>
     </div>
     }

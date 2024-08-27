@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Auth, AuthProvider, confirmPasswordReset, createUserWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut, updateProfile, user, UserCredential, verifyPasswordResetCode } from '@angular/fire/auth';
+import { Auth, AuthProvider, browserLocalPersistence, confirmPasswordReset, createUserWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail, setPersistence, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut, updateProfile, user, UserCredential, verifyPasswordResetCode } from '@angular/fire/auth';
 import { catchError, concatMap, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { UserInterface } from '../../models/user.interface';
 import { UserLoggedService } from './user-logged.service';
@@ -11,7 +11,7 @@ import { LandingPageComponent } from '../../landing-page/landing-page.component'
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService  {
   firebaseAuth = inject(Auth);
   router = inject(Router);
   user$ = user(this.firebaseAuth);
@@ -19,20 +19,35 @@ export class AuthService {
   currentUserSig = signal<UserInterface | null | undefined>(undefined);
   uid: string = '';
 
-  ngOnInit(): void {
-   
+  constructor(){
+    this.restoreUid()
+    this.subscribeUser()
+    window.addEventListener('beforeunload', this.handleBeforeUnload.bind(this));
+  }
+
+  private restoreUid() {
+    const storedUid = sessionStorage.getItem('uid');
+    if (storedUid) {
+      this.uid = storedUid;
+      console.log('UID restored from localStorage:', this.uid);
+    }
   }
 
   subscribeUser() {
     this.user$.subscribe(async (user) => {
       if (user) {
+        this.uid = user.uid
+        sessionStorage.setItem('uid', this.uid);
         this.currentUserSig.set({
           email: user.email!,
           username: user.displayName!,
           userId: user.uid!
         });
+        await this.updateUserStatus(this.uid, true);
+        console.log('UserId is subscribed:',this.uid, 'Username:', user.displayName)
       } else {
         this.currentUserSig.set(null);
+        sessionStorage.removeItem('uid');
       }
     });
   }
@@ -99,9 +114,7 @@ export class AuthService {
       .then(async (userCredential) => {
         this.uid = userCredential.user.uid;
         console.log('Logged UserID:', this.uid);
-
         await this.updateUserStatus(this.uid, true);
-
         return userCredential;
       })
       .catch((error) => {
@@ -202,5 +215,20 @@ export class AuthService {
   private handleLoginError(error: any): void {
     console.error('Error during Google login:', error);
     throw error;
+  }
+
+  private handleBeforeUnload(event: BeforeUnloadEvent) {
+    if (this.uid) {
+      
+      this.updateUserStatus(this.uid, false).then(() => {
+        
+        this.currentUserSig.set(null);
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    
+    window.removeEventListener('beforeunload', this.handleBeforeUnload.bind(this));
   }
 }

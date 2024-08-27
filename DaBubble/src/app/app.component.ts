@@ -26,14 +26,14 @@ export class AppComponent implements OnInit {
   oobCode :string = ''
 
   ngOnInit(): void {
-    this.authService.subscribeUser();  
+      
   }
 
  logout() {
     this.authService.logout();  
     this.router.navigateByUrl('');  
   }
-  
+ 
   async setStatusOn() {
     if (this.currentUser) {
       try {

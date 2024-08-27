@@ -44,8 +44,9 @@
   width: 100%;
 
   > img {
-    max-width: 200px;
-    max-height: 200px;
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
     object-fit: cover;
   }
 }
@@ -70,6 +71,12 @@
       }
     }
   }
+}
+
+.avatarStatus {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .email {
@@ -142,4 +149,27 @@
       background-color: var(--purple2);
     }
   }
+}
+
+.close {
+  background-image: url('/assets/img/main-page/thread/cross.svg');
+  background-repeat: no-repeat;
+  height: 40px;
+  width: 40px;
+  color: white;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-image: url('/assets/img/main-page/thread/cross-hover.svg');
+  }
+}
+
+.error-message {
+  color: red;
+}
+
+a:focus {
+  outline: none;
+  border: none;
 }
