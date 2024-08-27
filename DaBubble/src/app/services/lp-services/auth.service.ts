@@ -22,10 +22,11 @@ export class AuthService  {
   constructor(){
     this.restoreUid()
     this.subscribeUser()
+    window.addEventListener('beforeunload', this.handleBeforeUnload.bind(this));
   }
 
   private restoreUid() {
-    const storedUid = localStorage.getItem('uid');
+    const storedUid = sessionStorage.getItem('uid');
     if (storedUid) {
       this.uid = storedUid;
       console.log('UID restored from localStorage:', this.uid);
@@ -36,16 +37,17 @@ export class AuthService  {
     this.user$.subscribe(async (user) => {
       if (user) {
         this.uid = user.uid
-        localStorage.setItem('uid', this.uid);
+        sessionStorage.setItem('uid', this.uid);
         this.currentUserSig.set({
           email: user.email!,
           username: user.displayName!,
           userId: user.uid!
         });
+        await this.updateUserStatus(this.uid, true);
         console.log('UserId is subscribed:',this.uid, 'Username:', user.displayName)
       } else {
         this.currentUserSig.set(null);
-        localStorage.removeItem('uid');
+        sessionStorage.removeItem('uid');
       }
     });
   }
@@ -112,9 +114,7 @@ export class AuthService  {
       .then(async (userCredential) => {
         this.uid = userCredential.user.uid;
         console.log('Logged UserID:', this.uid);
-
         await this.updateUserStatus(this.uid, true);
-
         return userCredential;
       })
       .catch((error) => {
@@ -215,5 +215,20 @@ export class AuthService  {
   private handleLoginError(error: any): void {
     console.error('Error during Google login:', error);
     throw error;
+  }
+
+  private handleBeforeUnload(event: BeforeUnloadEvent) {
+    if (this.uid) {
+      
+      this.updateUserStatus(this.uid, false).then(() => {
+        
+        this.currentUserSig.set(null);
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    
+    window.removeEventListener('beforeunload', this.handleBeforeUnload.bind(this));
   }
 }
