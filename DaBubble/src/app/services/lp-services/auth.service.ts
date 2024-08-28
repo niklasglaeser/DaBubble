@@ -22,7 +22,7 @@ export class AuthService  {
   constructor(){
     this.restoreUid()
     this.subscribeUser()
-    window.addEventListener('beforeunload', this.handleBeforeUnload.bind(this));
+    window.addEventListener('storage', this.handleStorageChange.bind(this));
   }
 
   private restoreUid() {
@@ -217,18 +217,18 @@ export class AuthService  {
     throw error;
   }
 
-  private handleBeforeUnload(event: BeforeUnloadEvent) {
-    if (this.uid) {
-      
-      this.updateUserStatus(this.uid, false).then(() => {
-        
-        this.currentUserSig.set(null);
-      });
+  private handleStorageChange(event: StorageEvent) {
+    if (event.key === 'uid' && event.newValue === null) {
+      this.currentUserSig.set(null);
+      sessionStorage.removeItem('uid');
+      this.router.navigate(['']);
     }
   }
 
-  ngOnDestroy() {
+  
+    ngOnDestroy() {
+      window.removeEventListener('storage', this.handleStorageChange.bind(this));
+    }
     
-    window.removeEventListener('beforeunload', this.handleBeforeUnload.bind(this));
-  }
+  
 }
