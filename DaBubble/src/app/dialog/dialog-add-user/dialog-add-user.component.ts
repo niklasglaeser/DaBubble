@@ -26,7 +26,7 @@ export class DialogAddUserComponent implements OnInit {
   isPanelOpen!: boolean;
 
   ngOnInit(): void {
-    this.updateFilteredUsers(''); // Initiale Filterung
+    this.updateFilteredUsers('');
   }
 
   handleUserSearch(event: Event): void {
@@ -50,7 +50,7 @@ export class DialogAddUserComponent implements OnInit {
 
   removeSelectedUser(user: UserLogged): void {
     this.selectedUsers = this.selectedUsers.filter((u) => u.uid !== user.uid);
-    this.updateFilteredUsers(''); // Aktualisiere die Liste, damit der Benutzer wieder in der Auswahl erscheint
+    this.updateFilteredUsers('');
     this.emitUpdatedUsers();
   }
 

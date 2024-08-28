@@ -95,6 +95,12 @@ mat-option {
   margin-top: 16px !important;
 }
 
+mat-chip-grid {
+  max-height: 275px !important;
+  height: 100% !important;
+  overflow-y: auto;
+}
+
 .chip-subcontainer {
   display: flex;
   align-items: center;

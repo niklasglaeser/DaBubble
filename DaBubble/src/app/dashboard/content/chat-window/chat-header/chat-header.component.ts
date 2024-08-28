@@ -21,7 +21,7 @@ export class ChatHeaderComponent {
   @Input() members: UserLogged[] = [];
   @Input() users: UserLogged[] = [];
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService) { }
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService) {}
 
   openEditChannel(): void {
     if (this.channel && this.channel.id) {
@@ -42,8 +42,15 @@ export class ChatHeaderComponent {
   openOverviewChannel(): void {
     if (this.members) {
       const dialogRef = this.dialog.open(DialogOverviewUsersComponent, {
-        data: { members: this.members }
+        data: { members: this.members, channel: this.channel, users: this.users },
+        autoFocus: false,
+        hasBackdrop: true
       });
+
+      dialogRef.componentInstance.openAddUserDialogEvent.subscribe(() => {
+        this.openAddUser();
+      });
+
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           console.log('Dialog result:', result);
@@ -53,7 +60,6 @@ export class ChatHeaderComponent {
       console.error('No channel ID');
     }
   }
-
   openAddUser(): void {
     if (this.members) {
       console.log('All users before opening dialog:', this.users);
@@ -63,7 +69,8 @@ export class ChatHeaderComponent {
           channel: this.channel,
           users: this.users
         },
-        autoFocus: false
+        autoFocus: false,
+        hasBackdrop: true
       });
 
       dialogRef.afterClosed().subscribe(async (updatedMembers: UserLogged[]) => {
@@ -71,8 +78,14 @@ export class ChatHeaderComponent {
           this.members = updatedMembers;
           if (this.channel?.id) {
             try {
-              await this.channelService.addUsersToChannel(this.channel.id, updatedMembers.map((user) => user.uid));
-              await this.updateUserProfilesWithChannel(updatedMembers.map((user) => user.uid), this.channel.id);
+              await this.channelService.addUsersToChannel(
+                this.channel.id,
+                updatedMembers.map((user) => user.uid)
+              );
+              await this.updateUserProfilesWithChannel(
+                updatedMembers.map((user) => user.uid),
+                this.channel.id
+              );
             } catch (error) {
               console.error('Error updating Firebase:', error);
             }
