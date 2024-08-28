@@ -6,11 +6,11 @@
         <div  class="logo-box">
             <img src="assets/img/landing-page/Logo-text.svg" alt="logo" class="logo">
         </div>
-        <div *ngIf="$login" class="create-acc">
+        <div *ngIf="$login && !$mobileVersion" class="create-acc">
             <p class="fs-18">Neu bei DABubble?</p>
             <a (click)="toCreatAcc()"><span class="fs-18 link">Konto erstellen</span></a>
         </div>
- 
+
         <app-login *ngIf="$login"></app-login>
         <app-sign-up *ngIf="$signUp"></app-sign-up>
         <app-avatar *ngIf="$avatar"></app-avatar>
@@ -23,6 +23,11 @@
         <div class="footer">
             <a (click)="toImprint()" ><span class="fs-18 link">Impressum</span></a>
             <a (click)="toPrivacy()" ><span class="fs-18 link">Datenschutz</span></a>
+        </div>
+
+        <div *ngIf="$login && $mobileVersion" class="create-acc">
+            <p class="fs-18">Neu bei DABubble?</p>
+            <a (click)="toCreatAcc()"><span class="fs-18 link">Konto erstellen</span></a>
         </div>
         
     </div>

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { addDoc, collection, Firestore, updateDoc, doc, DocumentReference, setDoc, query, where, getDocs, getDoc, onSnapshot, DocumentData, DocumentSnapshot } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { UserLogged } from '../../models/user-logged.model';
 
 
@@ -15,22 +16,40 @@ export class UserLoggedService {
 
   constructor(){}
 
-  async subscribeUser(id: string): Promise<void> {
-    const docRef = doc(this.userCollection, id);  
-    
-    try {
-      const docSnap = await getDoc(docRef);
+  // async subscribeUser(id: string): Promise<void> {
+  //   const docRef = doc(this.userCollection, id);  
+   
+  //   try {
+  //     const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        this.userData = docSnap.data() as UserLogged;
-      } else {
-        console.log('No such document!');
-        this.userData = undefined;
-      }
-    } catch (error) {
-      console.error('Error getting document:', error);
-      this.userData = undefined;
-    }
+  //     if (docSnap.exists()) {
+  //       this.userData = docSnap.data() as UserLogged;
+  //     } else {
+  //       console.log('No such document!');
+  //       this.userData = undefined;
+  //     }
+  //   } catch (error) {
+  //     console.error('Error getting document:', error);
+  //     this.userData = undefined;
+  //   }
+  // }
+
+  subscribeUser(id: string): Observable<UserLogged | undefined> {
+    return new Observable((observer) => {
+      const docRef = doc(this.userCollection, id);
+      const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          observer.next(docSnap.data() as UserLogged);
+        } else {
+          console.log('No such document!');
+          observer.next(undefined);
+        }
+      }, (error) => {
+        console.error('Error getting document:', error);
+        observer.error(error);
+      });
+      return () => unsubscribe();
+    });
   }
 
   async isEmailTaken(email: string): Promise<boolean> {

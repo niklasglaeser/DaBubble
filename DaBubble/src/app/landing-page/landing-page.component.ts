@@ -33,6 +33,7 @@ export class LandingPageComponent implements OnInit {
   router = inject(Router)
   route = inject(ActivatedRoute)
 
+  $mobileVersion = true
   $login = true;
   $signUp = false;
   $avatar = false;

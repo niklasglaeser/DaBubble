@@ -1,9 +1,9 @@
 <div class="container">
     <div class="content">
-        <h1 class="fs-46">Anmelden</h1>
-        <span class="fs-20 login-text">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
+        <h1 class="fs-46" [ngClass]="{'fs-32-700': mobileVersion}">Anmelden</h1>
+        <span class="fs-20 login-text" [ngClass]="{'fs-17': mobileVersion}">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
         <form [formGroup]="registerForm"  (ngSubmit)="onSubmit()">
-            
+           
             <div class="input-container">
                 
                 <input 

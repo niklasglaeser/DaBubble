@@ -77,7 +77,7 @@ export class SidebarComponent implements OnInit {
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
 
       if (this.channels.length > 0) {
-        // this.openChannel(this.channels[0].id);
+        this.openChannel(this.channels[0].id);
       }
     });
   }
@@ -98,8 +98,14 @@ export class SidebarComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogChannelEditComponent, {
       data: { channelId: channelId }
     });
+    console.log(this.selectedChannelId);
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.selectedChannelId = channelId;
+        this.channelStateService.setSelectedChannelId(channelId);
+      }
+    });
   }
   /*TESTING*/
 
@@ -118,8 +124,7 @@ export class SidebarComponent implements OnInit {
     this.channelStateService.setSelectedChannelId(channelId);
   }
 
-
-  openDirectmessage(userId: string,) {
+  openDirectmessage(userId: string) {
     let recipientId = userId;
     let currentUser = this.authService.currentUserSig();
     let currentUserId = currentUser!.userId;

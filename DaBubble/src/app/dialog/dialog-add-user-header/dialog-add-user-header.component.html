@@ -7,8 +7,8 @@
     <span class="fs-18"># {{data.channel?.name}}</span>
     <app-dialog-add-user class="custom-width-100" [allUsers]="allUsers" [selectedUsers]="selectedUsers"
       (updatedUsers)="onUsersUpdated($event)"></app-dialog-add-user>
-    <div class="dialog-actions">
-      <button (click)="close(true)">Speichern</button>
-    </div>
+  </div>
+  <div class="dialog-actions">
+    <button (click)="close(true)">Speichern</button>
   </div>
 </div>

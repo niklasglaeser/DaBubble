@@ -9,11 +9,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     max-width: 1920px;
     min-height: 950px;
     width: 100%;
     height: 100%;
     margin: auto;
+    padding: 16px;
 }
 
 .logo-box {
@@ -23,6 +25,16 @@
     .logo {
         width: 242px;
         height: 70px;
+    }
+    @media (max-width: 650px) {
+        position: relative;
+        top: unset;
+        left: unset;
+        margin-bottom: 30px;
+        .logo {
+            width: 204px;
+            height: 56px;
+        }
     }
 }
 
@@ -35,6 +47,12 @@
     justify-content: center;
     align-items: center;
     gap: 16px;
+    @media (max-width: 650px) {
+        position: relative;
+        top: unset;
+        right:unset;
+        margin-top: 30px;
+    }
 }
 
 a{
@@ -50,6 +68,9 @@ a{
     align-items: flex-end;
     gap: 16px;
     bottom: 50px;
+    @media (max-width: 650px) {
+        display: none;
+    }
 }
 
 .link{
@@ -121,6 +142,9 @@ a{
 app-login{
     max-width: 606px;
     width: 100%;
+    @media (max-width:650px) {
+        max-width: 552px ;
+    }
 }
 
 app-sign-up{
