@@ -7,6 +7,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { DialogMenuComponent } from './dialog-menu/dialog-menu.component';
+import { DialogEditProfilComponent } from '../../dialog/dialog-edit-profil/dialog-edit-profil.component';
 
 @Component({
   selector: 'app-header',
@@ -28,15 +29,16 @@ export class HeaderComponent {
   authService = inject(AuthService)
   user?: UserLogged 
   
-
   ngOnInit(): void {
     this.subscribeToUserData()
   }
 
   async subscribeToUserData(): Promise<void> {
     if (this.authService.uid) {
-      await this.userLogged.subscribeUser(this.authService.uid)
-      this.user = this.userLogged.userData
+      await this.userLogged.subscribeUser(this.authService.uid).subscribe((data) =>{
+        this.user = data
+      })
+      
     }
   }
 
@@ -48,6 +50,12 @@ export class HeaderComponent {
         top: `${arrowButton.offsetTop + arrowButton.offsetHeight}px`,
         left: `${arrowButton.offsetLeft - 250}px`
       }, 
+    });
+  }
+
+  openProfilDialog(){
+    this.dialog.open(DialogEditProfilComponent, {
+     
     });
   }
 }

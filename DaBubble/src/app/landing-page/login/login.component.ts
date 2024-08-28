@@ -25,13 +25,16 @@ export class LoginComponent {
   http = inject(HttpClient);
   isSubmited: boolean = false;
   errorM: string | null = null; 
+  mobileVersion: boolean
 
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private lp: LandingPageComponent) {}
+  constructor(private fb: FormBuilder, private lp: LandingPageComponent) {
+    this.mobileVersion = this.lp.$mobileVersion
+  }
 
   onSubmit(): void {
     this.isSubmited = true; 
