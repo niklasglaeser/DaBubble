@@ -7,7 +7,7 @@ import { UserLogged } from '../models/user-logged.model';
   providedIn: 'root'
 })
 export class UserService {
-  private firestore = inject(Firestore);
+  public firestore = inject(Firestore);
   private usersSubject = new BehaviorSubject<UserLogged[]>([]);
 
   users$ = this.usersSubject.asObservable();

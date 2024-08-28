@@ -127,7 +127,9 @@ export class SidebarComponent implements OnInit {
     this.dmService.setConversationMembers(currentUserId, recipientId).then(() => {
       // Notify the DM window that the conversation is ready to be loaded
       this.conversationSet.emit();
+      this.dmService.setRecipientId(recipientId);
     });
+    
 
     console.log('open Directmessage for User' + userId);
     let dmWindow = document.querySelector('.dm-window') as HTMLElement;
