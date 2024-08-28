@@ -1,22 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserLogged } from '../../models/user-logged.model';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { getDoc } from '@angular/fire/firestore';
+import { DialogAddChannelComponent } from '../dialog-add-channel/dialog-add-channel.component';
+import { SidebarComponent } from '../../dashboard/content/sidebar/sidebar.component';
+import { ChannelStateService } from '../../services/channel-state.service';
 
 @Component({
   selector: 'app-dialog-edit-profil',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './dialog-edit-profil.component.html',
   styleUrl: './dialog-edit-profil.component.scss'
 })
 export class DialogEditProfilComponent implements OnInit {
-  isOpen = true;
+  // isOpen = true;
   currentUserId$ = new BehaviorSubject<string | null>(null);
   user!: UserLogged;
 
@@ -29,7 +32,7 @@ export class DialogEditProfilComponent implements OnInit {
 
   inputNameDisabled: boolean = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { user: UserLogged }, private auth: Auth = inject(Auth), public dialogRef: MatDialogRef<DialogEditProfilComponent>, private userService: UserService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { user: UserLogged }, private auth: Auth = inject(Auth), public dialogRef: MatDialogRef<DialogEditProfilComponent>, private userService: UserService, private channelStateService: ChannelStateService, private dialog: MatDialog) {
     this.getCurrentUserId();
   }
 
@@ -45,7 +48,6 @@ export class DialogEditProfilComponent implements OnInit {
       try {
         this.editNameClicked = false;
         this.editName = 'Bearbeiten';
-        this.channelUpdate(event);
       } catch {
         console.log('error');
       }
@@ -92,13 +94,14 @@ export class DialogEditProfilComponent implements OnInit {
     }
   }
 
-  channelUpdate(event: Event) {
-    console.log('Channel update' + event);
-  }
+  openDirectMessage(userId: string) {
+    this.channelStateService.openDirectMessage(userId);
+    this.dialog.closeAll();
 
-  toggleDialog() {
-    this.isOpen = !this.isOpen;
   }
+  // toggleDialog() {
+  //   this.isOpen = !this.isOpen;
+  // }
 
   close() {
     this.dialogRef.close();

@@ -80,6 +80,9 @@ export class SidebarComponent implements OnInit {
         this.openChannel(this.channels[0].id);
       }
     });
+    this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
+      this.openDirectmessage(userId);
+    });
   }
 
   getList(): Channel[] {
@@ -90,7 +93,7 @@ export class SidebarComponent implements OnInit {
   addChannel() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
   /*TESTING*/
@@ -134,7 +137,7 @@ export class SidebarComponent implements OnInit {
       this.conversationSet.emit();
       this.dmService.setRecipientId(recipientId);
     });
-    
+
 
     console.log('open Directmessage for User' + userId);
     let dmWindow = document.querySelector('.dm-window') as HTMLElement;

@@ -1,4 +1,5 @@
-<div class="dialog" *ngIf="isOpen">
+<!-- <div class="dialog" *ngIf="isOpen"> -->
+<div class="dialog">
   <div class="dialog-content">
     <div class="dialog-header">
       <h2>{{title}}</h2>
@@ -18,12 +19,12 @@
         @if (data.user.onlineStatus) {
         <div class="avatarStatus">
           <img src="../../assets/img/main-page/head/Online.svg">
-          <span style="color: var(--onlineGreen);">Aktiv</span>
+          <span style="color: var(--onlineGreen);" class="fs-20">Aktiv</span>
         </div>
         }@else {
         <div class="avatarStatus">
           <img src="../../assets/img/main-page/head/Offline.svg">
-          <span style="color: var(--textGray);">Offline</span>
+          <span style="color: var(--textGray);" class="fs-20">Offline</span>
         </div>
         }
       </div>
@@ -35,10 +36,13 @@
       <img src="../../../assets/img/general/mail.svg" alt="" srcset="">
       <div>
         <div class="fs-20-700">E-Mail-Adresse</div>
-        <a class="" href="mailto:{{data.user.email}}">{{data.user.email}}</a>
+        <a class="fs-18" href="mailto:{{data.user.email}}">{{data.user.email}}</a>
       </div>
     </div>
-    HIER MESSAGE BUTTON
+    <div class="dialog-actions">
+      <button (click)="openDirectMessage(data.user.uid)"><img src="../../../assets/img/general/message.svg"><span
+          class="fs-18-700">Nachricht</span></button>
+    </div>
     }@else {
     <div class="email-edit">
       <div class="row">
@@ -62,7 +66,7 @@
         E-Mail darf nicht leer sein.
       </div>
       <div class="dialog-actions">
-        <button class="exitBtn fs-18-700" (click)="toggleDialog()">Abbrechen</button>
+        <button class="exitBtn fs-18-700" (click)="close()">Abbrechen</button>
         <button class="saveBtn fs-18-700" [disabled]="!profilName || !profilEmail"
           (click)="updateUser()">Speichern</button>
       </div>

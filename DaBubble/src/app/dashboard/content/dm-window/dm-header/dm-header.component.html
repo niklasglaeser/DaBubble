@@ -1,8 +1,9 @@
 <div class="chat-header" *ngIf="recipientUser$ | async as recipientUser">
-    <div class="chat-header-left">
+    <div class="chat-header-left" (click)="openProfile(recipientUser.uid)">
         <div class="avatarStatus">
-            <img src="{{ recipientUser?.photoURL }}">
-            <img [src]="recipientUser?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+            <img [src]="recipientUser?.photoURL" alt="User Avatar">
+            <img [src]="recipientUser?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'"
+                alt="User Status">
         </div>
         <div class="fs-24-700">{{recipientUser?.username}}</div>
     </div>

@@ -173,3 +173,27 @@ a:focus {
   outline: none;
   border: none;
 }
+
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px 12px 28px;
+    color: white;
+    background-color: var(--purple1);
+    border: unset;
+    border-radius: 25px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--lightPurple);
+    }
+  }
+}
