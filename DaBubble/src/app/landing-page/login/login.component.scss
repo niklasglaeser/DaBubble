@@ -119,6 +119,10 @@ input {
     }
     @media (max-width: 650px) {
         height: 50px;
+        
+    }
+    @media (max-width: 400px) {
+        padding: 18px 32px 18px 50px;
         &::placeholder {
             font-size: 14px; 
         }
@@ -128,7 +132,6 @@ input {
 input:focus ~ mat-icon{
     color: black;
 }
-
 
 .fpw{
     span{
