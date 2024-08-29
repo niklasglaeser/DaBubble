@@ -1,24 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {
-  addDoc,
-  collection,
-  collectionData,
-  doc,
-  Firestore,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  setDoc
-} from '@angular/fire/firestore';
+import {addDoc, collection, collectionData, doc, Firestore, getDoc, onSnapshot, orderBy, query, setDoc} from '@angular/fire/firestore';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { AuthService } from './lp-services/auth.service';
 import { UserLogged } from '../models/user-logged.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root',})
 export class DirectMessagesService implements OnDestroy {
 
   currentUserId!: string;
@@ -109,6 +96,11 @@ export class DirectMessagesService implements OnDestroy {
     }
   }
 
+  /**
+  * Loads and returns the conversation messages between the current user and the recipient.
+  * Messages are fetched from Firestore, sorted by creation time, and the latest user data (username, photoURL) of the sender gets added.
+  * @returns {Observable<Message[]>} An Observable that emits an array of updated messages.
+  */
   loadConversation(): Observable<Message[]> {
     const messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
     const messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
@@ -116,13 +108,8 @@ export class DirectMessagesService implements OnDestroy {
     return combineLatest([ collectionData(messagesQuery, { idField: 'id' }) as Observable<Message[]>, this.currentUser$, this.recipientUser$])
     .pipe(map(([messages, currentUser, recipientUser]) => {
         return messages.map(message => {
-          if (message.senderId === this.currentUserId) {
-            message.senderName = currentUser?.username || message.senderName;
-            message.photoURL = currentUser?.photoURL || message.photoURL;
-          } else if (message.senderId === this.recipientId) {
-            message.senderName = recipientUser?.username || message.senderName;
-            message.photoURL = recipientUser?.photoURL || message.photoURL;
-          }
+          if (message.senderId === this.currentUserId) { message.senderName = currentUser?.username || message.senderName; message.photoURL = currentUser?.photoURL || message.photoURL;
+          } else if (message.senderId === this.recipientId) { message.senderName = recipientUser?.username || message.senderName; message.photoURL = recipientUser?.photoURL || message.photoURL;}
           return message;
         });
       })

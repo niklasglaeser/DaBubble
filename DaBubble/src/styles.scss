@@ -49,30 +49,6 @@ $DaBubble-theme: mat.define-light-theme(
   --rosaError: #ed1e7a;
 }
 
-/* Custom Scrollbar */
-
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--lighterPurple);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--lightPurple);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  cursor: pointer;
-  background: var(--purple3);
-}
-
-/* Custom Scrollbar */
-
 * {
   margin: 0;
   box-sizing: border-box;
@@ -84,6 +60,28 @@ body {
   height: auto;
   width: auto;
   background-color: var(--bgColor);
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: white; 
+    border-radius: 10px; 
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #EDEEFE; 
+  }
+  
+  scrollbar-width: thin;
+  scrollbar-color: #EDEEFE transparent;
 }
 
 a,
