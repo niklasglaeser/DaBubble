@@ -12,7 +12,10 @@ import { Channel } from '../../../../models/channel.class';
 })
 export class ChatFooterComponent {
   @Input() channel: Channel | null = null;
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService) {
+    console.log(this.channel);
+
+  }
 
   sendMessage(): void {
     const textarea = document.getElementById(

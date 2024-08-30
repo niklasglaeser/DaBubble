@@ -1,13 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { Channel } from '../../../../models/channel.class';
 import { UserLogged } from '../../../../models/user-logged.model';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
 import { DialogOverviewUsersComponent } from '../../../../dialog/dialog-overview-users/dialog-overview-users.component';
 import { DialogAddUserHeaderComponent } from '../../../../dialog/dialog-add-user-header/dialog-add-user-header.component';
 import { ChannelService } from '../../../../services/channel.service';
 import { UserService } from '../../../../services/user.service';
 import { arrayUnion, updateDoc } from '@angular/fire/firestore';
+import { GlobalService } from '../../../../services/global.service';
 
 @Component({
   selector: 'app-chat-header',
@@ -21,13 +22,23 @@ export class ChatHeaderComponent {
   @Input() members: UserLogged[] = [];
   @Input() users: UserLogged[] = [];
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService) {}
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private globalService: GlobalService) { }
 
-  openEditChannel(): void {
+  openEditChannel(event: MouseEvent): void {
+    console.log(event);
+
     if (this.channel && this.channel.id) {
-      const dialogRef = this.dialog.open(DialogChannelEditComponent, {
-        data: { channelId: this.channel.id }
-      });
+      const dialogConfig = new MatDialogConfig();
+      const dialogWidth = 872;
+      const position = this.globalService.calculateRightPosition(event, dialogWidth);
+
+      dialogConfig.data = { channelId: this.channel.id };
+      dialogConfig.position = position;
+      dialogConfig.panelClass = 'dialog-panel-edit-channel';
+      dialogConfig.width = '100%';
+      dialogConfig.maxWidth = `${dialogWidth}px`;
+
+      const dialogRef = this.dialog.open(DialogChannelEditComponent, dialogConfig);
 
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
@@ -39,16 +50,27 @@ export class ChatHeaderComponent {
     }
   }
 
-  openOverviewChannel(): void {
+
+
+
+  openOverviewChannel(event: MouseEvent): void {
     if (this.members) {
-      const dialogRef = this.dialog.open(DialogOverviewUsersComponent, {
-        data: { members: this.members, channel: this.channel, users: this.users },
-        autoFocus: false,
-        hasBackdrop: true
-      });
+      const dialogConfig = new MatDialogConfig();
+      const dialogWidth = 415;
+      const position = this.globalService.calculateLeftPosition(event, dialogWidth);
+
+      dialogConfig.data = { members: this.members, channel: this.channel, users: this.users };
+      dialogConfig.position = position;
+      dialogConfig.panelClass = 'dialog-panel-channel-overview';
+      dialogConfig.width = '100%';
+      dialogConfig.maxWidth = `${dialogWidth}px`;
+      dialogConfig.autoFocus = false;
+      dialogConfig.hasBackdrop = true;
+
+      const dialogRef = this.dialog.open(DialogOverviewUsersComponent, dialogConfig);
 
       dialogRef.componentInstance.openAddUserDialogEvent.subscribe(() => {
-        this.openAddUser();
+        this.openAddUser(event);
       });
 
       dialogRef.afterClosed().subscribe((result) => {
@@ -60,18 +82,24 @@ export class ChatHeaderComponent {
       console.error('No channel ID');
     }
   }
-  openAddUser(): void {
+
+
+
+  openAddUser(event: MouseEvent): void {
     if (this.members) {
-      console.log('All users before opening dialog:', this.users);
-      const dialogRef = this.dialog.open(DialogAddUserHeaderComponent, {
-        data: {
-          members: this.members,
-          channel: this.channel,
-          users: this.users
-        },
-        autoFocus: false,
-        hasBackdrop: true
-      });
+      const dialogConfig = new MatDialogConfig();
+      const dialogWidth = 415;
+      const position = this.globalService.calculateLeftPosition(event, dialogWidth);
+
+      dialogConfig.data = { members: this.members, channel: this.channel, users: this.users };
+      dialogConfig.position = position;
+      dialogConfig.panelClass = 'dialog-panel-channel-overview';
+      dialogConfig.width = '100%';
+      dialogConfig.maxWidth = `${dialogWidth}px`;
+      dialogConfig.autoFocus = false;
+      dialogConfig.hasBackdrop = true;
+
+      const dialogRef = this.dialog.open(DialogAddUserHeaderComponent, dialogConfig);
 
       dialogRef.afterClosed().subscribe(async (updatedMembers: UserLogged[]) => {
         if (updatedMembers) {

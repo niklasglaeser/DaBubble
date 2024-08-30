@@ -14,12 +14,11 @@ import { getDoc } from '@angular/fire/firestore';
   styleUrl: './dialog-channel-edit.component.scss',
 })
 export class DialogChannelEditComponent {
-  @ViewChild('descriptionTextarea')
-  descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
   channel!: Channel;
 
   isOpen = true;
-  title: string = 'Entwicklerteam 1';
+  title: string = '';
 
   editName: string = 'Bearbeiten';
   editDescription: string = 'Bearbeiten';
@@ -38,7 +37,7 @@ export class DialogChannelEditComponent {
     private channelService: ChannelService,
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string },
     public dialogRef: MatDialogRef<DialogChannelEditComponent>
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadChannel();
@@ -118,10 +117,6 @@ export class DialogChannelEditComponent {
         console.log('error');
       }
     }
-  }
-
-  toggleDialog() {
-    this.isOpen = !this.isOpen;
   }
 
   close() {

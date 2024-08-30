@@ -1,24 +1,8 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
 @include mat.core();
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
 $DaBubble-primary: mat.define-palette(mat.$indigo-palette);
 $DaBubble-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
 $DaBubble-warn: mat.define-palette(mat.$red-palette);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
 $DaBubble-theme: mat.define-light-theme(
   (
     color: (
@@ -30,10 +14,6 @@ $DaBubble-theme: mat.define-light-theme(
     density: 0
   )
 );
-
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
 @include mat.all-component-themes($DaBubble-theme);
 
 /* You can add global styles to this file, and also import other style files */
@@ -56,7 +36,6 @@ $DaBubble-theme: mat.define-light-theme(
 }
 
 body {
-  // background-color: var(--bgColor);
   height: auto;
   width: auto;
   background-color: var(--bgColor);
@@ -208,8 +187,18 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-::ng-deep .custom-dialog-container {
-  margin: 0 !important;
-  position: fixed !important; /* Erzwinge die fixe Position */
-  transform: none !important; /* Entferne die Standard-Transformation */
+.dialog-panel-edit-channel
+  .mat-mdc-dialog-container
+  .mdc-dialog__container
+  .mat-mdc-dialog-surface {
+  border-radius: 0 30px 30px 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dialog-panel-channel-overview
+  .mat-mdc-dialog-container
+  .mdc-dialog__container
+  .mat-mdc-dialog-surface {
+  border-radius: 30px 0 30px 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }

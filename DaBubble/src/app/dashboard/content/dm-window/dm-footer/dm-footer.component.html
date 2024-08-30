@@ -1,5 +1,6 @@
-<div class="dm-footer">
-    <textarea type="text" name="message-input" id="dm-message-input" placeholder="Nachricht an #Entwicklerteam"></textarea>
+<div class="dm-footer" *ngIf="recipientUser$ | async as recipientUser">
+    <textarea type="text" name="message-input" id="dm-message-input"
+        placeholder="Nachricht an #{{recipientUser?.username}}"></textarea>
     <div class="chat-message-toolbar">
         <div class="chat-toolbar-left">
             <div>
