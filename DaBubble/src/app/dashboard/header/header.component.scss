@@ -5,6 +5,7 @@
     padding: 20px 40px;
     align-items: center;
     box-sizing: border-box;
+    gap: 100px;
 }
 
 .header-left {
@@ -17,12 +18,82 @@
 
 .header-center {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     gap: 30px;
+    flex: 1;
     background-color: white;
     border-radius: 30px;
-    padding: 20px;
-    width: 900px;
+    padding: 8px 16px;
+    // width: 900px;
+}
+
+.form-group-search {
+    position: relative;
+    flex: 1;
+    input {
+        width: 100%;
+        border: 0px solid var(--lightPurple);
+        border-radius: 40px;
+        box-sizing: border-box;
+        font-size: 24px;
+        font-weight: 400;
+        outline: none;
+    }
+}
+
+.chip-subcontainer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    p {
+        margin: 0;
+        font-size: 18px;
+    }
+}
+
+/* MATERIAL DESIGN AUTOCOMPLETE*/
+::ng-deep .mdc-list-item__primary-text {
+    &:hover {
+        background-color: var(--lighterPurple) !important;
+        border-radius: 30px;
+    }
+}
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Nunito", sans-serif !important;
+    padding: 4px 16px;
+}
+
+mat-option {
+    margin-bottom: 8px !important;
+    padding-left: 20px !important;
+    &:hover {
+        background-color: transparent !important;
+    }
+}
+
+::ng-deep .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+    border-radius: 0 0 30px 30px !important;
+}
+/* MATERIAL DESIGN AUTOCOMPLETE*/
+.avatarStatus {
+    position: relative;
+    > img:first-child {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    > :last-child {
+        position: absolute;
+        width: 14px;
+        bottom: 6px;
+        right: 0;
+    }
 }
 
 .search-input {
@@ -43,10 +114,6 @@
     cursor: pointer;
     scale: 120%;
 }
-
-
-
-
 .header-right {
     display: flex;
     align-items: center;
@@ -54,41 +121,19 @@
     padding-right: 30px;
     &:hover {
         cursor: pointer;
-        background-color: #EDEEFE;
-        
+        background-color: #edeefe;
+
         .arrow-down {
-            background-image: url('/assets/img/main-page/chat/arrow_down_hover.svg');
+            background-image: url("/assets/img/main-page/chat/arrow_down_hover.svg");
             transition: background-image 0.3s ease;
+        }
     }
-}
 }
 
-.avatarStatus {
-    position: relative;
-    display: flex;
-    align-items: center;
-  
-    > img:first-child {
-      width: 70px;
-      height: 70px;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-  
-    > :last-child {
-      position: absolute;
-      width: 14px;
-      bottom: 0;
-      right: 0;
-    }
-  }
-  
 .arrow-down {
     height: 40px;
     width: 40px;
-    background-image: url('/assets/img/main-page/chat/arrow_down.svg');
+    background-image: url("/assets/img/main-page/chat/arrow_down.svg");
     background-repeat: no-repeat;
     background-position: center;
 }
-
- 

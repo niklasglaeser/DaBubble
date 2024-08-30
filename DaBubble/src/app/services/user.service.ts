@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { EventEmitter, inject, Injectable } from '@angular/core';
 import { collection, Firestore, query, where, collectionData, onSnapshot, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserLogged } from '../models/user-logged.model';
@@ -9,6 +9,9 @@ import { UserLogged } from '../models/user-logged.model';
 export class UserService {
   public firestore = inject(Firestore);
   private usersSubject = new BehaviorSubject<UserLogged[]>([]);
+
+  userSearchSelected: EventEmitter<string> = new EventEmitter<string>();
+  channelSearchSelect: EventEmitter<string> = new EventEmitter<string>();
 
   users$ = this.usersSubject.asObservable();
   unsubList: () => void;
@@ -67,18 +70,6 @@ export class UserService {
     }
   }
 
-  // async getSingleUserObj(docId: string): Promise<UserLogged | null> {
-  //   const userDocRef = doc(this.firestore, 'Users', docId);
-  //   const docSnap = await getDoc(userDocRef);
-
-  //   if (docSnap.exists()) {
-  //     return { uid: docSnap.id, ...docSnap.data() } as UserLogged;
-  //   } else {
-  //     console.error('No such user!');
-  //     return null;
-  //   }
-  // }
-
   getSingleUser(docId: string) {
     return doc(collection(this.firestore, 'Users'), docId);
   }
@@ -93,5 +84,13 @@ export class UserService {
     const usersQuery = query(usersCollection, where('username', '>=', queryText), where('username', '<=', endText));
 
     return collectionData(usersQuery) as Observable<UserLogged[]>;
+  }
+
+  emitUserId(userId: string) {
+    this.userSearchSelected.emit(userId);
+  }
+
+  emitChannelId(channelId: string) {
+    this.channelSearchSelect.emit(channelId);
   }
 }

@@ -83,6 +83,13 @@ export class SidebarComponent implements OnInit {
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
       this.openDirectmessage(userId);
     });
+
+    this.userService.userSearchSelected.subscribe((userId: string) => {
+      this.openDirectmessage(userId);
+    });
+    this.userService.channelSearchSelect.subscribe((channelId: string) => {
+      this.openChannel(channelId);
+    });
   }
 
   getList(): Channel[] {
