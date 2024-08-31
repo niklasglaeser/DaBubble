@@ -18,15 +18,16 @@ import { Message } from '../models/message.model'
 import { Reaction } from '../models/reaction.model'
 import { AuthService } from './lp-services/auth.service'
 import { UserLogged } from '../models/user-logged.model'
+import { Channel } from '../models/channel.class'
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(private firestore: Firestore, private authService: AuthService) { }
 
   async addMessage(channelId: string, message: Message) {
-    const messagesRef = collection(this.firestore,'channels',channelId,'messages');
+    const messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
     const currentUser = this.authService.currentUserSig()
 
     await addDoc(messagesRef, {
@@ -58,7 +59,7 @@ export class MessageService {
     message: Message,
     messageId: string
   ) {
-    const messagesRef = collection(this.firestore,'channels',channelId,'messages', messageId, 'thread')
+    const messagesRef = collection(this.firestore, 'channels', channelId, 'messages', messageId, 'thread')
     const currentUser = this.authService.currentUserSig()
 
     await addDoc(messagesRef, {
@@ -90,6 +91,51 @@ export class MessageService {
       console.error('Error updating document:', e)
     }
   }
+
+  searchUsers(searchText: string): Observable<UserLogged[]> {
+    return new Observable(observer => {
+      const userCollection = collection(this.firestore, 'Users');
+      const q = query(userCollection, orderBy('username'));
+
+      const unsubscribe = onSnapshot(q, snapshot => {
+        const users = snapshot.docs
+          .map(doc => {
+            const data = doc.data() as UserLogged;
+            return data;
+          })
+          .filter(user => user.username.toLowerCase().includes(searchText.toLowerCase()));
+
+        observer.next(users);
+      }, error => observer.error(error));
+
+      return () => unsubscribe();
+    });
+  }
+
+  searchUserChannels(userId: string, searchText: string): Observable<Channel[]> {
+    return new Observable(observer => {
+      const channelCollection = collection(this.firestore, 'channels');
+      const q = query(channelCollection, orderBy('name'));
+
+      const unsubscribe = onSnapshot(q, snapshot => {
+        const channels = snapshot.docs
+          .map(doc => {
+            const data = doc.data() as Channel;
+            return data;
+          })
+          .filter(channel =>
+            channel.name.toLowerCase().includes(searchText.toLowerCase()) &&
+            channel.members?.includes(userId)
+          );
+
+        observer.next(channels);
+      }, error => observer.error(error));
+
+      return () => unsubscribe();
+    });
+  }
+
+
 
   getMessagesWithUsers(channelId: string): Observable<Message[]> {
     return new Observable((observer) => {
