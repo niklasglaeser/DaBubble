@@ -155,6 +155,10 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  openSearchBar() {
+    this.channelStateService.openSearchBar();
+  }
+
   toggleDropdown(menu: string) {
     if (menu === 'channels') {
       this.isChannelsDropdownOpen = !this.isChannelsDropdownOpen;

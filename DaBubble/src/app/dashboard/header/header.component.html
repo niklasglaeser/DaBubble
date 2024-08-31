@@ -3,9 +3,9 @@
     <div class="header-center">
         <div class="form-group-search">
             <div class="header-center">
-                <input type="text" placeholder="DevSpace" [formControl]="searchControl" [matAutocomplete]="auto"
-                    class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen"
-                    (input)="handleContentSearch($event)" />
+                <input type="text" [placeholder]="placeholderText" [formControl]="searchControl"
+                    [matAutocomplete]="auto" class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen"
+                    (input)="handleContentSearch($event)" matAutocompleteTrigger />
                 <img class="search-button" src="/assets/img/main-page/head/search.svg">
             </div>
             <mat-autocomplete #auto="matAutocomplete" (opened)="isPanelOpen = true" (closed)="isPanelOpen = false"
