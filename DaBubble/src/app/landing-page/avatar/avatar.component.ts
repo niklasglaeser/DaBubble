@@ -33,7 +33,7 @@ export class AvatarComponent {
 
   choseAvatar(index: number) {
     this.avatars = this.avatars.map((_, i) => i === index);
-    this.profileImg = `assets/img/landing-page/men${index}.svg`; // Setze die Avatar-URL
+    this.profileImg = `assets/img/landing-page/men${index}.svg`; 
   }
 
   backToSignUp() {
