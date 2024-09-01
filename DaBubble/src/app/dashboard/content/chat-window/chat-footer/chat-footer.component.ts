@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, inject, Input, ViewChild } from '@angular/core';
 import { MessageService } from '../../../../services/message.service';
 import { Message } from '../../../../models/message.model';
 import { Channel } from '../../../../models/channel.class';
@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { UserLogged } from '../../../../models/user-logged.model';
 import { AuthService } from '../../../../services/lp-services/auth.service';
+import { UserLoggedService } from '../../../../services/lp-services/user-logged.service';
+import { UploadService } from '../../../../services/lp-services/upload.service';
 
 @Component({
   selector: 'app-chat-footer',
@@ -19,8 +21,10 @@ import { AuthService } from '../../../../services/lp-services/auth.service';
 export class ChatFooterComponent {
   @Input() channel: Channel | null = null;
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
-
+  userService = inject(UserLoggedService);
+  imgUploadService = inject(UploadService);
   currentUserId: string = '';
+  chatImg: string | null = null; 
 
   symbolSearch = new FormControl();
   filteredUserOptions$: Observable<UserLogged[]> | null = null;
@@ -40,11 +44,13 @@ export class ChatFooterComponent {
 
     if (messageText.trim()) {
       const message: Message = {
+        photoURL: this.chatImg || '',
         message: messageText,
         senderId: '',
         // senderName: '',
         created_at: new Date(),
         updated_at: new Date(),
+        
       };
 
       const channelId = this.channel?.id;
@@ -95,6 +101,29 @@ export class ChatFooterComponent {
     });
   }
 
+  uploadImage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    
+    if (file) {
+      const currentUser = this.authService.currentUserSig();
+      if (currentUser) {
+        this.imgUploadService.uploadImgChat(currentUser.userId,file,this.channel?.id).pipe(
+        ).subscribe({
+          next: (photoURL: string) => {
+            this.chatImg = photoURL;
+            console.log('Bild erfolgreich hochgeladen:', photoURL);
+          },
+          error: (err: any) => {
+            console.error('Fehler beim Hochladen des Bildes:', err);
+          }
+        });
+      }
+    }
+  }
 
+  triggerFileUpload(inputElement: HTMLInputElement) {
+    inputElement.click();
+  }
 
 }

@@ -10,6 +10,8 @@ import { getDoc } from '@angular/fire/firestore';
 import { DialogAddChannelComponent } from '../dialog-add-channel/dialog-add-channel.component';
 import { SidebarComponent } from '../../dashboard/content/sidebar/sidebar.component';
 import { ChannelStateService } from '../../services/channel-state.service';
+import { AvatarComponent } from '../../landing-page/avatar/avatar.component';
+import { AvatarProfileComponent } from './avatar/avatar.component';
 
 @Component({
   selector: 'app-dialog-edit-profil',
@@ -111,5 +113,9 @@ export class DialogEditProfilComponent implements OnInit {
     onAuthStateChanged(this.auth, (user) => {
       this.currentUserId$.next(user ? user.uid : null);
     });
+  }
+
+  openProfilAvatar() {
+    this.dialog.open(AvatarProfileComponent, {});
   }
 }
