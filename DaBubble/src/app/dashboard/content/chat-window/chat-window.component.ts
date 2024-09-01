@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { ChatMessagesComponent } from './chat-messages/chat-messages.component';
 import { ChatFooterComponent } from './chat-footer/chat-footer.component';
@@ -27,6 +27,8 @@ import { ThreadService } from '../../../services/thread.service';
   styleUrl: './chat-window.component.scss',
 })
 export class ChatWindowComponent implements OnInit {
+
+  @Input() workspaceVisible: boolean = true;
   channelId: string = '';
   channel: Channel | null = null;
 

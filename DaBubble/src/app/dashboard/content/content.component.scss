@@ -1,8 +1,13 @@
 .chat-window {
   width: 100%;
-  padding-right: 30px;
-  padding-left: 30px;
   display: flex;
+  margin-left: 20px;
+
+  &.no-sidebar {
+    margin-left: 0;
+  }
+  // padding-right: 30px;
+  // padding-left: 30px;
 }
 
 .dm-window {
@@ -10,14 +15,13 @@
   padding-right: 30px;
   padding-left: 30px;
   display: none;
-  
 }
 
 .thread-window {
   max-width: 0;
   width: 0;
   transition: max-width 0.3s;
-  padding-right: 50px;
+  margin-left: 20px;
   visibility: hidden;
 }
 
@@ -28,7 +32,7 @@
 }
 
 .sidebar-window {
-  padding-left: 50px;
-  height: 95%;
+  // padding-left: 50px;
+  // height: 95%;
   box-sizing: border-box;
 }
