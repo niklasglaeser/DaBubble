@@ -60,10 +60,15 @@ export class SidebarComponent implements OnInit {
   selectedChannelId: string | null = null;
 
   users: UserLogged[] = [];
+  directMessagesUsers: UserLogged[] = [];
   unsubscribe: any;
 
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService) {
 
+  }
+
+  get currentUserId(): string | undefined {
+    return this.authService.uid;
   }
 
   ngOnInit(): void {
@@ -89,7 +94,23 @@ export class SidebarComponent implements OnInit {
     this.userService.channelSearchSelect.subscribe((channelId: string) => {
       this.openChannel(channelId);
     });
+
+    this.loadDmConvos();
   }
+
+  loadDmConvos() {
+    const currentUserId = this.currentUserId;
+    if (currentUserId) {
+      this.dmService.setCurrentUserId(currentUserId);
+  
+      this.dmService.conversations$.subscribe(users => {
+        this.directMessagesUsers = users;
+      });
+    } else {
+      console.error('Current user ID is undefined, unable to load direct message conversations.');
+    }
+  }
+  
 
   getList(): Channel[] {
     return this.channelService.channels;

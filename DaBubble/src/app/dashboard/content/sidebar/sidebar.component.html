@@ -84,7 +84,7 @@
     </div>
   </div>
   <div class="dropdown" [class.show]="isMessagesDropdownOpen">
-    @for (user of users; track $index) {
+    @for (user of directMessagesUsers; track $index) {
     <div class="directUser" (click)="openDirectmessage(user.uid)">
       <div [class.active]="selectedUserId === user.uid">
         <div class="avatarStatus">

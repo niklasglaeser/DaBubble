@@ -21,14 +21,20 @@ export class DirectMessagesService implements OnDestroy {
   private currentUserSource = new BehaviorSubject<UserLogged | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
+  private conversationsSource = new BehaviorSubject<UserLogged[]>([]);
+  conversations$ = this.conversationsSource.asObservable();
+
   private unsubscribeRecipientSnapshot: (() => void) | null = null;
   private unsubscribeCurrentUserSnapshot: (() => void) | null = null;
+  private unsubscribeConversationsSnapshot: (() => void) | null = null;
 
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(private firestore: Firestore, private authService: AuthService) {
+  }
 
   ngOnDestroy() {
     this.unsubscribeListener(this.unsubscribeRecipientSnapshot);
     this.unsubscribeListener(this.unsubscribeCurrentUserSnapshot);
+    this.unsubscribeListener(this.unsubscribeConversationsSnapshot);
   }
 
   async setConversationMembers(currentUserId: string, recipientId: string) {
@@ -46,6 +52,7 @@ export class DirectMessagesService implements OnDestroy {
 
   setCurrentUserId(id: string) {
     this.setupCurrentUserListener(id);
+    this.setupConversationsListener(id);
   }
 
   private setupRecipientUserListener(recipientId: string) {
@@ -125,6 +132,51 @@ export class DirectMessagesService implements OnDestroy {
       senderId: this.currentUserId,
       recipientId: this.recipientId
     });
+  }
+
+  private setupConversationsListener(currentUserId: string) {
+    this.unsubscribeListener(this.unsubscribeConversationsSnapshot);
+    const conversationsRef = collection(this.firestore, 'directChats');
+    const conversationsQuery = query(conversationsRef, orderBy('created_at', 'desc'));
+  
+    this.unsubscribeConversationsSnapshot = onSnapshot(conversationsQuery, (querySnapshot) => {const userIds: string[] = [];
+      querySnapshot.forEach(docSnapshot => {const members = docSnapshot.data()['members'] as string[];
+        if (members.includes(currentUserId)) {
+          const otherUserId = members.find(id => id !== currentUserId);
+          if (otherUserId) {userIds.push(otherUserId);}
+        }
+      });
+      this.setupUsersListeners(userIds);
+    });
+  }
+  
+  private setupUsersListeners(userIds: string[]) {
+    this.unsubscribeUserListeners();
+  
+    const users: UserLogged[] = [];
+    const unsubscribes: (() => void)[] = [];
+  
+    userIds.forEach(userId => {const userDocRef = doc(this.firestore, `Users/${userId}`);
+      const unsubscribe = onSnapshot(userDocRef, (userDoc) => {
+        if (userDoc.exists()) {
+          const user = { uid: userDoc.id, ...userDoc.data() } as UserLogged;
+          const existingIndex = users.findIndex(u => u.uid === user.uid);
+          if (existingIndex >= 0) {users[existingIndex] = user;} else {users.push(user);}
+          this.conversationsSource.next([...users]);
+        }
+      });
+      unsubscribes.push(unsubscribe);
+    });
+    this.currentUsersUnsubscribes = unsubscribes;
+  }
+  
+  private currentUsersUnsubscribes: (() => void)[] = [];
+  
+  private unsubscribeUserListeners() {
+    if (this.currentUsersUnsubscribes.length) {
+      this.currentUsersUnsubscribes.forEach(unsubscribe => unsubscribe());
+      this.currentUsersUnsubscribes = [];
+    }
   }
   
 }

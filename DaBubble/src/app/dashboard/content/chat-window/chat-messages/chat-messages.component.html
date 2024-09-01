@@ -7,9 +7,8 @@
                 <div class="reaction-bar">
                     <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')"></div>
                     <div class="applaud-reaction" (click)="toggleReaction(message, '🙌🏻')"></div>
-                    <div class="emoji-reaction"></div>
-                    <div class="comment-reaction" (click)="openThread(channelId, message.id!, message)">
-                    </div>
+                    <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
+                    <div class="comment-reaction" (click)="openThread(channelId, message.id!, message)"></div>
                     <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction"
                        (click)="editMessage(message)"></div>
                 </div>
@@ -17,7 +16,7 @@
                     <img class="author-picture" [src]="message.photoURL">
                     <div class="details">
                         <div class="author">
-                            <div class="author-name fs-18-700">{{message.senderName}} </div>
+                            <div class="author-name fs-18-700">{{message.senderName}}</div>
                             <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                         </div>
                         <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
@@ -54,13 +53,14 @@
                                     </div>
                                     <div class="emoji-counter">{{ reaction.count }}</div>
                                 </div>
-                                <div class="add-reaction"></div>
+                                <div class="add-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)">
+                                </div>
                             </div>
-
-
-
                         </div>
                     </div>
+                </div>
+                <div *ngIf="emojiPickerMessageId === message.id" class="emoji-picker-dialog">
+                    <emoji-mart (emojiClick)="addEmoji($event, message)"></emoji-mart>
                 </div>
             </div>
         </div>
