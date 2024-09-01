@@ -54,29 +54,37 @@ export class MessageService {
     }
   }
 
-  async toggleReaction(channelId: string, messageId: string, reaction: Reaction) {
+  async toggleReaction(channelId: string, messageId: string, emoji: string, userId: string, username: string) {
     const messageDocRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
+
     const messageDoc = await getDoc(messageDocRef);
     if (messageDoc.exists()) {
       const currentReactions: Reaction[] = messageDoc.data()['reactions'] || [];
-      const existingReaction = currentReactions.find((r: Reaction) => r.emoji === reaction.emoji);
+      const existingReaction = currentReactions.find(r => r.emoji === emoji);
 
       if (existingReaction) {
-        if (existingReaction.userIds.includes(reaction.userIds[0])) {
-          existingReaction.userIds = existingReaction.userIds.filter(id => id !== reaction.userIds[0]);
-          existingReaction.count -= 1;
+        if (existingReaction.userIds.includes(userId)) {
+          const index = existingReaction.userIds.indexOf(userId);
+          if (index > -1) {
+            existingReaction.userIds.splice(index, 1);
+            existingReaction.usernames.splice(index, 1);
+            existingReaction.count -= 1;
+          }
+
           if (existingReaction.count === 0) {
             currentReactions.splice(currentReactions.indexOf(existingReaction), 1);
           }
         } else {
-          existingReaction.userIds.push(reaction.userIds[0]);
+          existingReaction.userIds.push(userId);
+          existingReaction.usernames.push(username);
           existingReaction.count += 1;
         }
       } else {
         currentReactions.push({
-          emoji: reaction.emoji,
+          emoji,
           count: 1,
-          userIds: [reaction.userIds[0]],
+          userIds: [userId],
+          usernames: [username],
         });
       }
       await updateDoc(messageDocRef, { reactions: currentReactions });

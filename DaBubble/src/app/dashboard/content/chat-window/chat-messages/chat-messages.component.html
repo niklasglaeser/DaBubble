@@ -43,14 +43,17 @@
                                 </span>
                             </div>
                             <div class="reactions">
-                                <div *ngFor="let reaction of message.reactions" class="emoji-container">
-                                    <div class="emoji" (click)="updateReaction(message, reaction.emoji)">
+                                <div *ngFor="let reaction of message.reactions" class="emoji-container"
+                                    [matTooltip]="getReactionTooltip(reaction)"
+                                    (click)="toggleReaction(message, reaction.emoji)">
+                                    <div class="emoji">
                                         {{ reaction.emoji }}
                                     </div>
                                     <div class="emoji-counter">{{ reaction.count }}</div>
                                 </div>
                                 <div class="add-reaction"></div>
                             </div>
+
 
 
                         </div>
