@@ -12,6 +12,8 @@ import { SidebarComponent } from '../../dashboard/content/sidebar/sidebar.compon
 import { ChannelStateService } from '../../services/channel-state.service';
 import { AvatarComponent } from '../../landing-page/avatar/avatar.component';
 import { AvatarProfileComponent } from './avatar/avatar.component';
+import { AuthService } from '../../services/lp-services/auth.service';
+import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 
 @Component({
   selector: 'app-dialog-edit-profil',
@@ -21,6 +23,8 @@ import { AvatarProfileComponent } from './avatar/avatar.component';
   styleUrl: './dialog-edit-profil.component.scss'
 })
 export class DialogEditProfilComponent implements OnInit {
+  authService = inject(AuthService)
+  UserService = inject(UserLoggedService)
   // isOpen = true;
   currentUserId$ = new BehaviorSubject<string | null>(null);
   user!: UserLogged;
@@ -28,6 +32,9 @@ export class DialogEditProfilComponent implements OnInit {
   title: string = 'Profil';
   profilName: string = '';
   profilEmail: string = '';
+  profileImg: string = ''
+  edit:boolean = false
+
 
   editName: string = 'Bearbeiten';
   editNameClicked: boolean = false;
@@ -40,16 +47,28 @@ export class DialogEditProfilComponent implements OnInit {
 
   ngOnInit() {
     this.loadProfile();
+    this.subscribeToUserData()
   }
+
+  async subscribeToUserData(): Promise<void> {
+    if (this.authService.uid) {
+      await this.UserService.subscribeUser(this.authService.uid).subscribe((data) => {
+        this.profileImg = data?.photoURL!
+      });
+    }
+  }
+
 
   editProfilBtn(event: Event) {
     if (!this.editNameClicked) {
       this.editNameClicked = true;
       this.editName = 'Speichern';
+      this.edit = true
     } else {
       try {
         this.editNameClicked = false;
         this.editName = 'Bearbeiten';
+        this.edit = false
       } catch {
         console.log('error');
       }
@@ -116,6 +135,8 @@ export class DialogEditProfilComponent implements OnInit {
   }
 
   openProfilAvatar() {
-    this.dialog.open(AvatarProfileComponent, {});
+    if(this.edit){
+      this.dialog.open(AvatarProfileComponent, {});
+    }
   }
 }

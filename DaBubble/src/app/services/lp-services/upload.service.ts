@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Storage, ref, getDownloadURL } from '@angular/fire/storage';
+import { Storage, ref, getDownloadURL, deleteObject } from '@angular/fire/storage';
 import { uploadBytes } from '@firebase/storage';
 import { from, Observable, switchMap } from 'rxjs';
 
@@ -19,12 +19,26 @@ export class UploadService {
     );
   }
 
+  getRandomInRange(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+
   uploadImgChat(userId: string, image: File, channelId: any): Observable<string> {
-    const storagePath = `chat/${channelId}/${userId}/${image.name}`;
+    const index = this.getRandomInRange(0.00001,9999999)
+    const storagePath = `chat/${channelId}/${userId}/${index}/${image.name}`;
     const storageRef = ref(this.storage, storagePath);
     
     return from(uploadBytes(storageRef, image)).pipe(
       switchMap(result => getDownloadURL(result.ref))
     );
   }
+
+  deleteImgChat(path:string): Observable<void> {
+    const storagePath = path;
+    const storageRef = ref(this.storage, storagePath);
+    
+    return from(deleteObject(storageRef));
+  }
+
+  
 }
