@@ -11,7 +11,7 @@ export class DeviceService {
   constructor() {
     fromEvent(window, 'resize')
       .pipe(
-        debounceTime(200),
+        debounceTime(50),
         map(() => window.innerWidth)
       )
       .subscribe((width) => this.screenWidth$.next(width));

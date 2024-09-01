@@ -21,9 +21,8 @@ export class GlobalService {
     const windowWidth = window.innerWidth;
     let rightPosition = event.clientX;
 
-    // Berechnung der Position von rechts
     if (rightPosition + dialogWidth > windowWidth) {
-      rightPosition = windowWidth - dialogWidth; // Dialog auf den maximalen rechten Rand setzen
+      rightPosition = windowWidth - dialogWidth;
     }
 
     return {
