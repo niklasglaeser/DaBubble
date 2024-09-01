@@ -31,7 +31,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
   selector: 'app-chat-messages',
   standalone: true,
 
-  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule],
+  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule, PickerComponent],
 
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.scss'],
@@ -179,6 +179,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     this.dialog.open(DialogChatImgComponent, {
      data: { imagePath: message.imagePath } 
     });
+  }
 
   addEmoji(event: any, message: Message) {
     const emoji = event.emoji.native;
@@ -191,7 +192,6 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     this.emojiPickerMessageId = this.emojiPickerMessageId === messageId ? undefined : messageId;
   }
 
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -203,3 +203,4 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   }
 }
+

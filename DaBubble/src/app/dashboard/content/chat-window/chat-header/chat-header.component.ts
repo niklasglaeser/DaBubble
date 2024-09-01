@@ -55,9 +55,6 @@ export class ChatHeaderComponent {
     }
   }
 
-
-
-
   openOverviewChannel(event: MouseEvent): void {
     if (this.members) {
 
