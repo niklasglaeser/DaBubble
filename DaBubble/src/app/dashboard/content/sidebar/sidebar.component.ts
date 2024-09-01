@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
@@ -36,8 +36,8 @@ import { DirectMessagesService } from '../../../services/direct-message.service'
           display: 'none'
         })
       ),
-      transition('in => out', animate('125ms ease-in')),
-      transition('out => in', animate('125ms ease-out'))
+      transition('in => out', animate('175ms ease-in')),
+      transition('out => in', animate('175ms ease-out'))
     ])
   ]
 })
@@ -46,15 +46,14 @@ export class SidebarComponent implements OnInit {
   dialogAddChannelComponent!: DialogAddChannelComponent;
 
   @Output() conversationSet = new EventEmitter<void>();
-
-  workspaceVisible: boolean = true;
-  showWorkspaceToggle = true;
+  @Input() workspaceVisible: boolean = true;
 
   isChannelsDropdownOpen = true;
   isMessagesDropdownOpen = true;
   isActive = false;
   isOnline = true;
   isDirectChat = false;
+  selectedUserId: string | null = null;
 
   channels: any = [];
   channelsSubscription!: Subscription;
@@ -65,7 +64,7 @@ export class SidebarComponent implements OnInit {
   unsubscribe: any;
 
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService) {
-    this.checkWindowSize();
+
   }
 
   get currentUserId(): string | undefined {
@@ -141,10 +140,6 @@ export class SidebarComponent implements OnInit {
   }
   /*TESTING*/
 
-  toggleWorkspace() {
-    this.workspaceVisible = !this.workspaceVisible;
-  }
-
   openChannel(channelId: string) {
     let dmWindow = document.querySelector('.dm-window') as HTMLElement;
     let chatWindow = document.querySelector('.chat-window') as HTMLElement;
@@ -153,6 +148,8 @@ export class SidebarComponent implements OnInit {
       chatWindow.style.display = 'flex';
     }
     this.selectedChannelId = channelId;
+    this.selectedUserId = null;
+    this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
   }
 
@@ -175,6 +172,13 @@ export class SidebarComponent implements OnInit {
       dmWindow.style.display = 'flex';
       chatWindow.style.display = 'none';
     }
+    this.selectedChannelId = null;
+    this.selectedUserId = userId;
+    this.isDirectChat = true;
+  }
+
+  openSearchBar() {
+    this.channelStateService.openSearchBar();
   }
 
   toggleDropdown(menu: string) {
@@ -183,14 +187,5 @@ export class SidebarComponent implements OnInit {
     } else if (menu === 'messages') {
       this.isMessagesDropdownOpen = !this.isMessagesDropdownOpen;
     }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.checkWindowSize();
-  }
-
-  checkWindowSize() {
-    this.showWorkspaceToggle = window.innerWidth <= 1980;
   }
 }

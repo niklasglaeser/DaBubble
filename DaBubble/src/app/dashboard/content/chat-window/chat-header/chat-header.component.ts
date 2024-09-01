@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Channel } from '../../../../models/channel.class';
 import { UserLogged } from '../../../../models/user-logged.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -21,16 +21,21 @@ export class ChatHeaderComponent {
   @Input() channel: Channel | null = null;
   @Input() members: UserLogged[] = [];
   @Input() users: UserLogged[] = [];
+  @ViewChild('openEditChannelPosition') openEditChannelPosition!: ElementRef;
+  @ViewChild('openOverviewPosition') openOverviewPosition!: ElementRef;
+  @ViewChild('openAddUserPosition') openAddUserPosition!: ElementRef;
 
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private globalService: GlobalService) { }
 
   openEditChannel(event: MouseEvent): void {
-    console.log(event);
-
     if (this.channel && this.channel.id) {
       const dialogConfig = new MatDialogConfig();
       const dialogWidth = 872;
-      const position = this.globalService.calculateRightPosition(event, dialogWidth);
+      const openEditChannelPosition = this.openEditChannelPosition.nativeElement;
+      const position = {
+        top: `${openEditChannelPosition.offsetTop + openEditChannelPosition.offsetHeight}px`,
+        left: `${openEditChannelPosition.offsetLeft}px`
+      }
 
       dialogConfig.data = { channelId: this.channel.id };
       dialogConfig.position = position;
@@ -55,10 +60,14 @@ export class ChatHeaderComponent {
 
   openOverviewChannel(event: MouseEvent): void {
     if (this.members) {
+
       const dialogConfig = new MatDialogConfig();
       const dialogWidth = 415;
-      const position = this.globalService.calculateLeftPosition(event, dialogWidth);
-
+      const openOverviewPosition = this.openOverviewPosition.nativeElement;
+      const position = {
+        top: `${openOverviewPosition.offsetTop + openOverviewPosition.offsetHeight}px`,
+        left: `${openOverviewPosition.offsetLeft - 350}px`
+      }
       dialogConfig.data = { members: this.members, channel: this.channel, users: this.users };
       dialogConfig.position = position;
       dialogConfig.panelClass = 'dialog-panel-channel-overview';
@@ -89,8 +98,11 @@ export class ChatHeaderComponent {
     if (this.members) {
       const dialogConfig = new MatDialogConfig();
       const dialogWidth = 415;
-      const position = this.globalService.calculateLeftPosition(event, dialogWidth);
-
+      const openAddUserPosition = this.openAddUserPosition.nativeElement;
+      const position = {
+        top: `${openAddUserPosition.offsetTop + openAddUserPosition.offsetHeight}px`,
+        left: `${openAddUserPosition.offsetLeft - 380}px`
+      }
       dialogConfig.data = { members: this.members, channel: this.channel, users: this.users };
       dialogConfig.position = position;
       dialogConfig.panelClass = 'dialog-panel-channel-overview';

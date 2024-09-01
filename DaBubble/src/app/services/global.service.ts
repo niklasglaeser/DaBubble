@@ -6,6 +6,10 @@ import { Injectable } from '@angular/core';
 export class GlobalService {
 
   constructor() { }
+
+  /*TESTING OPENING DIALOG*/
+
+  /*
   calculateLeftPosition(event: MouseEvent, dialogWidth: number): { top: string; left: string } {
     let leftPosition = event.clientX - dialogWidth;
     if (leftPosition < 0) {
@@ -21,14 +25,16 @@ export class GlobalService {
     const windowWidth = window.innerWidth;
     let rightPosition = event.clientX;
 
-    // Berechnung der Position von rechts
     if (rightPosition + dialogWidth > windowWidth) {
-      rightPosition = windowWidth - dialogWidth; // Dialog auf den maximalen rechten Rand setzen
+      rightPosition = windowWidth - dialogWidth;
     }
 
     return {
       top: `${event.clientY}px`,
       left: `${rightPosition}px`
     };
-  }
+  }*/
+
+
+  /*TESTING OPENING DIALOG*/
 }  

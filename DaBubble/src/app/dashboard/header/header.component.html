@@ -3,9 +3,9 @@
     <div class="header-center">
         <div class="form-group-search">
             <div class="header-center">
-                <input type="text" placeholder="DevSpace" [formControl]="searchControl" [matAutocomplete]="auto"
-                    class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen"
-                    (input)="handleContentSearch($event)" />
+                <input type="text" [placeholder]="placeholderText" [formControl]="searchControl"
+                    [matAutocomplete]="auto" class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen"
+                    (input)="handleContentSearch($event)" matAutocompleteTrigger />
                 <img class="search-button" src="/assets/img/main-page/head/search.svg">
             </div>
             <mat-autocomplete #auto="matAutocomplete" (opened)="isPanelOpen = true" (closed)="isPanelOpen = false"
@@ -34,14 +34,14 @@
             </mat-autocomplete>
         </div>
     </div>
-    <div class="header-right">
+    <div class="header-right" (click)="openDialog()">
         <div class="fs-32-700 user-name">{{ user?.username }}</div>
         <div class="avatarStatus">
             <img src="{{ user?.photoURL }}">
             <img
                 [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
         </div>
-        <div class="arrow-down" #arrowButton (click)="openDialog()">
+        <div class="arrow-down" #arrowButton >
         </div>
     </div>
 </div>

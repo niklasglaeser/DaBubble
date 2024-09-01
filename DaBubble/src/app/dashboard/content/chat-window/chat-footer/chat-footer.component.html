@@ -1,23 +1,47 @@
 <div class="chat-footer">
-    <textarea type="text" name="message-input" id="chat-message-input"
-        placeholder="Nachricht an #{{channel?.name}}"></textarea>
+    <textarea type="text" name="message-input" id="chat-message-input" placeholder="Nachricht an #{{channel?.name}}"
+        [formControl]="symbolSearch" [matAutocomplete]="auto" (input)="onInput($event)"></textarea>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="showSelectedName" (opened)="isPanelOpen = true"
+        (closed)="isPanelOpen = false">
+        <ng-container *ngIf="filteredUserOptions$ | async as filteredUsers">
+            <mat-option *ngFor="let user of filteredUsers" [value]="user">
+                <div class="chip-subcontainer">
+                    <div class="avatarStatus">
+                        <img [src]="user.photoURL ? user.photoURL : '../../assets/img/landing-page/men1.svg'">
+                        <img
+                            [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+                    </div>
+                    <p>{{ user.username }}</p>
+                </div>
+            </mat-option>
+        </ng-container>
+
+        <ng-container *ngIf="filteredChannelOptions$ | async as filteredChannels">
+            <mat-option *ngFor="let channel of filteredChannels" [value]="channel">
+                <p class="fs-18">{{ channel.name }}</p>
+            </mat-option>
+        </ng-container>
+    </mat-autocomplete>
+
     <div class="chat-message-toolbar">
         <div class="chat-toolbar-left">
-            <div>
-                <div class="add-file"></div>
+            <div >
+                <div class="add-file" (click)="triggerFileUpload(fileInput)"></div>
+                <!-- Hidden file input -->
+            <input type="file" #fileInput style="display: none" (change)="uploadImage($event)">
             </div>
             <div class="seperator"></div>
             <div>
                 <div class="add-emojis"></div>
             </div>
             <div>
-                <div class="tag-user"></div>
+                <div class="tag-user" (click)="openUserAutocomplete()"></div>
             </div>
         </div>
         <div class="chat-toolbar-right">
             <div>
                 <div class="send-message" (click)="sendMessage()"></div>
-            </div>
+           </div>
         </div>
     </div>
 </div>

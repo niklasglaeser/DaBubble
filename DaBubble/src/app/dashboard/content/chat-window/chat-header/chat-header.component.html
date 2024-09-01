@@ -1,16 +1,16 @@
 <div class="chat-header">
-    <div class="chat-header-left" (click)="openEditChannel($event)">
+    <div class="chat-header-left" #openEditChannelPosition (click)="openEditChannel($event)">
         <div class="fs-24-700">{{channel?.name}}</div>
         <div class="arrow-down"></div>
     </div>
     <div class="chat-header-right">
-        <div class="user-pictures" (click)="openOverviewChannel($event)">
+        <div class="user-pictures" #openOverviewPosition (click)="openOverviewChannel($event)">
             @for (member of members; track $index) {
             <img src="{{member.photoURL}}">
             }
             <div class="fs-20-700" style="padding-left: 15px;">{{members.length}}</div>
         </div>
-        <div class="add-members" (click)="openAddUser($event)"></div>
+        <div class="add-members" #openAddUserPosition (click)="openAddUser($event)"></div>
 
     </div>
 </div>

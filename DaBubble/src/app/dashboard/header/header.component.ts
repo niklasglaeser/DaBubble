@@ -1,19 +1,21 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLogged } from '../../models/user-logged.model';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogMenuComponent } from './dialog-menu/dialog-menu.component';
 import { DialogEditProfilComponent } from '../../dialog/dialog-edit-profil/dialog-edit-profil.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { addDoc, collection, collectionData, doc, Firestore, getDoc, getDocs, onSnapshot, orderBy, query, QuerySnapshot, setDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, Firestore, getDocs } from '@angular/fire/firestore';
 import { UserService } from '../../services/user.service';
+import { Subscription } from 'rxjs';
+import { ChannelStateService } from '../../services/channel-state.service';
 
 @Component({
   selector: 'app-header',
@@ -27,31 +29,46 @@ import { UserService } from '../../services/user.service';
     MatChipsModule,
     MatFormFieldModule,
     DialogMenuComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DialogEditProfilComponent
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('arrowButton') arrowButton!: ElementRef;
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
+  @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
-
+  private subscription: Subscription = new Subscription();
 
   dialog = inject(MatDialog);
-  userLogged = inject(UserLoggedService)
-  authService = inject(AuthService)
-  user?: UserLogged
+  userLogged = inject(UserLoggedService);
+  authService = inject(AuthService);
+  user?: UserLogged;
 
   searchControl = new FormControl();
-  isPanelOpen!: boolean;
+  isPanelOpen: boolean = false;
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
-  constructor(private firestore: Firestore) { }
+  placeholderText: string = 'Durchsuche DevSpace';
+
+
+  constructor(private firestore: Firestore, private channelStateService: ChannelStateService) { }
 
   ngOnInit(): void {
-    this.subscribeToUserData()
+    this.subscribeToUserData();
+
+    this.subscription.add(
+      this.channelStateService.emitOpenSearchBar.subscribe(() => {
+        this.openSearchPanel();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   handleContentSearch(event: Event): void {
@@ -67,12 +84,8 @@ export class HeaderComponent {
       this.searchResults = [];
     }
   }
-  async searchCollections(searchTerm: string): Promise<void> {
-    if (!searchTerm) {
-      this.searchResults = [];
-      return;
-    }
 
+  async searchCollections(searchTerm: string): Promise<void> {
     try {
       const channelsSnapshot = await getDocs(collection(this.firestore, 'channels'));
       const usersSnapshot = await getDocs(collection(this.firestore, 'Users'));
@@ -95,8 +108,46 @@ export class HeaderComponent {
           this.searchResults.push({ id: doc.id, ...doc.data(), type: 'user' });
         }
       });
+
     } catch (error) {
       console.error('Error fetching search results:', error);
+    }
+  }
+
+  async openSearchPanel(): Promise<void> {
+    await this.loadAllData();
+    this.placeholderText = 'Suche nach Channels und Mitgliedern...';
+
+    if (this.autocompleteTrigger) {
+      this.autocompleteTrigger.openPanel();
+    } else {
+      console.error('autocompleteTrigger ist nicht verfügbar');
+    }
+  }
+
+  async loadAllData(): Promise<void> {
+    try {
+      const channelsSnapshot = await getDocs(collection(this.firestore, 'channels'));
+      const usersSnapshot = await getDocs(collection(this.firestore, 'Users'));
+      this.searchResults = [];
+      const currentUserId = this.authService.uid;
+
+      channelsSnapshot.forEach(doc => {
+        const channelData = doc.data();
+        const members = channelData["members"] || [];
+
+        if (members.includes(currentUserId)) {
+          this.searchResults.push({ id: doc.id, ...channelData, type: 'channel' });
+        }
+      });
+
+      usersSnapshot.forEach(doc => {
+        const userData = doc.data();
+        this.searchResults.push({ id: doc.id, ...userData, type: 'user' });
+      });
+
+    } catch (error) {
+      console.error('Error fetching all data:', error);
     }
   }
 
@@ -110,10 +161,6 @@ export class HeaderComponent {
     this.searchResults = [];
   }
 
-  displayFn(value: any): string {
-    return '';
-  }
-
   get channelResults() {
     return this.searchResults.filter(result => result.type === 'channel');
   }
@@ -122,34 +169,11 @@ export class HeaderComponent {
     return this.searchResults.filter(result => result.type === 'user');
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   async subscribeToUserData(): Promise<void> {
     if (this.authService.uid) {
       await this.userLogged.subscribeUser(this.authService.uid).subscribe((data) => {
-        this.user = data
-      })
-
+        this.user = data;
+      });
     }
   }
 
@@ -158,15 +182,18 @@ export class HeaderComponent {
 
     this.dialog.open(DialogMenuComponent, {
       position: {
-        top: `${arrowButton.offsetTop + arrowButton.offsetHeight}px`,
+        top: `${25 + arrowButton.offsetTop + arrowButton.offsetHeight}px`,
         left: `${arrowButton.offsetLeft - 250}px`
       },
+      panelClass: 'dialog-header-profile',
     });
   }
 
   openProfilDialog() {
-    this.dialog.open(DialogEditProfilComponent, {
+    this.dialog.open(DialogEditProfilComponent, {});
+  }
 
-    });
+  displayFn(value: any): string {
+    return '';
   }
 }

@@ -12,11 +12,14 @@ import { UserLogged } from '../../../../models/user-logged.model';
 import { ThreadService } from '../../../../services/thread.service';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../../../services/message.service';
+import { Reaction } from '../../../../models/reaction.model';
+import { UserService } from '../../../../services/user.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-chat-messages',
   standalone: true,
-  imports: [CommonModule, DatePipe, FormsModule],
+  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule],
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.scss'],
   providers: [DatePipe],
@@ -26,10 +29,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   @Input() currentUser: UserLogged | null = null;
   @Input() channelId: string = '';
   @Input() threadCounts: Map<string, number> = new Map<string, number>();
-  @Input() lastThreadMessageTimes: Map<string, Date | null> = new Map<
-    string,
-    Date | null
-  >();
+  @Input() lastThreadMessageTimes: Map<string, Date | null> = new Map<string, Date | null>();
 
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
@@ -40,10 +40,11 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   constructor(
     private datePipe: DatePipe,
     private threadService: ThreadService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private userService: UserService
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
@@ -137,4 +138,24 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       threadWindow.classList.add('open');
     }
   }
+
+  async toggleReaction(message: Message, emoji: string) {
+    const userId = this.currentUser?.uid!;
+    const username = this.currentUser?.username!;
+
+    try {
+      await this.messageService.toggleReaction(this.channelId, message.id!, emoji, userId, username);
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren der Reaktion:', error);
+    }
+  }
+
+  getReactionTooltip(reaction: Reaction): string {
+    if (!reaction.usernames || reaction.usernames.length === 0) {
+      return 'Keine Reaktionen';
+    }
+    return `Reaktionen von: ${reaction.usernames.join(', ')}`;
+  }
+
+
 }

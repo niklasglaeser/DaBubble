@@ -19,4 +19,12 @@ export class UploadService {
     );
   }
 
+  uploadImgChat(userId: string, image: File, channelId: any): Observable<string> {
+    const storagePath = `chat/${channelId}/${userId}/${image.name}`;
+    const storageRef = ref(this.storage, storagePath);
+    
+    return from(uploadBytes(storageRef, image)).pipe(
+      switchMap(result => getDownloadURL(result.ref))
+    );
+  }
 }

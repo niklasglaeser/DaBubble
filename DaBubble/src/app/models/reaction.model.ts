@@ -1,4 +1,6 @@
 export interface Reaction {
-  userId: string;
+  userIds: string[];
+  usernames: string[];
   emoji: string;
+  count: number;
 }

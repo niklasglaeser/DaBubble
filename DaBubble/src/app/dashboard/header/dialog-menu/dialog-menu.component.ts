@@ -56,5 +56,6 @@ export class DialogMenuComponent {
     this.dialog.open(DialogEditProfilComponent, {
       data: { user: this.user }
     });
+    this.dialogRef.close()
   }
 }

@@ -9,6 +9,8 @@ export class ChannelStateService {
   selectedChannelId$ = this.selectedChannelIdSource.asObservable();
 
   public emitOpenDirectMessage = new EventEmitter<string>();
+  public emitOpenSearchBar = new EventEmitter<void>();
+
 
   openDirectMessage(userId: string) {
     this.emitOpenDirectMessage.emit(userId);
@@ -16,5 +18,9 @@ export class ChannelStateService {
 
   setSelectedChannelId(channelId: string) {
     this.selectedChannelIdSource.next(channelId);
+  }
+
+  openSearchBar() {
+    this.emitOpenSearchBar.emit();
   }
 }
