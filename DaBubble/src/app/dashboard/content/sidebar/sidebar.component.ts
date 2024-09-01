@@ -68,7 +68,7 @@ export class SidebarComponent implements OnInit {
   }
 
   get currentUserId(): string | undefined {
-    return this.authService.currentUserSig()?.userId;
+    return this.authService.uid;
   }
 
   ngOnInit(): void {
@@ -102,7 +102,6 @@ export class SidebarComponent implements OnInit {
     const currentUserId = this.currentUserId;
     if (currentUserId) {
       this.dmService.setCurrentUserId(currentUserId);
-      console.log('DER FEHLER: ' + this.directMessagesUsers);
   
       this.dmService.conversations$.subscribe(users => {
         this.directMessagesUsers = users;
