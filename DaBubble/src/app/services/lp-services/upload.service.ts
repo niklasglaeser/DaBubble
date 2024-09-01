@@ -19,8 +19,8 @@ export class UploadService {
     );
   }
 
-  uploadImgChat(userId: string, image: File, channelId: string): Observable<string> {
-    const storagePath = `user-profile-images/${channelId}/${userId}/${image.name}`;
+  uploadImgChat(userId: string, image: File, channelId: any): Observable<string> {
+    const storagePath = `chat/${channelId}/${userId}/${image.name}`;
     const storageRef = ref(this.storage, storagePath);
     
     return from(uploadBytes(storageRef, image)).pipe(

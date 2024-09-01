@@ -1,0 +1,41 @@
+
+<div class="container">
+    <div class="content">
+        <div class="back-box">
+            <a (click)="backToProfile()" ><mat-icon>arrow_back</mat-icon></a>
+        </div>
+        <h1 class="fs-46">Wähle deinen Avatar</h1>
+        <img class="profile-img" [src]="profileImg "  alt="">
+        <div class="profile-name">
+            <span class="fs-32-700">Frederik Beck</span>
+        </div>
+        <div class="list">
+            <span class="fs-20">Aus der Liste wählen</span>
+        
+            <div class="chose-avatar">
+                <div *ngFor="let avatar of avatars; let i=index" class="avatar-box" 
+                [ngClass]="{'chosen': avatar}"
+                (click)="choseAvatar(i)"
+                >
+                    <img src="assets/img/landing-page/men{{i}}.svg" id="{{avatar}}{{i}}">
+                </div>
+            </div>
+        </div>
+        <div class="upload-img">
+            <span class="fs-20">eigenes Bild verwenden</span>
+            <button class="fs-18-b" (click)="triggerFileUpload(fileInput)">
+                Datei hochladen
+            </button>
+            <!-- Hidden file input -->
+            <input type="file" #fileInput style="display: none" (change)="uploadImage($event)">
+        </div>
+        <div class="futer-box">
+            <div class="futer-btn">
+                <button (click)="saveProfileAndContinue()">
+                    <span class="fs-18-b">Weiter</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

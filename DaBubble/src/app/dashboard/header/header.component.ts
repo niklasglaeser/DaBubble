@@ -3,7 +3,7 @@ import { UserLoggedService } from '../../services/lp-services/user-logged.servic
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLogged } from '../../models/user-logged.model';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogMenuComponent } from './dialog-menu/dialog-menu.component';
@@ -29,7 +29,8 @@ import { ChannelStateService } from '../../services/channel-state.service';
     MatChipsModule,
     MatFormFieldModule,
     DialogMenuComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DialogEditProfilComponent
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
@@ -181,7 +182,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.dialog.open(DialogMenuComponent, {
       position: {
-        top: `${arrowButton.offsetTop + arrowButton.offsetHeight}px`,
+        top: `${25 + arrowButton.offsetTop + arrowButton.offsetHeight}px`,
         left: `${arrowButton.offsetLeft - 250}px`
       },
     });
