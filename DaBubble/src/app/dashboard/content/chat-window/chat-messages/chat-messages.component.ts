@@ -12,6 +12,9 @@ import { UserLogged } from '../../../../models/user-logged.model';
 import { ThreadService } from '../../../../services/thread.service';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../../../services/message.service';
+import { Reaction } from '../../../../models/reaction.model';
+import { UserService } from '../../../../services/user.service';
+import { updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-chat-messages',
@@ -35,15 +38,19 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   editMessageClicked: boolean = false;
   editMessageText: string = '';
 
+  reactionUsers: UserLogged[] = [];
+  hover: boolean = false;
+
   private userSubscription: Subscription | undefined;
 
   constructor(
     private datePipe: DatePipe,
     private threadService: ThreadService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private userService: UserService
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
@@ -137,4 +144,30 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       threadWindow.classList.add('open');
     }
   }
+
+
+  /* TESTIN EMOJI*/
+  async toggleReaction(message: Message, emoji: string) {
+    const userId = this.currentUser?.uid!;
+    const reaction: Reaction = { emoji, count: 1, userIds: [userId] };
+    try {
+      await this.messageService.toggleReaction(this.channelId, message.id!, reaction);
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren der Reaktion:', error);
+    }
+  }
+
+  updateReaction(message: Message, emoji: string) {
+    this.toggleReaction(message, emoji);
+  }
+
+  showUserInfo(reaction: Reaction) {
+    this.reactionUsers = [];
+    // this.getUserForReaction(reaction);
+  }
+
+  hideUserInfo() {
+    this.reactionUsers = [];
+  }
+  /* TESTIN EMOJI*/
 }

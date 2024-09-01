@@ -54,6 +54,35 @@ export class MessageService {
     }
   }
 
+  async toggleReaction(channelId: string, messageId: string, reaction: Reaction) {
+    const messageDocRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
+    const messageDoc = await getDoc(messageDocRef);
+    if (messageDoc.exists()) {
+      const currentReactions: Reaction[] = messageDoc.data()['reactions'] || [];
+      const existingReaction = currentReactions.find((r: Reaction) => r.emoji === reaction.emoji);
+
+      if (existingReaction) {
+        if (existingReaction.userIds.includes(reaction.userIds[0])) {
+          existingReaction.userIds = existingReaction.userIds.filter(id => id !== reaction.userIds[0]);
+          existingReaction.count -= 1;
+          if (existingReaction.count === 0) {
+            currentReactions.splice(currentReactions.indexOf(existingReaction), 1);
+          }
+        } else {
+          existingReaction.userIds.push(reaction.userIds[0]);
+          existingReaction.count += 1;
+        }
+      } else {
+        currentReactions.push({
+          emoji: reaction.emoji,
+          count: 1,
+          userIds: [reaction.userIds[0]],
+        });
+      }
+      await updateDoc(messageDocRef, { reactions: currentReactions });
+    }
+  }
+
   async addMessageThread(
     channelId: string,
     message: Message,
