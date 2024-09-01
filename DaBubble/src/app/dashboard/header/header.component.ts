@@ -184,6 +184,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         top: `${arrowButton.offsetTop + arrowButton.offsetHeight}px`,
         left: `${arrowButton.offsetLeft - 250}px`
       },
+      panelClass: 'dialog-header-profile',
     });
   }
 

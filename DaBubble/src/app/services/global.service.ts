@@ -6,6 +6,10 @@ import { Injectable } from '@angular/core';
 export class GlobalService {
 
   constructor() { }
+
+  /*TESTING OPENING DIALOG*/
+
+  /*
   calculateLeftPosition(event: MouseEvent, dialogWidth: number): { top: string; left: string } {
     let leftPosition = event.clientX - dialogWidth;
     if (leftPosition < 0) {
@@ -29,5 +33,8 @@ export class GlobalService {
       top: `${event.clientY}px`,
       left: `${rightPosition}px`
     };
-  }
+  }*/
+
+
+  /*TESTING OPENING DIALOG*/
 }  
