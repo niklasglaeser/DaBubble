@@ -17,8 +17,8 @@ import { Message } from '../../../models/message.model';
 export class DmWindowComponent {
   messages$: Observable<Message[]> | null = null;
 
-  constructor (private dmService: DirectMessagesService) {}
-  
+  constructor(private dmService: DirectMessagesService) { }
+
   loadMessages(): void {
     this.messages$ = this.dmService.loadConversation();
     console.log('messs loaded');

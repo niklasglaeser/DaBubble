@@ -1,15 +1,45 @@
 <div class="header-container">
     <img class="header-left" src="/assets/img/general/dabubble-logo.svg">
     <div class="header-center">
-        <input type="text" class="search-input" placeholder="Durchsuchen...">
-        <img class="search-button" src="/assets/img/main-page/head/search.svg">
+        <div class="form-group-search">
+            <div class="header-center">
+                <input type="text" [placeholder]="placeholderText" [formControl]="searchControl"
+                    [matAutocomplete]="auto" class="example-input" [class.mat-autocomplete-panel-open]="isPanelOpen"
+                    (input)="handleContentSearch($event)" matAutocompleteTrigger />
+                <img class="search-button" src="/assets/img/main-page/head/search.svg">
+            </div>
+            <mat-autocomplete #auto="matAutocomplete" (opened)="isPanelOpen = true" (closed)="isPanelOpen = false"
+                (optionSelected)="onOptionSelected($event.option.value)" [displayWith]="displayFn">
+                <mat-optgroup>
+                    <span class="no-hover">{{ channelResults.length > 0 ? 'Channels' : 'keine Channels gefunden'
+                        }}</span>
+                    <mat-option *ngFor="let channel of channelResults" [value]="channel">
+                        <p class="fs-18">{{ channel.name }}</p>
+                    </mat-option>
+                </mat-optgroup>
+                <mat-optgroup>
+                    <span class="no-hover">{{ userResults.length > 0 ? 'Mitglieder' : 'keine Mitglieder gefunden'
+                        }}</span>
+                    <mat-option *ngFor="let user of userResults" [value]="user">
+                        <div class="chip-subcontainer">
+                            <div class="avatarStatus">
+                                <img [src]="user.photoURL ? user.photoURL : '../../assets/img/landing-page/men1.svg'">
+                                <img
+                                    [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+                            </div>
+                            <p>{{ user.username }}</p>
+                        </div>
+                    </mat-option>
+                </mat-optgroup>
+            </mat-autocomplete>
+        </div>
     </div>
     <div class="header-right" (click)="openDialog()">
         <div class="fs-32-700 user-name">{{ user?.username }}</div>
         <div class="avatarStatus">
             <img src="{{ user?.photoURL }}">
-        <img
-            [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+            <img
+                [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
         </div>
         <div class="arrow-down" #arrowButton >
         </div>
