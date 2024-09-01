@@ -11,7 +11,7 @@
                     <div class="comment-reaction" (click)="openThread(channelId, message.id!, message)">
                     </div>
                     <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction"
-                        (click)="editMessage(message)"></div>
+                       (click)="editMessage(message)"></div>
                 </div>
                 <div class="message-content">
                     <img class="author-picture" [src]="message.photoURL">
@@ -22,6 +22,9 @@
                         </div>
                         <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
                             class="text fs-18">
+                            <div *ngIf="message.imagePath" class="message-image" (click)="openImg(message)">
+                                <img [src]="message.imagePath" alt="Message Image">
+                              </div>
                             {{message.message}}
                         </div>
                         <ng-template #editTemplate>

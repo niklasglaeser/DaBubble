@@ -4,6 +4,7 @@ import {
   OnInit,
   OnDestroy,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Message } from '../../../../models/message.model';
@@ -15,11 +16,13 @@ import { MessageService } from '../../../../services/message.service';
 import { Reaction } from '../../../../models/reaction.model';
 import { UserService } from '../../../../services/user.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogChatImgComponent } from '../../../../dialog/dialog-chat-img/dialog-chat-img.component';
 
 @Component({
   selector: 'app-chat-messages',
   standalone: true,
-  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule],
+  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule],
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.scss'],
   providers: [DatePipe],
@@ -30,6 +33,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   @Input() channelId: string = '';
   @Input() threadCounts: Map<string, number> = new Map<string, number>();
   @Input() lastThreadMessageTimes: Map<string, Date | null> = new Map<string, Date | null>();
+  dialog = inject(MatDialog);
 
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
@@ -157,5 +161,9 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     return `Reaktionen von: ${reaction.usernames.join(', ')}`;
   }
 
-
+  openImg(message: Message){
+    this.dialog.open(DialogChatImgComponent, {
+     data: { imagePath: message.imagePath } 
+    });
+  }
 }

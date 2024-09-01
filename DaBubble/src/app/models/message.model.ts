@@ -8,6 +8,7 @@ export interface Message {
   photoURL?: string;
   message: string;
   reactions?: Reaction[];
+  imagePath?: string;
   created_at: Date;
   updated_at?: Date;
 }
