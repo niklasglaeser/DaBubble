@@ -48,6 +48,10 @@ export class DmMessagesComponent {
     }
   }
 
+  formatMessage(message: string): string {
+    return message.replace(/\n/g, '<br>');
+  }
+
   ngOnInit() {
     // Abonniere das Observable, um den Nachrichtenstatus zu überwachen
     this.hasMessages$ = this.dmService.hasMessages$;
