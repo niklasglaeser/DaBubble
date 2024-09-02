@@ -48,8 +48,17 @@
     height: 200px;
     border-radius: 100%;
     object-fit: cover;
+    
+  }
+  .scale{
+    cursor: pointer;
+    transition: transform 0.2s ease; 
+    &:hover{
+      scale: 0.95;
+    }
   }
 }
+
 
 .container-title {
   display: flex;

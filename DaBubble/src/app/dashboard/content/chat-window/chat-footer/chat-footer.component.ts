@@ -10,11 +10,12 @@ import { UserLogged } from '../../../../models/user-logged.model';
 import { AuthService } from '../../../../services/lp-services/auth.service';
 import { UserLoggedService } from '../../../../services/lp-services/user-logged.service';
 import { UploadService } from '../../../../services/lp-services/upload.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-chat-footer',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatAutocompleteModule, MatAutocompleteTrigger],
+  imports: [CommonModule, ReactiveFormsModule, MatAutocompleteModule, MatAutocompleteTrigger,MatIconModule],
   templateUrl: './chat-footer.component.html',
   styleUrls: ['./chat-footer.component.scss'],
 })
@@ -40,18 +41,24 @@ export class ChatFooterComponent {
     let textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
     let messageText = textarea.value;
 
-    if (messageText) {
-      let message: Message = {
-        photoURL: this.chatImg || '',
-        message: messageText,
+    if (messageText.trim() || this.chatImg) {
+      const message: Message = {
+        photoURL: '',
+        message: messageText || '',
         senderId: '',
+        // senderName: '',
+        imagePath: this.chatImg! ,
         created_at: new Date(),
         updated_at: new Date(),  
       };
       let channelId = this.channel?.id;
 
       if (channelId) {
-        this.messageService.addMessage(channelId, message).then(() => {textarea.value = '';});
+        // Ensure channelId is a valid string
+        this.messageService.addMessage(channelId, message).then(() => {
+          textarea.value = '';
+          this.chatImg = null
+        });
       } else {
         console.error('Channel ID is undefined.');
       }
@@ -116,6 +123,11 @@ export class ChatFooterComponent {
 
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
+  }
+
+  deleteImg(){
+    this.imgUploadService.deleteImgChat(this.chatImg!)
+    this.chatImg = null
   }
 
 }
