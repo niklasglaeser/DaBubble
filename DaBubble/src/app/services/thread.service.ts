@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDoc, limit, onSnapshot, orderBy, query, Timestamp } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, Firestore, getDoc, limit, onSnapshot, orderBy, query, setDoc, Timestamp } from '@angular/fire/firestore';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { MessageService } from './message.service';
@@ -12,7 +12,7 @@ export class ThreadService {
   selectedMessage$ = this.selectedMessageSource.asObservable();
   selectedMessage: Message | null = null;
 
-  constructor(private firestore: Firestore, private messageService: MessageService) {}
+  constructor(private firestore: Firestore, private messageService: MessageService) { }
 
   getThreadMessages(channelId: string, messageId: string): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
@@ -46,6 +46,7 @@ export class ThreadService {
       });
     });
   }
+
 
   async checkAndCreateThread(channelId: string, messageId: string, originMessage: Message) {
     try {
