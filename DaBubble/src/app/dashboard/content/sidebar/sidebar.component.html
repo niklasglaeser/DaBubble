@@ -84,6 +84,16 @@
     </div>
   </div>
   <div class="dropdown" [class.show]="isMessagesDropdownOpen">
+    <div class="directUser" (click)="openDirectmessage(currentUser!.uid)">
+      <div [class.active]="selectedUserId === currentUser!.uid">
+        <div class="avatarStatus">
+          <img [src]="currentUser!.photoURL ? currentUser!.photoURL : '../../assets/img/landing-page/men1.svg'">
+          <img
+            [src]="currentUser!.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+        </div>
+        <span class="directUserName fs-18">{{currentUser!.username}} (Du)</span>
+      </div>
+    </div>
     @for (user of directMessagesUsers; track $index) {
     <div class="directUser" (click)="openDirectmessage(user.uid)">
       <div [class.active]="selectedUserId === user.uid">

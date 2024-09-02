@@ -183,4 +183,8 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       this.emojiPickerMessageId = undefined;
     }
   }
+
+  formatMessage(message: string): string {
+    return message.replace(/\n/g, '<br>');
+  }
 }

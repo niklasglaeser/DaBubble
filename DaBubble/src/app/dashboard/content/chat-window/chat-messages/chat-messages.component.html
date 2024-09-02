@@ -19,10 +19,7 @@
                             <div class="author-name fs-18-700">{{message.senderName}}</div>
                             <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                         </div>
-                        <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
-                            class="text fs-18">
-                            {{message.message}}
-                        </div>
+                        <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate" class="text fs-18" [innerHTML]="formatMessage(message.message)"> {{message.message}}</div>
                         <ng-template #editTemplate>
                             <div class="edit-channel">
                                 <textarea class="text fs-18" [(ngModel)]="editMessageText"></textarea>

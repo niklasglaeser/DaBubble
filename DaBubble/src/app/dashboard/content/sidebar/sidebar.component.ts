@@ -3,7 +3,7 @@ import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/di
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
 import { ChannelService } from '../../../services/channel.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { WorkspaceToggleComponent } from '../../../dialog/workspace-toggle/workspace-toggle.component';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { UserLogged } from '../../../models/user-logged.model';
 import { ChannelStateService } from '../../../services/channel-state.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { DirectMessagesService } from '../../../services/direct-message.service';
+import { User } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -63,6 +64,8 @@ export class SidebarComponent implements OnInit {
   directMessagesUsers: UserLogged[] = [];
   unsubscribe: any;
 
+  currentUser: UserLogged | null = null;
+
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService) {
 
   }
@@ -75,6 +78,7 @@ export class SidebarComponent implements OnInit {
     this.userService.users$.subscribe((users) => {
       this.users = users;
     });
+
 
     this.channelService.channels$.subscribe((channels) => {
       this.channels = channels;
@@ -93,6 +97,10 @@ export class SidebarComponent implements OnInit {
     });
     this.userService.channelSearchSelect.subscribe((channelId: string) => {
       this.openChannel(channelId);
+    });
+
+    this.dmService.currentUser$.subscribe((user) => {
+      this.currentUser = user;
     });
 
     this.loadDmConvos();

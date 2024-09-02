@@ -37,29 +37,21 @@ export class ChatFooterComponent {
   }
 
   sendMessage(): void {
-    const textarea = document.getElementById(
-      'chat-message-input'
-    ) as HTMLTextAreaElement;
-    const messageText = textarea.value;
+    let textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
+    let messageText = textarea.value;
 
-    if (messageText.trim()) {
-      const message: Message = {
+    if (messageText) {
+      let message: Message = {
         photoURL: this.chatImg || '',
         message: messageText,
         senderId: '',
-        // senderName: '',
         created_at: new Date(),
-        updated_at: new Date(),
-        
+        updated_at: new Date(),  
       };
-
-      const channelId = this.channel?.id;
+      let channelId = this.channel?.id;
 
       if (channelId) {
-        // Ensure channelId is a valid string
-        this.messageService.addMessage(channelId, message).then(() => {
-          textarea.value = '';
-        });
+        this.messageService.addMessage(channelId, message).then(() => {textarea.value = '';});
       } else {
         console.error('Channel ID is undefined.');
       }
@@ -67,7 +59,7 @@ export class ChatFooterComponent {
   }
 
   onInput(event: Event): void {
-    const input = (event.target as HTMLInputElement).value;
+    let input = (event.target as HTMLInputElement).value;
     this.inputValue = input;
 
     if (input.startsWith('@')) {

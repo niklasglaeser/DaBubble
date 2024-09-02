@@ -3,6 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Message } from '../../../../models/message.model';
 import { AuthService } from '../../../../services/lp-services/auth.service';
+import { Observable } from 'rxjs';
+import { UserLogged } from '../../../../models/user-logged.model';
 
 @Component({
   selector: 'app-dm-messages',
@@ -15,7 +17,12 @@ import { AuthService } from '../../../../services/lp-services/auth.service';
 export class DmMessagesComponent {
   @Input() messages: Message[] | null = null;
 
-  constructor (private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe) {}
+  hasMessages$!: Observable<boolean>;
+  recipientUser$: Observable<UserLogged | null>;
+
+  constructor (private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe) {
+    this.recipientUser$ = this.dmService.recipientUser$;
+  }
 
   get currentUserId(): string | undefined {
     return this.authService.currentUserSig()?.userId;
@@ -41,6 +48,10 @@ export class DmMessagesComponent {
     }
   }
 
+  ngOnInit() {
+    // Abonniere das Observable, um den Nachrichtenstatus zu überwachen
+    this.hasMessages$ = this.dmService.hasMessages$;
+  }
   
 
 

@@ -5,6 +5,8 @@
 }
 
 #dm-messages-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   padding-left: 35px;
@@ -265,6 +267,54 @@
     .last-answer {
       order: 1;
     }
+  }
+}
+
+.nomsg {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 20px;
+  padding-bottom: 30px;
+}
+
+.nomsgtxt {
+  color: #686868;
+
+  >span {
+    color: #535af1;
+  }
+}
+
+.chat-header-left {
+  display: flex;
+  gap: 30px;
+  padding: 10px;
+
+  >div {
+      display: flex;
+      align-items: center;
+  }
+}
+
+.avatarStatus {
+  position: relative;
+  display: flex;
+
+  > img:first-child {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid black;
+  }
+
+  > :last-child {
+    position: absolute;
+    width: 14px;
+    bottom: 0;
+    right: 0;
   }
 }
 

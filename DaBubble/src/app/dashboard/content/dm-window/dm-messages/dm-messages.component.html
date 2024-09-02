@@ -1,7 +1,6 @@
 <div class="dm-content">
-  <div id="dm-messages-container">
-      <div *ngFor="let message of messages"
-          [ngClass]="message.senderId === currentUserId ? 'user-send-message' : 'message'">
+  <div id="dm-messages-container"> 
+      <div *ngFor="let message of messages" [ngClass]="message.senderId === currentUserId ? 'user-send-message' : 'message'">
           <div class="message-date">{{ formatDate(message.created_at) }}</div>
           <div class="message-section">
               <div class="reaction-bar">
@@ -17,7 +16,7 @@
                           <div class="author-name fs-18-700">{{message.senderName}} </div>
                           <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                       </div>
-                      <div class="text fs-18">{{ message.message }}</div>
+                      <div class="text fs-18">{{message.message }}</div>
                       <div class="open-thread">
                           <div class="reactions">
                               <div class="emoji-container">
@@ -34,6 +33,16 @@
                   </div>
               </div>
           </div>
+      </div>
+      <div *ngIf="!(hasMessages$ | async)" class="nomsg">
+        <div class="chat-header-left" *ngIf="recipientUser$ | async as recipientUser">
+            <div class="avatarStatus">
+                <img [src]="recipientUser?.photoURL" alt="User Avatar">
+                <img [src]="recipientUser?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'" alt="User Status">
+            </div>
+            <div class="fs-24-700">{{recipientUser?.username}}</div>
+        </div>
+        <div *ngIf="recipientUser$ | async as recipientUser" class="fs-20 nomsgtxt">Die Unterhaltung findet nur zwischen dir und <span>&#64;{{recipientUser?.username}}</span> statt.</div>
       </div>
   </div>
 </div>
