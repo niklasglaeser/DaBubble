@@ -1,14 +1,13 @@
 <div class="dm-content">
-  <div id="dm-messages-container">
-      <div *ngFor="let message of messages"
-          [ngClass]="message.senderId === currentUserId ? 'user-send-message' : 'message'">
+  <div id="dm-messages-container"> 
+      <div *ngFor="let message of messages" [ngClass]="message.senderId === currentUserId ? 'user-send-message' : 'message'">
           <div class="message-date">{{ formatDate(message.created_at) }}</div>
           <div class="message-section">
               <div class="reaction-bar">
-                  <div class="checkmark-reaction"></div>
-                  <div class="applaud-reaction"></div>
-                  <div class="emoji-reaction"></div>
-                  <div *ngIf="currentUserId === message.senderId" class="option-reaction"></div>
+                <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')"></div>
+                <div class="applaud-reaction" (click)="toggleReaction(message, '🙌🏻')"></div>
+                <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
+                <div *ngIf="currentUserId === message.senderId" class="option-reaction"></div>
               </div>
               <div class="message-content">
                   <img class="author-picture" [src]="message.photoURL">
@@ -17,23 +16,47 @@
                           <div class="author-name fs-18-700">{{message.senderName}} </div>
                           <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                       </div>
-                      <div class="text fs-18">{{ message.message }}</div>
+                      <div class="text fs-18" [innerHTML]="formatMessage(message.message)">{{message.message }}</div>
                       <div class="open-thread">
-                          <div class="reactions">
-                              <div class="emoji-container">
-                                  <div class="emoji"></div>
-                                  <div class="emoji-counter">1</div>
-                              </div>
-                              <div class="emoji-container">
-                                  <div class="emoji"></div>
-                                  <div class="emoji-counter">1</div>
-                              </div>
-                              <div class="add-reaction"></div>
-                          </div>
+                        <div class="reactions">
+                            <div *ngFor="let reaction of message.reactions" class="emoji-container"
+                                (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"
+                                (click)="toggleReaction(message, reaction.emoji)">
+
+                                <div class="emoji">{{ reaction.emoji }}</div>
+                                <div class="emoji-counter">{{ reaction.count }}</div>
+
+                                <div class="custom-tooltip" *ngIf="showTooltip">
+                                    <div class="tooltip-content">
+                                        <span class="tooltip-emoji" [style.fontSize.px]="30">{{ reaction.emoji}}</span>
+                                        <span class="tooltip-text fs-18">
+                                            <ng-container *ngIf="reaction.usernames.length > 2">{{ reaction.usernames[0] === currentUser?.username ? 'Du' :reaction.usernames[0] }},{{ reaction.usernames[1] === currentUser?.username ? 'Du' : reaction.usernames[1] }} und {{ reaction.usernames.length - 2 }} weitere</ng-container>
+                                            <ng-container *ngIf="reaction.usernames.length <= 2">
+                                                <ng-container *ngFor="let username of reaction.usernames">{{ username === currentUser?.username ? 'Du' : username }}<span *ngIf="!isLastItem(reaction.usernames, username)"> und</span></ng-container>
+                                            </ng-container>
+                                        </span>
+                                        <span class="tooltip-text">{{ getReactionText(reaction) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                       </div>
                   </div>
               </div>
+              <div *ngIf="emojiPickerMessageId === message.id" class="emoji-picker-dialog">
+                <emoji-mart (emojiClick)="addEmoji($event, message)"></emoji-mart>
+              </div>
           </div>
+      </div>
+      <div *ngIf="!(hasMessages$ | async)" class="nomsg">
+        <div class="chat-header-left" *ngIf="recipientUser$ | async as recipientUser">
+            <div class="avatarStatus">
+                <img [src]="recipientUser?.photoURL" alt="User Avatar">
+                <img [src]="recipientUser?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'" alt="User Status">
+            </div>
+            <div class="fs-24-700">{{recipientUser?.username}}</div>
+        </div>
+        <div *ngIf="recipientUser$ | async as recipientUser" class="fs-20 nomsgtxt">Die Unterhaltung findet nur zwischen dir und <span>&#64;{{recipientUser?.username}}</span> statt.</div>
       </div>
   </div>
 </div>

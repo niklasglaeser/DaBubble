@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { collection, Firestore, doc, addDoc, updateDoc, onSnapshot, deleteDoc, where, getDocs, QuerySnapshot, query, setDoc } from '@angular/fire/firestore';
+import { collection, Firestore, doc, addDoc, updateDoc, onSnapshot, deleteDoc, where, getDocs, QuerySnapshot, query, setDoc, getDoc } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.class';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './lp-services/auth.service';
@@ -12,6 +12,7 @@ export class ChannelService {
   private firestore = inject(Firestore);
   channels: Channel[] = [];
   channels$ = new BehaviorSubject<Channel[]>([]);
+  defaultChannelId: string = '2eELSnZJ5InLSZUJgmLC';
   currentUserId$ = new BehaviorSubject<string | null>(null);
 
   /*onSnapshot variablen*/
@@ -88,9 +89,18 @@ export class ChannelService {
   async addUsersToChannel(channelId: string, userIds: string[]): Promise<void> {
     try {
       const channelDocRef = this.getSingleChannel(channelId);
-      await updateDoc(channelDocRef, {
-        members: userIds
-      });
+      // Aktuelle Mitglieder des Channels abrufen
+      const channelSnap = await getDoc(channelDocRef);
+      if (channelSnap.exists()) {
+        const currentMembers = channelSnap.data()['members'] || [];
+        const updatedMembers = [...new Set([...currentMembers, ...userIds])];
+
+        await updateDoc(channelDocRef, {
+          members: updatedMembers
+        });
+      } else {
+        console.error('Channel does not exist');
+      }
     } catch (e) {
       console.error('Error adding users to channel: ', e);
     }

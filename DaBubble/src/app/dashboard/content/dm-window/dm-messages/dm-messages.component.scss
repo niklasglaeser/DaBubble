@@ -1,10 +1,12 @@
 .dm-content {
-    display: flex;
-    height: 100%;
-    width: 100%;
+  display: flex;
+  height: 100%;
+  width: 100%;
 }
 
 #dm-messages-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   padding-left: 35px;
@@ -131,6 +133,7 @@
 }
 
 .details {
+  // width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -179,12 +182,41 @@
   padding: 5px 10px;
   border-radius: 20px;
   scale: 80%;
+  position: relative;
+}
+
+.custom-tooltip {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 120%;
+  left: 25px;
+  background-color: var(--purple1);
+  color: white;
+  border-radius: 30px 30px 30px 0;
+  height: 150px;
+  width: 160px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s;
+  padding: 4px;
+}
+
+.tooltip-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.emoji-container:hover .custom-tooltip {
+  opacity: 1;
 }
 
 .emoji {
   height: 24px;
   width: 24px;
-  background-image: url("/assets/img/main-page/chat/reaction-checkmark.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -247,6 +279,7 @@
     }
 
     .text {
+      width: 100%;
       align-self: flex-end;
       border-top-left-radius: 30px;
       border-top-right-radius: 0px;
@@ -265,6 +298,54 @@
     .last-answer {
       order: 1;
     }
+  }
+}
+
+.nomsg {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 20px;
+  padding-bottom: 30px;
+}
+
+.nomsgtxt {
+  color: #686868;
+
+  > span {
+    color: #535af1;
+  }
+}
+
+.chat-header-left {
+  display: flex;
+  gap: 30px;
+  padding: 10px;
+
+  > div {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.avatarStatus {
+  position: relative;
+  display: flex;
+
+  > img:first-child {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid black;
+  }
+
+  > :last-child {
+    position: absolute;
+    width: 14px;
+    bottom: 0;
+    right: 0;
   }
 }
 
@@ -297,4 +378,17 @@
 }
 /*Marco CSS edit Message*/
 
+.emoji-picker-dialog {
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+.tool-tip {
+  color: white;
+  background-color: red;
+}

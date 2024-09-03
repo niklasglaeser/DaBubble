@@ -24,6 +24,12 @@ export class DirectMessagesService implements OnDestroy {
   private conversationsSource = new BehaviorSubject<UserLogged[]>([]);
   conversations$ = this.conversationsSource.asObservable();
 
+  private hasMessagesSource = new BehaviorSubject<boolean>(false);
+  hasMessages$ = this.hasMessagesSource.asObservable();
+
+  private conversationIdSource = new BehaviorSubject<string | null>(null);
+  conversationId$ = this.conversationIdSource.asObservable();
+
   private unsubscribeRecipientSnapshot: (() => void) | null = null;
   private unsubscribeCurrentUserSnapshot: (() => void) | null = null;
   private unsubscribeConversationsSnapshot: (() => void) | null = null;
@@ -101,6 +107,7 @@ export class DirectMessagesService implements OnDestroy {
         created_at: Date.now(),
       });
     }
+    this.conversationIdSource.next(this.conversationId);
   }
 
   /**
@@ -112,11 +119,25 @@ export class DirectMessagesService implements OnDestroy {
     const messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
     const messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
   
-    return combineLatest([ collectionData(messagesQuery, { idField: 'id' }) as Observable<Message[]>, this.currentUser$, this.recipientUser$])
-    .pipe(map(([messages, currentUser, recipientUser]) => {
+    return combineLatest([
+      collectionData(messagesQuery, { idField: 'id' }) as Observable<Message[]>,
+      this.currentUser$,
+      this.recipientUser$
+    ]).pipe(
+      map(([messages, currentUser, recipientUser]) => {
+        // Check if messages exist
+        const hasMessages = messages.length > 0;
+        this.hasMessagesSource.next(hasMessages);
+  
+        // Map the messages to include user data
         return messages.map(message => {
-          if (message.senderId === this.currentUserId) { message.senderName = currentUser?.username || message.senderName; message.photoURL = currentUser?.photoURL || message.photoURL;
-          } else if (message.senderId === this.recipientId) { message.senderName = recipientUser?.username || message.senderName; message.photoURL = recipientUser?.photoURL || message.photoURL;}
+          if (message.senderId === this.currentUserId) {
+            message.senderName = currentUser?.username || message.senderName;
+            message.photoURL = currentUser?.photoURL || message.photoURL;
+          } else if (message.senderId === this.recipientId) {
+            message.senderName = recipientUser?.username || message.senderName;
+            message.photoURL = recipientUser?.photoURL || message.photoURL;
+          }
           return message;
         });
       })

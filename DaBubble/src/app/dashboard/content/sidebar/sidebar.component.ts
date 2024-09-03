@@ -3,7 +3,7 @@ import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/di
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
 import { ChannelService } from '../../../services/channel.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { WorkspaceToggleComponent } from '../../../dialog/workspace-toggle/workspace-toggle.component';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { UserLogged } from '../../../models/user-logged.model';
 import { ChannelStateService } from '../../../services/channel-state.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { DirectMessagesService } from '../../../services/direct-message.service';
+import { User } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -58,10 +59,13 @@ export class SidebarComponent implements OnInit {
   channels: any = [];
   channelsSubscription!: Subscription;
   selectedChannelId: string | null = null;
+  fixedChannelId: string = '';
 
   users: UserLogged[] = [];
   directMessagesUsers: UserLogged[] = [];
   unsubscribe: any;
+
+  currentUser: UserLogged | null = null;
 
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService) {
 
@@ -76,12 +80,14 @@ export class SidebarComponent implements OnInit {
       this.users = users;
     });
 
+
     this.channelService.channels$.subscribe((channels) => {
       this.channels = channels;
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
 
       if (this.channels.length > 0) {
-        this.openChannel(this.channels[0].id);
+        this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
+        this.openChannel(this.fixedChannelId);
       }
     });
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
@@ -95,6 +101,10 @@ export class SidebarComponent implements OnInit {
       this.openChannel(channelId);
     });
 
+    this.dmService.currentUser$.subscribe((user) => {
+      this.currentUser = user;
+    });
+
     this.loadDmConvos();
   }
 
@@ -102,7 +112,7 @@ export class SidebarComponent implements OnInit {
     const currentUserId = this.currentUserId;
     if (currentUserId) {
       this.dmService.setCurrentUserId(currentUserId);
-  
+
       this.dmService.conversations$.subscribe(users => {
         this.directMessagesUsers = users;
       });
@@ -110,7 +120,7 @@ export class SidebarComponent implements OnInit {
       console.error('Current user ID is undefined, unable to load direct message conversations.');
     }
   }
-  
+
 
   getList(): Channel[] {
     return this.channelService.channels;

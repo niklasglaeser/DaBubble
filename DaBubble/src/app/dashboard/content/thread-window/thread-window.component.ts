@@ -3,7 +3,7 @@ import { ThreadHeaderComponent } from './thread-header/thread-header.component';
 import { ThreadMessagesComponent } from './thread-messages/thread-messages.component';
 import { ThreadFooterComponent } from './thread-footer/thread-footer.component';
 import { Message } from '../../../models/message.model';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { ThreadService } from '../../../services/thread.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { UserService } from '../../../services/user.service';
@@ -32,13 +32,15 @@ export class ThreadWindowComponent implements OnInit {
   threadMessageCount$: Observable<number> | undefined;
   currentUserId: string | null = null;
 
+  private subscriptions = new Subscription();
+
   constructor(
     private threadService: ThreadService,
     private authService: AuthService,
     private userService: UserService,
     private messageService: MessageService,
     private channelService: ChannelService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.threadService.selectedMessage$.subscribe((data) => {
@@ -50,8 +52,21 @@ export class ThreadWindowComponent implements OnInit {
         this.loadThreadMessages();
         this.getCurrentUserId();
         this.loadThreadMessageCount();
+        this.subscribeToOriginMessage();
       }
     });
+  }
+
+  subscribeToOriginMessage() {
+    if (this.channelId && this.messageId) {
+      this.subscriptions.add(
+        this.messageService.getSingleMessageWithReactions(this.channelId, this.messageId).subscribe((updatedMessage) => {
+          if (updatedMessage) {
+            this.originMessage = updatedMessage;
+          }
+        })
+      );
+    }
   }
 
   loadThreadMessages() {
@@ -60,7 +75,6 @@ export class ThreadWindowComponent implements OnInit {
         .getThreadMessagesWithUsers(this.channelId, this.messageId)
         .pipe(
           map((threadMessages) => {
-            // Filtere die originMessage aus den Thread-Nachrichten heraus
             return threadMessages.filter(
               (message) => message.id !== this.originMessage?.id
             );

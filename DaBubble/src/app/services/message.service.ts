@@ -54,43 +54,6 @@ export class MessageService {
     }
   }
 
-  async toggleReaction(channelId: string, messageId: string, emoji: string, userId: string, username: string) {
-    const messageDocRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
-
-    const messageDoc = await getDoc(messageDocRef);
-    if (messageDoc.exists()) {
-      const currentReactions: Reaction[] = messageDoc.data()['reactions'] || [];
-      const existingReaction = currentReactions.find(r => r.emoji === emoji);
-
-      if (existingReaction) {
-        if (existingReaction.userIds.includes(userId)) {
-          const index = existingReaction.userIds.indexOf(userId);
-          if (index > -1) {
-            existingReaction.userIds.splice(index, 1);
-            existingReaction.usernames.splice(index, 1);
-            existingReaction.count -= 1;
-          }
-
-          if (existingReaction.count === 0) {
-            currentReactions.splice(currentReactions.indexOf(existingReaction), 1);
-          }
-        } else {
-          existingReaction.userIds.push(userId);
-          existingReaction.usernames.push(username);
-          existingReaction.count += 1;
-        }
-      } else {
-        currentReactions.push({
-          emoji,
-          count: 1,
-          userIds: [userId],
-          usernames: [username],
-        });
-      }
-      await updateDoc(messageDocRef, { reactions: currentReactions });
-    }
-  }
-
   async addMessageThread(
     channelId: string,
     message: Message,
@@ -250,15 +213,15 @@ export class MessageService {
     })
   }
 
-  async addReaction(channelId: string, messageId: string, reaction: Reaction) {
-    const messageDocRef = doc(
-      this.firestore,
-      `channels/${channelId}/messages/${messageId}`
-    )
-    await updateDoc(messageDocRef, {
-      reactions: arrayUnion(reaction),
-    })
-  }
+  // async addReaction(channelId: string, messageId: string, reaction: Reaction) {
+  //   const messageDocRef = doc(
+  //     this.firestore,
+  //     `channels/${channelId}/messages/${messageId}`
+  //   )
+  //   await updateDoc(messageDocRef, {
+  //     reactions: arrayUnion(reaction),
+  //   })
+  // }
 
   getSingleMessage(channelId: string, messageId: string) {
     return doc(this.firestore, `channels/${channelId}/messages/${messageId}`)
@@ -273,4 +236,36 @@ export class MessageService {
       `channels/${channelId}/messages/${messageId}/thread/${threadId}`
     )
   }
+  getSingleMessageWithReactions(channelId: string, messageId: string): Observable<Message | null> {
+    return new Observable<Message | null>((observer) => {
+      const messageDocRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
+      onSnapshot(messageDocRef, async (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data() as Message;
+          const userDocRef = doc(this.firestore, `Users/${data.senderId}`);
+          const userDoc = await getDoc(userDocRef);
+          let userData: UserLogged | null = null;
+
+          if (userDoc.exists()) {
+            let userObj = userDoc.data();
+            userData = new UserLogged(userObj as UserLogged);
+          }
+
+          const messageWithUserData = {
+            id: docSnapshot.id,
+            ...data,
+            senderName: userData?.username || 'Unknown User',
+            photoURL: userData?.photoURL || '',
+          };
+          observer.next(messageWithUserData);
+        } else {
+          observer.next(null);
+        }
+      }, (error) => {
+        observer.error(error);
+      });
+    });
+  }
+
+
 }

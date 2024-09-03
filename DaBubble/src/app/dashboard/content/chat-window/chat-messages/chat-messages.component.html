@@ -10,7 +10,7 @@
                     <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
                     <div class="comment-reaction" (click)="openThread(channelId, message.id!, message)"></div>
                     <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction"
-                       (click)="editMessage(message)"></div>
+                        (click)="editMessage(message)"></div>
                 </div>
                 <div class="message-content">
                     <img class="author-picture" [src]="message.photoURL">
@@ -23,38 +23,62 @@
                             class="text fs-18">
                             <div *ngIf="message.imagePath" class="message-image" (click)="openImg(message)">
                                 <img [src]="message.imagePath" alt="Message Image">
-                              </div>
+                            </div>
                             {{message.message}}
                         </div>
                         <ng-template #editTemplate>
                             <div class="edit-channel">
                                 <textarea class="text fs-18" [(ngModel)]="editMessageText"></textarea>
                             </div>
+                            <div *ngIf="isMessageEmpty" class="error-message">
+                                Die Nachricht darf nicht leer sein.
+                            </div>
                             <span class="edit" (click)="saveEditedMessage()">Speichern</span>
                             <span class="edit" (click)="cancelEdit()">Abbrechen</span>
                         </ng-template>
                         <div class="open-thread">
                             <div class="open-answers fs-18" (click)="openThread(channelId, message.id!, message)">
-                                <span *ngIf="getReplayCount(message.id!)">
-                                    {{ threadCounts.get(message.id!) }} Antworten
-                                </span>
+                                <span *ngIf="getReplayCount(message.id!)">{{ threadCounts.get(message.id!) }}
+                                    Antworten</span>
                             </div>
                             <div class="fs-14 last-answer">
-                                <span *ngIf="getAnswerTime(message.id!) as answerTime">
-                                    Letzte Antwort: {{ formatTime(answerTime) }}
-                                </span>
+                                <span *ngIf="getAnswerTime(message.id!) as answerTime">Letzte Antwort: {{
+                                    formatTime(answerTime) }}</span>
                             </div>
                             <div class="reactions">
                                 <div *ngFor="let reaction of message.reactions" class="emoji-container"
-                                    [matTooltip]="getReactionTooltip(reaction)"
+                                    (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"
                                     (click)="toggleReaction(message, reaction.emoji)">
-                                    <div class="emoji">
-                                        {{ reaction.emoji }}
-                                    </div>
+
+                                    <div class="emoji">{{ reaction.emoji }}</div>
                                     <div class="emoji-counter">{{ reaction.count }}</div>
+
+                                    <div class="custom-tooltip" *ngIf="showTooltip">
+                                        <div class="tooltip-content">
+                                            <span class="tooltip-emoji" [style.fontSize.px]="30">{{ reaction.emoji
+                                                }}</span>
+                                            <span class="tooltip-text fs-18">
+                                                <ng-container *ngIf="reaction.usernames.length > 2">
+                                                    {{ reaction.usernames[0] === currentUser?.username ? 'Du' :
+                                                    reaction.usernames[0] }},
+                                                    {{ reaction.usernames[1] === currentUser?.username ? 'Du' :
+                                                    reaction.usernames[1] }}
+                                                    und {{ reaction.usernames.length - 2 }} weitere
+                                                </ng-container>
+                                                <ng-container *ngIf="reaction.usernames.length <= 2">
+                                                    <ng-container *ngFor="let username of reaction.usernames">
+                                                        {{ username === currentUser?.username ? 'Du' : username }}<span
+                                                            *ngIf="!isLastItem(reaction.usernames, username)"> und
+                                                        </span>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </span>
+                                            <span class="tooltip-text">{{ getReactionText(reaction) }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="add-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)">
-                                </div>
+                            </div>
+                            <div class="add-reaction" (click)="toggleEmojiPicker(message.id, $event)">
                             </div>
                         </div>
                     </div>

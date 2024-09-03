@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Message } from '../../../../models/message.model';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Observable } from 'rxjs';
@@ -23,7 +23,7 @@ export class DmFooterComponent {
     const textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
     const messageText = textarea.value;
 
-    if (messageText.trim()) {
+    if (messageText) {
       const message: Message = {
         message: messageText,
         senderId: '',
@@ -35,6 +35,11 @@ export class DmFooterComponent {
       });
       console.log('send');
     }
+  }
+
+  @HostListener('keyup.enter', ['$event'])
+  onEnter(event: KeyboardEvent): void {
+    this.sendMessage();
   }
 
 }

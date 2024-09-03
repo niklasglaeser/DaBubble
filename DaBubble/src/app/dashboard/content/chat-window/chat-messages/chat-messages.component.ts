@@ -6,6 +6,7 @@ import {
   SimpleChanges,
   inject,
   HostListener,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Message } from '../../../../models/message.model';
@@ -16,19 +17,19 @@ import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../../../services/message.service';
 import { Reaction } from '../../../../models/reaction.model';
 import { UserService } from '../../../../services/user.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogChatImgComponent } from '../../../../dialog/dialog-chat-img/dialog-chat-img.component';
-
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { EmojiService } from '../../../../services/emoji.service';
+import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
 
 @Component({
   selector: 'app-chat-messages',
   standalone: true,
 
-  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule, PickerComponent],
+  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule, PickerComponent, EmojiComponent],
 
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.scss'],
@@ -40,14 +41,17 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   @Input() channelId: string = '';
   @Input() threadCounts: Map<string, number> = new Map<string, number>();
   @Input() lastThreadMessageTimes: Map<string, Date | null> = new Map<string, Date | null>();
+  @ViewChild('tooltip') tooltip!: MatTooltip;
+
   dialog = inject(MatDialog);
 
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
   editMessageText: string = '';
+  isMessageEmpty: boolean = false;
 
-  showEmojiPicker: boolean = false;
   emojiPickerMessageId: string | undefined = undefined;
+  showTooltip: boolean = false;
 
   private userSubscription: Subscription | undefined;
 
@@ -55,8 +59,10 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     private threadService: ThreadService,
     private messageService: MessageService,
-    private userService: UserService
+    private userService: UserService,
+    private emojiService: EmojiService
   ) { }
+
 
   ngOnInit(): void { }
 
@@ -82,6 +88,10 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
+      if (!this.editMessageText.trim()) {
+        this.isMessageEmpty = true;
+        return;
+      }
       try {
         this.selectedMessage.message = this.editMessageText;
         await this.messageService.updateMessage(
@@ -90,10 +100,10 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
           this.editMessageText
         );
         this.editMessageClicked = false;
+        this.isMessageEmpty = false;
+        console.log('Message successfully saved.' + this.editMessageText);
         this.selectedMessage = null;
         this.editMessageText = '';
-
-        console.log('Message successfully saved.');
       } catch (e) {
         console.error('Error saving message:', e);
       }
@@ -102,6 +112,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   cancelEdit() {
     this.closeEditMode();
+    this.isMessageEmpty = false;
   }
 
   closeEditMode() {
@@ -153,29 +164,22 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
+  openImg(message: Message) {
+    this.dialog.open(DialogChatImgComponent, {
+      data: { imagePath: message.imagePath }
+    });
+  }
+  /* EMOJI */
+
   async toggleReaction(message: Message, emoji: string) {
     const userId = this.currentUser?.uid!;
     const username = this.currentUser?.username!;
 
     try {
-      await this.messageService.toggleReaction(this.channelId, message.id!, emoji, userId, username);
+      await this.emojiService.toggleReaction(this.channelId, message.id!, emoji, userId, username);
     } catch (error) {
       console.error('Fehler beim Aktualisieren der Reaktion:', error);
     }
-  }
-
-  getReactionTooltip(reaction: Reaction): string {
-    if (!reaction.usernames || reaction.usernames.length === 0) {
-      return 'Keine Reaktionen';
-    }
-    return `Reaktionen von: ${reaction.usernames.join(', ')}`;
-  }
-
-
-  openImg(message: Message){
-    this.dialog.open(DialogChatImgComponent, {
-     data: { imagePath: message.imagePath } 
-    });
   }
 
   addEmoji(event: any, message: Message) {
@@ -189,6 +193,18 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     this.emojiPickerMessageId = this.emojiPickerMessageId === messageId ? undefined : messageId;
   }
 
+  toggleTooltip(show: boolean) {
+    this.showTooltip = show;
+  }
+
+  isLastItem(array: string[], item: string): boolean {
+    return array.indexOf(item) === array.length - 1;
+  }
+
+  getReactionText(reaction: Reaction): string {
+    return this.emojiService.getReactionText(reaction, this.currentUser);
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -197,7 +213,8 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     if (!isClickInside && this.emojiPickerMessageId) {
       this.emojiPickerMessageId = undefined;
     }
-
   }
+
+  /* EMOJI */
 }
 
