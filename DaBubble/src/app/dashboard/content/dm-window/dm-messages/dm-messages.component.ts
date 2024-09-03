@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe} from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Message } from '../../../../models/message.model';
 import { AuthService } from '../../../../services/lp-services/auth.service';
@@ -14,8 +14,9 @@ import { UserLogged } from '../../../../models/user-logged.model';
   styleUrl: './dm-messages.component.scss',
   providers: [DatePipe],
 })
-export class DmMessagesComponent {
+export class DmMessagesComponent implements AfterViewInit{
   @Input() messages: Message[] | null = null;
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   hasMessages$!: Observable<boolean>;
   recipientUser$: Observable<UserLogged | null>;
@@ -26,6 +27,18 @@ export class DmMessagesComponent {
 
   get currentUserId(): string | undefined {
     return this.authService.currentUserSig()?.userId;
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollToBottom(); // Automatisches Scrollen nach dem Laden der Nachrichten
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Scroll to bottom failed', err);
+    }
   }
 
   formatTime(timestamp: Date): string {
