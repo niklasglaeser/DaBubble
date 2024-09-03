@@ -35,12 +35,12 @@ export class LandingPageComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
 
   $mobileVersion = new BehaviorSubject<boolean>(window.innerWidth <= 650);
-  $login: boolean = false;
+  $login: boolean = true;
   $signUp: boolean = false; 
   $avatar: boolean = false;
   $resetPW: boolean = false;
   $imprint: boolean = false;
-  $privacy: boolean = true;
+  $privacy: boolean = false;
   $setPW: boolean = false;
   $registration: boolean = false;
   $emailSend: boolean = false;

@@ -45,6 +45,12 @@
             scale: 1.2;
         }
     }
+    a{
+        cursor: pointer;
+        object{
+            cursor: pointer;
+        }
+    }
 }
 
 .chat-message-toolbar {
