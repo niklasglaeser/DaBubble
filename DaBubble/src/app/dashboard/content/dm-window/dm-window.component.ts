@@ -14,27 +14,14 @@ import { Message } from '../../../models/message.model';
   templateUrl: './dm-window.component.html',
   styleUrl: './dm-window.component.scss'
 })
-export class DmWindowComponent implements AfterViewInit{
+export class DmWindowComponent {
   messages$: Observable<Message[]> | null = null;
-  @ViewChild('dmMessages') private chatContainer!: ElementRef;
 
   constructor(private dmService: DirectMessagesService) { }
 
   loadMessages(): void {
     this.messages$ = this.dmService.loadConversation();
     console.log('messs loaded');
-  }
-
-  ngAfterViewInit(): void {
-    this.scrollToBottom(); // Automatisches Scrollen nach dem Laden der Nachrichten
-  }
-
-  scrollToBottom(): void {
-    try {
-      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-    } catch (err) {
-      console.error('Scroll to bottom failed', err);
-    }
   }
 
 }
