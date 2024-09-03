@@ -16,8 +16,15 @@ import { Router } from '@angular/router';
 })
 export class ImprintComponent {
   router = inject(Router)
+  mobileVersion:boolean = false
 
   constructor (private lp: LandingPageComponent){}
+
+  ngOnInit() {
+    this.lp.$mobileVersion.subscribe(isMobile => {
+      this.mobileVersion = isMobile;
+    });
+  }
 
   backToLogin(){
     this.lp.resetAllStates()

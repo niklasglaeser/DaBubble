@@ -3,10 +3,10 @@
         <div class="back-box">
             <a (click)="backToLogin()"><mat-icon>arrow_back</mat-icon></a>
         </div>
-        <h1 class="fs-46">Konto erstellen</h1>
-        <span class="fs-20 login-text">Mit deinem Namen und deiner E-Mail Adresse hast du dein neues DABubble Konto.</span>
+        <h1 [ngClass]="{'fs-46': !mobileVersion, 'fs-32-700': mobileVersion}">Konto erstellen</h1>
+        <span class="login-text" [ngClass]="{'fs-20': !mobileVersion, 'fs-17': mobileVersion}">Mit deinem Namen und deiner E-Mail Adresse hast du dein neues DABubble Konto.</span>
         <form [formGroup]="registerForm"  (ngSubmit)="onSubmit()">
-           
+         
             <div class="input-container">
                 <input 
                 class="fs-18"
@@ -52,7 +52,7 @@
                     >
                 </div>
                 
-                 <span>Ich stimme der <a>Datenschutzerkärung</a> zu.</span>
+                 <span [ngClass]="{'fs-16': !mobileVersion, 'fs-14': mobileVersion}">Ich stimme der <a (click)="toPrivacy()">Datenschutzerkärung</a> zu.</span>
             </div>
 
             <div class="futer-box">

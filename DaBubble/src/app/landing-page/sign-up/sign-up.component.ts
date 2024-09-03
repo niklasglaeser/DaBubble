@@ -32,6 +32,7 @@ export class SignUpComponent {
   router = inject(Router)
   http = inject(HttpClient)
   alreadyUsed:boolean = false
+  mobileVersion:boolean = false
 
   isSubmited: boolean = false
 
@@ -46,6 +47,12 @@ export class SignUpComponent {
   });
 
   constructor(private fb: FormBuilder, private lp: LandingPageComponent) {
+  }
+
+  ngOnInit() {
+    this.lp.$mobileVersion.subscribe(isMobile => {
+      this.mobileVersion = isMobile;
+    });
   }
 
   onSubmit(): void {
@@ -78,8 +85,6 @@ export class SignUpComponent {
     }
   }
   
-  
-
   private navigateToAvatarSelection(): void {
     this.lp.$signUp = false
     this.lp.$avatar = true
@@ -97,5 +102,9 @@ export class SignUpComponent {
   backToLogin(){
     this.lp.$signUp = false
     this.lp.$login = true
+  }
+
+  toPrivacy(){
+    this.lp.toPrivacy()
   }
 }

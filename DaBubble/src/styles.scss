@@ -96,15 +96,34 @@ a {
 }
 
 .fs-17 {
-  font-size: 17px !important;
+  font-size: 17px ;
+  font-weight: 400;
+}
+
+.fs-16 {
+  font-size: 16px ;
+  font-weight: 400;
+}
+
+.fs-12 {
+  font-size: 12px ;
   font-weight: 400;
 }
 
 .fs-14 {
-  font-size: 14px !important;
+  font-size: 14px ;
   font-weight: 400;
 }
 
+.fs-14-b {
+  font-size: 14px ;
+  font-weight: 700;
+}
+
+.fs-16-b {
+  font-size: 16px;
+  font-weight: 700;
+}
 .fs-18-b {
   font-size: 18px;
   font-weight: 700;

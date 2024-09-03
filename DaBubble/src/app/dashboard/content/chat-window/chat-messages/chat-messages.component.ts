@@ -4,11 +4,8 @@ import {
   OnInit,
   OnDestroy,
   SimpleChanges,
-
   inject,
-
   HostListener,
-
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Message } from '../../../../models/message.model';

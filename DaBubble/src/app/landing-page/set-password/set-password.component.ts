@@ -29,6 +29,7 @@ export class SetPasswordComponent {
   oobCode: string | null = null;
   apiKey: string | null = null;
   lang: string | null = null;
+  mobileVersion: boolean = false
 
   constructor(
     private fb: FormBuilder,
@@ -43,6 +44,12 @@ export class SetPasswordComponent {
 
     this.route.queryParams.subscribe((queryParams) => {
       this.oobCode = queryParams['oobCode'];
+    });
+  }
+
+  ngOnInit() {
+    this.lp.$mobileVersion.subscribe(isMobile => {
+      this.mobileVersion = isMobile;
     });
   }
 

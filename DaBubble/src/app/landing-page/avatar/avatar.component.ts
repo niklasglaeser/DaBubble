@@ -25,10 +25,17 @@ export class AvatarComponent {
   userService = inject(UserLoggedService);
   router = inject(Router)
   currentUser = this.authService.currentUserSig();
+  mobileVersion: boolean = false
 
   avatars: boolean[] = [false, false, false, false, false, false];
 
   constructor(private lp: LandingPageComponent, private imgUploadService: UploadService, private toast: HotToastService) {
+  }
+
+  ngOnInit() {
+    this.lp.$mobileVersion.subscribe(isMobile => {
+      this.mobileVersion = isMobile;
+    });
   }
 
   choseAvatar(index: number) {

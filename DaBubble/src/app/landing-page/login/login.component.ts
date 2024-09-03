@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,13 +19,14 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent {
   authService = inject(AuthService);
   router = inject(Router);
   http = inject(HttpClient);
   isSubmited: boolean = false;
   errorM: string | null = null; 
-  mobileVersion: boolean
+  mobileVersion?: boolean
 
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -33,7 +34,12 @@ export class LoginComponent {
   });
 
   constructor(private fb: FormBuilder, private lp: LandingPageComponent) {
-    this.mobileVersion = this.lp.$mobileVersion
+  }
+
+  ngOnInit() {
+    this.lp.$mobileVersion.subscribe(isMobile => {
+      this.mobileVersion = isMobile;
+    });
   }
 
   onSubmit(): void {

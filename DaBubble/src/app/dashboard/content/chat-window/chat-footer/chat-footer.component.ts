@@ -11,6 +11,9 @@ import { AuthService } from '../../../../services/lp-services/auth.service';
 import { UserLoggedService } from '../../../../services/lp-services/user-logged.service';
 import { UploadService } from '../../../../services/lp-services/upload.service';
 import { MatIconModule } from '@angular/material/icon';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeUrlPipe } from '../../../../pipe/safe-url.pipe';
+import { SafeCall } from '@angular/compiler';
 
 @Component({
   selector: 'app-chat-footer',
@@ -26,6 +29,9 @@ export class ChatFooterComponent {
   imgUploadService = inject(UploadService);
   currentUserId: string = '';
   chatImg: string | null = null; 
+  uploadError: string | null = null;
+  isPdf: boolean = false;
+  originalFilePath: string | null = null; 
 
   symbolSearch = new FormControl();
   filteredUserOptions$: Observable<UserLogged[]> | null = null;
@@ -33,7 +39,7 @@ export class ChatFooterComponent {
   inputValue: string = '';
   isPanelOpen = false;
 
-  constructor(private messageService: MessageService, private authService: AuthService) {
+  constructor(private messageService: MessageService, private authService: AuthService,private sanitizer: DomSanitizer,) {
     this.currentUserId = this.authService.uid;
   }
 
@@ -107,31 +113,55 @@ export class ChatFooterComponent {
   uploadImage(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
-    
+
     if (file) {
+      this.isPdf = file.type === 'application/pdf';
+
       const currentUser = this.authService.currentUserSig();
       if (currentUser) {
-        this.imgUploadService.uploadImgChat(currentUser.userId,file,this.channel?.id).pipe(
+        this.imgUploadService.uploadImgChat(currentUser.userId, file, this.channel?.id).pipe(
         ).subscribe({
-          next: (photoURL: string) => {
-            this.chatImg = photoURL;
-            console.log('Bild erfolgreich hochgeladen:', photoURL);
+          next: (imagePath: string) => {
+            this.originalFilePath = imagePath;
+            this.chatImg = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string  : imagePath;
+            this.uploadError = null;
           },
           error: (err: any) => {
-            console.error('Fehler beim Hochladen des Bildes:', err);
+            this.uploadError = err.message || 'Fehler beim Hochladen des Bildes.';
+            this.chatImg = null;
+            this.originalFilePath = null;
+            this.isPdf = false;
+
+            setTimeout(() => {
+              this.uploadError = null;
+            }, 3000);
           }
         });
       }
     }
   }
 
+  transform(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
   }
 
-  deleteImg(){
-    this.imgUploadService.deleteImgChat(this.chatImg!)
-    this.chatImg = null
+  deleteImg() {
+    if (this.originalFilePath) {
+      this.imgUploadService.deleteImgChat(this.originalFilePath).subscribe({
+        next: () => {
+          this.chatImg = null;
+          this.originalFilePath = null;
+          this.isPdf = false;
+        },
+        error: (err: any) => {
+          console.error('Fehler beim Löschen der Datei:', err);
+        }
+      });
+    }
   }
 
 }
