@@ -24,6 +24,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 144px;
   max-height: 144px;
   padding: 24px;
@@ -31,14 +32,46 @@
   border-radius: 10px 0 10px 10px;
   background-color: var(--bgColor);
   margin-right: 20px;
+
   img {
     max-width: 120px;
     width: 100%;
     max-height: 120px;
     height: auto;
     object-fit: cover;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+  }
+
+  .pdf-message {
+    margin-top: 10px;
+    max-width: 120px;
+    width: 100%;
+  }
+
+  button {
+    background-color: var(--lightPurple);
+    color: var(--purple1);
+    border: none;
+    padding: 4px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    height: auto;
+   
+    width: 100%;
+
+    &:hover{
+      background-color: var(--purple3);
+      color: white;
+    }
   }
 }
+
 
 .message-date {
   position: relative;
