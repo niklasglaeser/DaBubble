@@ -59,6 +59,7 @@ export class SidebarComponent implements OnInit {
   channels: any = [];
   channelsSubscription!: Subscription;
   selectedChannelId: string | null = null;
+  fixedChannelId: string = '';
 
   users: UserLogged[] = [];
   directMessagesUsers: UserLogged[] = [];
@@ -85,7 +86,8 @@ export class SidebarComponent implements OnInit {
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
 
       if (this.channels.length > 0) {
-        this.openChannel(this.channels[0].id);
+        this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
+        this.openChannel(this.fixedChannelId);
       }
     });
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
@@ -110,7 +112,7 @@ export class SidebarComponent implements OnInit {
     const currentUserId = this.currentUserId;
     if (currentUserId) {
       this.dmService.setCurrentUserId(currentUserId);
-  
+
       this.dmService.conversations$.subscribe(users => {
         this.directMessagesUsers = users;
       });
@@ -118,7 +120,7 @@ export class SidebarComponent implements OnInit {
       console.error('Current user ID is undefined, unable to load direct message conversations.');
     }
   }
-  
+
 
   getList(): Channel[] {
     return this.channelService.channels;
