@@ -22,11 +22,18 @@ export class ResetPasswordComponent {
   authService = inject(AuthService);
   lp = inject(LandingPageComponent);
   resetForm: FormGroup;
+  mobileVersion: boolean = false
 
   constructor(private fb: FormBuilder,private route: ActivatedRoute,
     private router: Router) {
     this.resetForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+    });
+  }
+
+  ngOnInit() {
+    this.lp.$mobileVersion.subscribe(isMobile => {
+      this.mobileVersion = isMobile;
     });
   }
 

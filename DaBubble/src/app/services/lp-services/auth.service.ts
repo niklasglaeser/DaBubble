@@ -7,19 +7,21 @@ import { doc, getDoc } from '@angular/fire/firestore';
 import { UserLogged } from '../../models/user-logged.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LandingPageComponent } from '../../landing-page/landing-page.component';
+import { ChannelService } from '../channel.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService  {
+export class AuthService {
   firebaseAuth = inject(Auth);
   router = inject(Router);
   user$ = user(this.firebaseAuth);
   userService = inject(UserLoggedService);
+  channelService = inject(ChannelService);
   currentUserSig = signal<UserInterface | null | undefined>(undefined);
   uid: string = '';
 
-  constructor(){
+  constructor() {
     this.restoreUid()
     this.subscribeUser()
     window.addEventListener('storage', this.handleStorageChange.bind(this));
@@ -44,7 +46,7 @@ export class AuthService  {
           userId: user.uid!
         });
         await this.updateUserStatus(this.uid, true);
-        console.log('UserId is subscribed:',this.uid, 'Username:', user.displayName)
+        console.log('UserId is subscribed:', this.uid, 'Username:', user.displayName)
       } else {
         this.currentUserSig.set(null);
         sessionStorage.removeItem('uid');
@@ -56,13 +58,20 @@ export class AuthService  {
     try {
       await this.userService.updateUserStatus(userId, status);
       console.log(`User ${status ? 'online' : 'offline'} status set for userId: ${userId}`);
-    } catch (error) {}
+    } catch (error) { }
   }
 
   register(email: string, username: string, password: string): Observable<UserCredential> {
     return from(this.createFirebaseUser(email, password)).pipe(
       switchMap((userCredential) => this.updateUserProfile(userCredential, username)),
       switchMap((userCredential) => this.saveUserToDatabase(userCredential, username, email)),
+      switchMap((userCredential) => {
+        const uid = userCredential.user.uid;
+        const defaultChannelId = this.channelService.defaultChannelId;;
+        return from(this.channelService.addUsersToChannel(defaultChannelId, [uid])).pipe(
+          switchMap(() => of(userCredential))
+        );
+      }),
       catchError(this.handleRegistrationError)
     );
   }
@@ -225,10 +234,10 @@ export class AuthService  {
     }
   }
 
-  
-    ngOnDestroy() {
-      window.removeEventListener('storage', this.handleStorageChange.bind(this));
-    }
-    
-  
+
+  ngOnDestroy() {
+    window.removeEventListener('storage', this.handleStorageChange.bind(this));
+  }
+
+
 }

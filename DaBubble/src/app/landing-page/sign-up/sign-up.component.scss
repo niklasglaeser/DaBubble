@@ -10,6 +10,11 @@
     border-radius: 30px;
     padding: 32px 64px;
     margin-top: 16px;
+    @media (max-width: 650px) {
+        padding: 20px;
+        max-width: 500px;
+        gap: 30px;
+    }
 }
 
 .content{
@@ -19,12 +24,24 @@
     justify-content: center;
     align-items: center;
     gap: 32px;
+    width: 100%;
     h1{
         color: var(--purple1);
     }
     .login-text{
         text-align: center;
     }
+    @media (max-width: 650px) {
+        gap: 30px;
+    }
+    @media (max-width: 370px) {
+        h1{
+            font-size: 26px !important;
+            padding-left: 20px;
+        }
+    }
+
+
 }
 
 .back-box{
@@ -48,6 +65,13 @@
         justify-content: center;
         align-items: center;
         color: black;
+    }
+    @media (max-width: 650px) {
+        top: 2px;
+    }
+    @media (max-width: 370px) {
+        top: -2px;
+        left: -4px;
     }
 }
 
@@ -104,6 +128,20 @@ form{
         &:not(:placeholder-shown) + mat-icon {
             color: black;
         }
+
+        @media (max-width: 650px) {
+            height: 50px;
+            
+        }
+        @media (max-width: 400px) {
+            padding: 15px 32px 15px 50px;
+            &::placeholder {
+                font-size: 16px; 
+            }
+        }
+        @media (max-width: 400px) {
+            padding: 15px 15px 15px 45px;
+        }
     
     }
 
@@ -119,6 +157,10 @@ form{
         transition: color 0.3s ease; 
         &input:focus{
             color: black;
+        }
+        @media (max-width: 650px) {
+            top: 13px;
+            font-size: 24px;
         }
     }
 }
@@ -186,6 +228,9 @@ form{
         color: var(--purple2);
         &:hover{
             color: var(--purple1);
+        }
+        @media (max-width:650px) {
+            font-size: 16px;
         }
 
     }
