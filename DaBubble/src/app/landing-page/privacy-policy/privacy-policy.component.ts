@@ -17,8 +17,15 @@ import { Router } from '@angular/router';
 
 export class PrivacyPolicyComponent {
   router = inject(Router)
+  mobileVersion?: boolean
 
   constructor(private lp: LandingPageComponent){}
+
+  ngOnInit() {
+    this.lp.$mobileVersion.subscribe(isMobile => {
+      this.mobileVersion = isMobile;
+    });
+  }
 
   backToLogin(){
     this.lp.resetAllStates()

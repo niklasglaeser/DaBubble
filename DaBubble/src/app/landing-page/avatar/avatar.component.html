@@ -4,7 +4,7 @@
         <div class="back-box">
             <a (click)="backToSignUp()" ><mat-icon>arrow_back</mat-icon></a>
         </div>
-        <h1 class="fs-46">Wähle deinen Avatar</h1>
+        <h1 [ngClass]="{'fs-46': !mobileVersion, 'fs-32-700': mobileVersion}">Wähle deinen Avatar</h1>
         <img class="profile-img" [src]="profileImg ?? 'assets/img/landing-page/unknown.svg'" alt="">
         <div class="profile-name">
             <span class="fs-32-700">Frederik Beck</span>
@@ -23,7 +23,7 @@
         </div>
         <div class="upload-img">
             <span class="fs-20">eigenes Bild verwenden</span>
-            <button class="fs-18-b" (click)="triggerFileUpload(fileInput)">
+            <button [ngClass]="{'fs-18-b': !mobileVersion, 'fs-16-b': mobileVersion}" (click)="triggerFileUpload(fileInput)">
                 Datei hochladen
             </button>
             <!-- Hidden file input -->

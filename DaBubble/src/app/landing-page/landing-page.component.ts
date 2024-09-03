@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/lp-services/auth.service';
@@ -10,6 +10,7 @@ import { SetPasswordComponent } from './set-password/set-password.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { PopUpComponent } from './pop-up/pop-up.component';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-landing-page',
@@ -29,28 +30,40 @@ import { PopUpComponent } from './pop-up/pop-up.component';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
-  authService = inject(AuthService)
-  router = inject(Router)
-  route = inject(ActivatedRoute)
+  authService: AuthService = inject(AuthService);
+  router: Router = inject(Router);
+  route: ActivatedRoute = inject(ActivatedRoute);
 
-  $mobileVersion = true
-  $login = true;
-  $signUp = false;
-  $avatar = false;
-  $resetPW = false;
-  $imprint = false;
-  $privacy = false;
-  $setPW = false;
-  $registration = false;
-  $emailSend = false;
-  $setNewPW = false;
-  $uid = '';
-  animated = false;
+  $mobileVersion = new BehaviorSubject<boolean>(window.innerWidth <= 650);
+  $login: boolean = false;
+  $signUp: boolean = false; 
+  $avatar: boolean = false;
+  $resetPW: boolean = false;
+  $imprint: boolean = false;
+  $privacy: boolean = true;
+  $setPW: boolean = false;
+  $registration: boolean = false;
+  $emailSend: boolean = false;
+  $setNewPW: boolean = false;
+  $uid: string = '';
+  animated: boolean = false;
   oobCode: string | null = null;
 
-  constructor() {}
+  constructor() {
+    
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkMobileVersion();
+  }
+
+  checkMobileVersion() {
+    this.$mobileVersion.next(window.innerWidth <= 650);
+  }
 
   ngOnInit(): void {
+    this.checkMobileVersion();
     this.userIsLogged()
     this.route.params.subscribe((params) => {
       const action = params['action'];
@@ -111,7 +124,7 @@ export class LandingPageComponent implements OnInit {
     this.resetAllStates()
     this.$imprint = true
   }
-  
+ 
   toPrivacy(): void {
     this.resetAllStates()
     this.$privacy = true
@@ -135,5 +148,6 @@ export class LandingPageComponent implements OnInit {
       },2000);
     }
   }
+
 
 }

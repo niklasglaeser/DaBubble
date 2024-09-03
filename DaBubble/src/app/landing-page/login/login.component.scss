@@ -14,7 +14,7 @@
     width: 100%;
     @media (max-width: 650px) {
         padding: 35px 20px;
-        gap: 20px;
+        gap: 25px;
     }
     @media (max-width: 650px) {
         
@@ -36,7 +36,7 @@
         text-align: center;
     }
     @media (max-width: 650px) {
-        gap: 20px;
+        gap: 25px;
     }
 }
 
@@ -49,7 +49,7 @@ form{
     gap: 32px;
     width: 100%;
     @media (max-width: 650px) {
-        gap: 20px;
+        gap: 25px;
     }
 }
 
@@ -122,10 +122,13 @@ input {
         
     }
     @media (max-width: 400px) {
-        padding: 18px 32px 18px 50px;
+        padding: 15px 32px 15px 50px;
         &::placeholder {
-            font-size: 14px; 
+            font-size: 16px; 
         }
+    }
+    @media (max-width: 400px) {
+        padding: 15px 15px 15px 45px;
     }
 }
 
@@ -191,7 +194,11 @@ input:focus ~ mat-icon{
                 scale: 1.05;
             }
         }
+        @media (max-width: 400px) {
+            padding: 18px 26px;
+        }
     }
+    
 }
 
 .login-btn-box{
