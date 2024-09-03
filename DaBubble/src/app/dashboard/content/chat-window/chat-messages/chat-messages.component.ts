@@ -7,6 +7,7 @@ import {
   inject,
   HostListener,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Message } from '../../../../models/message.model';
@@ -42,6 +43,8 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   @Input() threadCounts: Map<string, number> = new Map<string, number>();
   @Input() lastThreadMessageTimes: Map<string, Date | null> = new Map<string, Date | null>();
   @ViewChild('tooltip') tooltip!: MatTooltip;
+  @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
+
 
   dialog = inject(MatDialog);
 
@@ -83,6 +86,11 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       this.editMessageClicked = true;
       this.editMessageText = message.message;
       this.selectedMessage = message;
+      setTimeout(() => {
+        if (this.editMessageText) {
+          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
+        }
+      }, 0);
     }
   }
 
@@ -205,6 +213,20 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     return this.emojiService.getReactionText(reaction, this.currentUser);
   }
 
+
+  adjustHeight(event: any) {
+    event.target.style.height = 'auto';
+    event.target.style.width = '100%';
+    event.target.style.height = event.target.scrollHeight + 'px';
+  }
+
+  adjustHeightDirectly(textarea: HTMLTextAreaElement) {
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.width = '100%';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+  }
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
