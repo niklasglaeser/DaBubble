@@ -6,7 +6,7 @@
       <div class="close" (click)="close()"></div>
     </div>
     <div class="container-profil">
-      <img src="{{data.user.photoURL}}" alt="" (click)="openProfilAvatar()" [ngClass]="{'scale': edit}">
+      <img [src]="profileImg || data.user.photoURL" alt="" (click)="openProfilAvatar()" [ngClass]="{'scale': edit}">
     </div>
     @if (!editNameClicked) {
     <div class="container-title">

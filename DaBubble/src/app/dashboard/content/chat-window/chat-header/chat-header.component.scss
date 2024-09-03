@@ -17,12 +17,11 @@
   gap: 10px;
   padding: 10px;
   max-width: 400px;
-  
 
   .arrow-down {
     height: 40px;
     width: 40px;
-    background-image: url('/assets/img/main-page/chat/arrow_down.svg');
+    background-image: url("/assets/img/main-page/chat/arrow_down.svg");
     background-repeat: no-repeat;
     background-position: center;
   }
@@ -30,10 +29,10 @@
   > div {
     display: flex;
     align-items: center;
-    overflow: hidden; 
-    white-space: nowrap; 
-    text-overflow: ellipsis; 
-    flex-grow: 1; 
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 1;
   }
   &:hover {
     cursor: pointer;
@@ -43,7 +42,7 @@
       color: #535af1;
     }
     .arrow-down {
-      background-image: url('/assets/img/main-page/chat/arrow_down_hover.svg');
+      background-image: url("/assets/img/main-page/chat/arrow_down_hover.svg");
     }
   }
 }
@@ -59,9 +58,13 @@
   align-items: center;
   padding: 10px;
   > img {
+    position: relative;
+    margin-left: -8px;
     height: 40px;
     width: 40px;
     border-radius: 20px;
+    border: 1px solid white;
+    object-fit: cover;
   }
   &:hover {
     cursor: pointer;
@@ -76,9 +79,9 @@
 .add-members {
   height: 40px;
   width: 40px;
-  background-image: url('/assets/img/main-page/chat/add-members-button.svg');
+  background-image: url("/assets/img/main-page/chat/add-members-button.svg");
   &:hover {
     cursor: pointer;
-    background-image: url('/assets/img/main-page/chat/add-members-button-hover.svg');
+    background-image: url("/assets/img/main-page/chat/add-members-button-hover.svg");
   }
 }
