@@ -31,6 +31,7 @@ export class ThreadMessagesComponent {
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
   editMessageText: string = '';
+  isMessageEmpty: boolean = false;
 
   emojiPickerMessageId: string | undefined = undefined;
   showTooltip: boolean = false;
@@ -59,24 +60,30 @@ export class ThreadMessagesComponent {
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
+      if (!this.editMessageText.trim()) {
+        this.isMessageEmpty = true;
+        return;
+      }
       try {
-        await this.messageService.updateThreadMessage(
+        this.selectedMessage.message = this.editMessageText;
+        await this.messageService.updateMessage(
           this.channelId,
-          this.originMessage?.id!,
           this.selectedMessage.id!,
           this.editMessageText
         );
-        this.selectedMessage.message = this.editMessageText;
-        this.closeEditMode();
+        this.editMessageClicked = false;
+        this.isMessageEmpty = false;
+        this.selectedMessage = null;
+        this.editMessageText = '';
       } catch (e) {
-        console.error('Error saving thread message:', e);
+        console.error('Error saving message:', e);
       }
     }
   }
 
-
   cancelEdit() {
     this.closeEditMode();
+    this.isMessageEmpty = false;
   }
 
   closeEditMode() {
