@@ -27,6 +27,9 @@ export class DirectMessagesService implements OnDestroy {
   private hasMessagesSource = new BehaviorSubject<boolean>(false);
   hasMessages$ = this.hasMessagesSource.asObservable();
 
+  private conversationIdSource = new BehaviorSubject<string | null>(null);
+  conversationId$ = this.conversationIdSource.asObservable();
+
   private unsubscribeRecipientSnapshot: (() => void) | null = null;
   private unsubscribeCurrentUserSnapshot: (() => void) | null = null;
   private unsubscribeConversationsSnapshot: (() => void) | null = null;
@@ -104,6 +107,7 @@ export class DirectMessagesService implements OnDestroy {
         created_at: Date.now(),
       });
     }
+    this.conversationIdSource.next(this.conversationId);
   }
 
   /**
