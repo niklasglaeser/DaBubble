@@ -4,17 +4,11 @@
     </div>
     <div *ngIf="chatImg || uploadError"  class="chatImg">
         <img *ngIf="chatImg && !isPdf" [src]="chatImg" alt="Uploaded image">
-     
+    
         <a *ngIf="chatImg && isPdf" [href]="safePath" target="_blank">
-            <object 
-                [data]="safePath" 
-                type="application/pdf" 
-                width="100%" 
-                height="120px">
-            </object>
+            <mat-icon class="pdf">picture_as_pdf</mat-icon>
         </a>
-      
-        <mat-icon *ngIf="chatImg" (click)="deleteImg()">delete</mat-icon>
+        <mat-icon class="delete" *ngIf="chatImg" (click)="deleteImg()">delete</mat-icon>
 
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>
     </div>

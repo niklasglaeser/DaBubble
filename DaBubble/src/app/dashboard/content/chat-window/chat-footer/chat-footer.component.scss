@@ -30,7 +30,7 @@
         height: auto;
         object-fit: cover;
     }
-    mat-icon {
+    .delete {
         position: absolute;
         display: flex;
         justify-content: center;
@@ -51,6 +51,17 @@
             cursor: pointer;
         }
     }
+}
+
+.pdf {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--purple1);
+    border-radius: 10px;
+    font-size: 64px;
 }
 
 .chat-message-toolbar {

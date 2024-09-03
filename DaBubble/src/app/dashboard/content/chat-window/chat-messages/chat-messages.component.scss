@@ -33,6 +33,17 @@
   background-color: var(--bgColor);
   margin-right: 20px;
 
+  .pdf {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--purple1);
+    border-radius: 10px;
+    font-size: 64px;
+}
+
   img {
     max-width: 120px;
     width: 100%;
@@ -47,29 +58,6 @@
     }
   }
 
-  .pdf-message {
-    margin-top: 10px;
-    max-width: 120px;
-    width: 100%;
-  }
-
-  button {
-    background-color: var(--lightPurple);
-    color: var(--purple1);
-    border: none;
-    padding: 4px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: auto;
-   
-    width: 100%;
-
-    &:hover{
-      background-color: var(--purple3);
-      color: white;
-    }
-  }
 }
 
 
