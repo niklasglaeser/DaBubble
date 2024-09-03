@@ -21,15 +21,31 @@
                         </div>
                         <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
                             class="text fs-18">
-                            <div *ngIf="message.imagePath" class="message-image" (click)="openImg(message)">
-                                <img [src]="message.imagePath" alt="Message Image">
+                            <div *ngIf="message.imagePath && !checkPdf(message)" class="message-image" (click)="openImg(message)">
+                                <img [src]="transform(message)" alt="Message Image">
+                            </div>
+                            <div *ngIf="message.imagePath && checkPdf(message)" class="message-image">
+                                <iframe 
+                                    [src]="transform(message)" 
+                                    width="100%" 
+                                    height="100px">
+                                </iframe>
+                                <div class="pdf-message">
+                                    <Button (click)="openPdf(message)">
+                                        PDF
+                                    </Button>
+                                </div>
                             </div>
                             {{message.message}}
                         </div>
                         <ng-template #editTemplate>
                             <div class="edit-channel">
+
+                               <textarea class="text fs-18" [(ngModel)]="editMessageText"></textarea>
+
                                 <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText"
                                     type="text" (input)="adjustHeight($event)"></textarea>
+
                             </div>
                             <div *ngIf="isMessageEmpty" class="error-message">
                                 Die Nachricht darf nicht leer sein.

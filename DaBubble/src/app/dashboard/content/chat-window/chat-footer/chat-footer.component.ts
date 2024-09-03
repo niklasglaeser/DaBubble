@@ -37,7 +37,7 @@ export class ChatFooterComponent {
   chatImg: string | null = null; 
   uploadError: string | null = null;
   isPdf: boolean = false;
-  originalFilePath: string | null = null; 
+  safePath: string | null = null; 
 
 
   symbolSearch = new FormControl();
@@ -145,14 +145,14 @@ export class ChatFooterComponent {
         this.imgUploadService.uploadImgChat(currentUser.userId, file, this.channel?.id).pipe(
         ).subscribe({
           next: (imagePath: string) => {
-            this.originalFilePath = imagePath;
-            this.chatImg = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string  : imagePath;
+            this.chatImg = imagePath;
+            this.safePath = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string : null
             this.uploadError = null;
           },
           error: (err: any) => {
             this.uploadError = err.message || 'Fehler beim Hochladen des Bildes.';
             this.chatImg = null;
-            this.originalFilePath = null;
+            this.safePath = null;
             this.isPdf = false;
 
             setTimeout(() => {
@@ -173,11 +173,11 @@ export class ChatFooterComponent {
   }
 
   deleteImg() {
-    if (this.originalFilePath) {
-      this.imgUploadService.deleteImgChat(this.originalFilePath).subscribe({
+    if (this.chatImg) {
+      this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
         next: () => {
           this.chatImg = null;
-          this.originalFilePath = null;
+          this.safePath = null;
           this.isPdf = false;
         },
         error: (err: any) => {
