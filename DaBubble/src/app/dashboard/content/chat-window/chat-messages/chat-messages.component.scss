@@ -337,6 +337,11 @@
   }
 }
 
+.edit-channel-btn {
+  display: flex;
+  gap: 8px;
+}
+
 .edit {
   color: var(--purple3);
   cursor: pointer;
