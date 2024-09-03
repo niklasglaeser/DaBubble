@@ -1,17 +1,20 @@
 <div class="chat-footer">
 
-    
-    
-
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
         <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
     </div>
-  
-    <div *ngIf="chatImg || uploadError" class="chatImg">
+    <div *ngIf="chatImg || uploadError"  class="chatImg">
         <img *ngIf="chatImg && !isPdf" [src]="chatImg" alt="Uploaded image">
-        
-        <iframe *ngIf="chatImg && isPdf" [src]="chatImg | safeUrl" type="application/pdf" width="100%" height="120px"></iframe>
-        
+     
+        <a *ngIf="chatImg && isPdf" [href]="safePath" target="_blank">
+            <object 
+                [data]="safePath" 
+                type="application/pdf" 
+                width="100%" 
+                height="120px">
+            </object>
+        </a>
+      
         <mat-icon *ngIf="chatImg" (click)="deleteImg()">delete</mat-icon>
         
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>

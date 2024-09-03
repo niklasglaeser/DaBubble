@@ -23,6 +23,7 @@ import { DialogChatImgComponent } from '../../../../dialog/dialog-chat-img/dialo
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiService } from '../../../../services/emoji.service';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -49,6 +50,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   editMessageClicked: boolean = false;
   editMessageText: string = '';
   isMessageEmpty: boolean = false;
+  isPdf: boolean = false
 
   emojiPickerMessageId: string | undefined = undefined;
   showTooltip: boolean = false;
@@ -60,11 +62,33 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     private threadService: ThreadService,
     private messageService: MessageService,
     private userService: UserService,
-    private emojiService: EmojiService
+    private emojiService: EmojiService,
+    private sanitizer: DomSanitizer,
   ) { }
 
 
   ngOnInit(): void { }
+
+  checkPdf(message: Message): boolean {
+    if (message.imagePath) {
+        const cleanUrl = message.imagePath.split('?')[0];
+        const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
+        console.log('Clean URL:', cleanUrl);  
+        console.log('Extracted file extension:', fileExtension); 
+        this.isPdf = fileExtension === 'pdf';
+    } else {
+        this.isPdf = false;
+    }
+    return this.isPdf;
+  } 
+
+  transform(message: Message): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(message.imagePath!);
+  }
+
+  openPdf(message: Message) {
+    window.open(message.imagePath, '_blank');
+  }
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
