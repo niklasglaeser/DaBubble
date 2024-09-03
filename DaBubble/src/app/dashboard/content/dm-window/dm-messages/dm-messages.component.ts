@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class DmMessagesComponent implements OnInit, OnDestroy {
   @Input() messages: Message[] | null = null;
+  @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
 
   hasMessages$!: Observable<boolean>;
   recipientUser$: Observable<UserLogged | null>;
@@ -116,6 +117,11 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
       this.editMessageClicked = true;
       this.editMessageText = message.message;
       this.selectedMessage = message;
+      setTimeout(() => {
+        if (this.editMessageText) {
+          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
+        }
+      }, 0);
     }
   }
 
@@ -187,6 +193,20 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
   getReactionText(reaction: Reaction): string {
     return this.emojiService.getReactionText(reaction, this.currentUser);
+  }
+
+  adjustHeight(event: any) {
+    event.target.style.height = 'auto';
+    event.target.style.width = '100%';
+    event.target.style.height = event.target.scrollHeight + 'px';
+  }
+
+  adjustHeightDirectly(textarea: HTMLTextAreaElement) {
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.width = '100%';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
   }
 
   @HostListener('document:click', ['$event'])

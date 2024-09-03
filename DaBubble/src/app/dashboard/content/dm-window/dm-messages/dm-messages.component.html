@@ -22,7 +22,7 @@
                       </div>
                         <ng-template #editTemplate class="edit-template">
                             <div class="edit-channel">
-                                <textarea class="text fs-18"[(ngModel)]="editMessageText"></textarea>
+                                <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText" type="text" (input)="adjustHeight($event)"></textarea>
                             </div>
                             <div *ngIf="isMessageEmpty" class="error-message">Die Nachricht darf nicht leer sein.</div>
                             <span class="edit" (click)="saveEditedMessage()">Speichern</span>
@@ -30,10 +30,7 @@
                         </ng-template>
                       <div class="open-thread">
                         <div class="reactions">
-                            <div *ngFor="let reaction of message.reactions" class="emoji-container"
-                                (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"
-                                (click)="toggleReaction(message, reaction.emoji)">
-
+                            <div *ngFor="let reaction of message.reactions" class="emoji-container" (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)" (click)="toggleReaction(message, reaction.emoji)">
                                 <div class="emoji">{{ reaction.emoji }}</div>
                                 <div class="emoji-counter">{{ reaction.count }}</div>
 
