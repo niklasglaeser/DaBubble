@@ -126,7 +126,7 @@ export class EmojiService {
     if (reaction.count === 1) {
       return reaction.usernames.includes(currentUser?.username ?? '') ? 'hast reagiert' : 'hat reagiert';
     } else if (reaction.count > 1) {
-      return 'hat reagiert';
+      return 'haben reagiert';
     }
     return '';
   }

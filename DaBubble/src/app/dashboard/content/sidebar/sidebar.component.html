@@ -84,7 +84,7 @@
     </div>
   </div>
   <div class="dropdown" [class.show]="isMessagesDropdownOpen">
-    <div class="directUser" (click)="openDirectmessage(currentUser!.uid)">
+    <div class="directUser" *ngIf="currentUser" (click)="openDirectmessage(currentUser!.uid)">
       <div [class.active]="selectedUserId === currentUser!.uid">
         <div class="avatarStatus">
           <img [src]="currentUser!.photoURL ? currentUser!.photoURL : '../../assets/img/landing-page/men1.svg'">

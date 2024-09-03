@@ -30,6 +30,9 @@
                             <div class="edit-channel">
                                 <textarea class="text fs-18" [(ngModel)]="editMessageText"></textarea>
                             </div>
+                            <div *ngIf="isMessageEmpty" class="error-message">
+                                Die Nachricht darf nicht leer sein.
+                            </div>
                             <span class="edit" (click)="saveEditedMessage()">Speichern</span>
                             <span class="edit" (click)="cancelEdit()">Abbrechen</span>
                         </ng-template>
@@ -75,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="add-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)">
+                            <div class="add-reaction" (click)="toggleEmojiPicker(message.id, $event)">
                             </div>
                         </div>
                     </div>

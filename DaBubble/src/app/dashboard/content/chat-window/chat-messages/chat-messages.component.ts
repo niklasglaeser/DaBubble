@@ -48,6 +48,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
   editMessageText: string = '';
+  isMessageEmpty: boolean = false;
 
   emojiPickerMessageId: string | undefined = undefined;
   showTooltip: boolean = false;
@@ -87,6 +88,11 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
+      if (!this.editMessageText.trim()) {
+        this.isMessageEmpty = true;
+        return;
+      }
+
       try {
         this.selectedMessage.message = this.editMessageText;
         await this.messageService.updateMessage(
@@ -95,7 +101,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
           this.editMessageText
         );
         this.editMessageClicked = false;
-
+        this.isMessageEmpty = false;
         console.log('Message successfully saved.' + this.editMessageText);
         this.selectedMessage = null;
         this.editMessageText = '';
@@ -107,6 +113,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   cancelEdit() {
     this.closeEditMode();
+    this.isMessageEmpty = false;
   }
 
   closeEditMode() {
