@@ -1,5 +1,4 @@
 <div class="chat-footer">
-
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
         <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
     </div>
@@ -16,10 +15,10 @@
         </a>
       
         <mat-icon *ngIf="chatImg" (click)="deleteImg()">delete</mat-icon>
-        
+
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>
-      </div> 
-    
+    </div>
+
     <textarea type="text" name="message-input" id="chat-message-input" placeholder="Nachricht an #{{channel?.name}}"
         [formControl]="symbolSearch" [matAutocomplete]="auto" (input)="onInput($event)"></textarea>
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="showSelectedName" (opened)="isPanelOpen = true"

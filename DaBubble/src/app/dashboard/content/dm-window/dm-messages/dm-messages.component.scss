@@ -133,7 +133,7 @@
 }
 
 .details {
-  // width: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -351,17 +351,20 @@
 
 /*Marco CSS edit Message*/
 .edit-channel {
+
+  height: 100%;
+
   > input,
   textarea {
-    width: 100%;
+    height: 100%;
     border: 1px solid var(--lightPurple);
     border-radius: 40px;
     box-sizing: border-box;
     padding: 18px 20px 18px 20px;
     outline: none;
-    overflow: hidden;
     background-color: white !important;
     color: black !important;
+    resize: none
   }
   :focus {
     border: 1px solid var(--purple1);
@@ -391,4 +394,8 @@
 .tool-tip {
   color: white;
   background-color: red;
+}
+
+.error-message {
+  color: red;
 }

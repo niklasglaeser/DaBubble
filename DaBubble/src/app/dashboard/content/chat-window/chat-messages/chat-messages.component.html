@@ -1,7 +1,7 @@
 <div class="chat-content">
-    <div *ngIf="messages$ | async as messages" id="chat-messages-container">
+    <div *ngIf="messages$ | async as messages" id="chat-messages-container" #chatContainer>
         <div *ngFor="let message of messages"
-            [ngClass]="message.senderId === currentUser?.uid ? 'user-send-message' : 'message'">
+            [ngClass]="message.senderId === currentUser?.uid ? 'user-send-message' : 'message'" [id]="message.id">
             <div class="message-date">{{ formatDate(message.created_at) }}</div>
             <div class="message-section">
                 <div class="reaction-bar">
@@ -40,13 +40,20 @@
                         </div>
                         <ng-template #editTemplate>
                             <div class="edit-channel">
+
                                <textarea class="text fs-18" [(ngModel)]="editMessageText"></textarea>
+
+                                <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText"
+                                    type="text" (input)="adjustHeight($event)"></textarea>
+
                             </div>
                             <div *ngIf="isMessageEmpty" class="error-message">
                                 Die Nachricht darf nicht leer sein.
                             </div>
-                            <span class="edit" (click)="saveEditedMessage()">Speichern</span>
-                            <span class="edit" (click)="cancelEdit()">Abbrechen</span>
+                            <div class="edit-channel-btn">
+                                <span class="edit" (click)="saveEditedMessage()">Speichern</span>
+                                <span class="edit" (click)="cancelEdit()">Abbrechen</span>
+                            </div>
                         </ng-template>
                         <div class="open-thread">
                             <div class="open-answers fs-18" (click)="openThread(channelId, message.id!, message)">

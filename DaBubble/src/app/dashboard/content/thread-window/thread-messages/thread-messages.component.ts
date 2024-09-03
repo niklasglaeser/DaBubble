@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../../../../models/message.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -27,6 +27,7 @@ export class ThreadMessagesComponent {
   @Input() currentUserId: string | null = null;
   @Input() currentUser: UserLogged | null = null;
   @Input() channelId: string = '';
+  @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
 
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
@@ -55,6 +56,11 @@ export class ThreadMessagesComponent {
       this.editMessageClicked = true;
       this.editMessageText = message.message;
       this.selectedMessage = message;
+      setTimeout(() => {
+        if (this.editMessageText) {
+          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
+        }
+      }, 0);
     }
   }
 
@@ -164,6 +170,20 @@ export class ThreadMessagesComponent {
 
   getReactionText(reaction: Reaction): string {
     return this.emojiService.getReactionText(reaction, this.currentUser);
+  }
+
+  adjustHeight(event: any) {
+    event.target.style.height = 'auto';
+    event.target.style.width = '100%';
+    event.target.style.height = event.target.scrollHeight + 'px';
+  }
+
+  adjustHeightDirectly(textarea: HTMLTextAreaElement) {
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.width = '100%';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
   }
 
   @HostListener('document:click', ['$event'])

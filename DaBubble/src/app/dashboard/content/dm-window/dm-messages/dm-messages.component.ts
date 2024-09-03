@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe} from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Message } from '../../../../models/message.model';
 import { AuthService } from '../../../../services/lp-services/auth.service';
@@ -11,12 +11,14 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { Reaction } from '../../../../models/reaction.model';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { DialogChatImgComponent } from '../../../../dialog/dialog-chat-img/dialog-chat-img.component';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-dm-messages',
   standalone: true,
-  imports: [CommonModule, EmojiComponent, PickerComponent],
+  imports: [CommonModule, EmojiComponent, PickerComponent, FormsModule],
   templateUrl: './dm-messages.component.html',
   styleUrl: './dm-messages.component.scss',
   providers: [DatePipe],
@@ -37,6 +39,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
   editMessageText: string = '';
+  isMessageEmpty: boolean = false;
 
   emojiPickerMessageId: string | undefined = undefined;
   showTooltip: boolean = false;
@@ -64,7 +67,6 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
     // Abonniere das Observable, um den Nachrichtenstatus zu überwachen
     this.hasMessages$ = this.dmService.hasMessages$;
-
   }
 
 
@@ -102,15 +104,13 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   }
 
 
-  /*
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['channelId'] && !changes['channelId'].isFirstChange()) {
+    if (changes['conversationId'] && !changes['conversationId'].isFirstChange()) {
       this.closeEditMode();
     }
   }
-  */
 
-  /*
+
   editMessage(message: Message) {
     if (this.currentUser && message.senderId === this.currentUser.uid) {
       this.editMessageClicked = true;
@@ -119,16 +119,11 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*
   async saveEditedMessage() {
     if (this.selectedMessage) {
       try {
         this.selectedMessage.message = this.editMessageText;
-        await this.messageService.updateMessage(
-          this.channelId,
-          this.selectedMessage.id!,
-          this.editMessageText
-        );
+        await this.dmService.updateMessage(this.conversationId!, this.selectedMessage.id!, this.editMessageText);
         this.editMessageClicked = false;
 
         console.log('Message successfully saved.' + this.editMessageText);
@@ -140,6 +135,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
+
   cancelEdit() {
     this.closeEditMode();
   }
@@ -150,15 +146,13 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     this.editMessageText = '';
   }
 
-  */
 
-  /*
   openImg(message: Message) {
     this.dialog.open(DialogChatImgComponent, {
       data: { imagePath: message.imagePath }
     });
   }
-  /* EMOJI */
+
 
 
   async toggleReaction(message: Message, emoji: string) {

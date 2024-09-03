@@ -33,7 +33,7 @@ export class DialogEditProfilComponent implements OnInit {
   profilName: string = '';
   profilEmail: string = '';
   profileImg: string = ''
-  edit:boolean = false
+  edit: boolean = false
 
 
   editName: string = 'Bearbeiten';
@@ -58,7 +58,6 @@ export class DialogEditProfilComponent implements OnInit {
     }
   }
 
-
   editProfilBtn(event: Event) {
     if (!this.editNameClicked) {
       this.editNameClicked = true;
@@ -79,7 +78,6 @@ export class DialogEditProfilComponent implements OnInit {
     if (this.data.user.uid) {
       const userDoc = this.userService.getSingleUser(this.data.user.uid);
       const userData = (await getDoc(userDoc)).data();
-
       if (userData) {
         this.user = new UserLogged({
           uid: this.data.user.uid,
@@ -135,7 +133,7 @@ export class DialogEditProfilComponent implements OnInit {
   }
 
   openProfilAvatar() {
-    if(this.edit){
+    if (this.edit) {
       this.dialog.open(AvatarProfileComponent, {});
     }
   }
