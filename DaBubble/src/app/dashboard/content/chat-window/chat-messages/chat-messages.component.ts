@@ -92,7 +92,6 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
         this.isMessageEmpty = true;
         return;
       }
-
       try {
         this.selectedMessage.message = this.editMessageText;
         await this.messageService.updateMessage(
