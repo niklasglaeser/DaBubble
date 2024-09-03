@@ -31,6 +31,20 @@
                         </div>
                     </mat-option>
                 </mat-optgroup>
+                <!-- <mat-optgroup *ngIf="messageResults.length > 0" [label]="'Nachrichten (' + messageResults.length + ')'">
+                    <mat-option *ngFor="let message of messageResults" [value]="message">
+                        <div class="message-result">
+                            <div class="message-content">
+                                <p><strong>{{ getUsername(message.senderId) }}:</strong> {{ message.message }}</p>
+                            </div>
+                        </div>
+                    </mat-option>
+                </mat-optgroup>
+                <mat-optgroup *ngIf="messageResults.length === 0" [label]="'Nachrichten'">
+                    <mat-option disabled>
+                        <span>keine Nachrichten gefunden</span>
+                    </mat-option>
+                </mat-optgroup> -->
             </mat-autocomplete>
         </div>
     </div>
@@ -41,7 +55,7 @@
             <img
                 [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
         </div>
-        <div class="arrow-down" #arrowButton >
+        <div class="arrow-down" #arrowButton>
         </div>
     </div>
 </div>

@@ -100,17 +100,36 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (channelName.includes(searchTerm.toLowerCase()) && members.includes(currentUserId)) {
           this.searchResults.push({ id: doc.id, ...channelData, type: 'channel' });
         }
+        // this.searchChannelMessages(doc.id, searchTerm);
       });
-
       usersSnapshot.forEach(doc => {
         const userName = (doc.data()["username"] || '').toLowerCase();
         if (userName.includes(searchTerm.toLowerCase())) {
           this.searchResults.push({ id: doc.id, ...doc.data(), type: 'user' });
         }
       });
-
     } catch (error) {
       console.error('Error fetching search results:', error);
+    }
+  }
+
+  async searchChannelMessages(channelId: string, searchTerm: string): Promise<void> {
+    try {
+      const messagesSnapshot = await getDocs(collection(this.firestore, `channels/${channelId}/messages`));
+      messagesSnapshot.forEach(doc => {
+        const messageData = doc.data();
+        const messageContent = (messageData["message"] || '').toLowerCase();
+        if (messageContent.includes(searchTerm.toLowerCase())) {
+          this.searchResults.push({
+            id: doc.id,
+            ...messageData,
+            type: 'message',
+            channelId: channelId
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Error searching messages in channel:', error);
     }
   }
 
@@ -120,8 +139,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     if (this.autocompleteTrigger) {
       this.autocompleteTrigger.openPanel();
-    } else {
-      console.error('autocompleteTrigger ist nicht verfügbar');
     }
   }
 
@@ -156,9 +173,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.userEventService.emitUserId(selectedItem.id);
     } else if (selectedItem.type === 'channel') {
       this.userEventService.emitChannelId(selectedItem.id);
+    } else if (selectedItem.type === 'message') {
+      this.navigateToMessage(selectedItem.channelId, selectedItem.id);
     }
     this.searchControl.setValue('');
     this.searchResults = [];
+  }
+
+  navigateToMessage(channelId: string, messageId: string): void {
+    this.userEventService.emitChannelId(channelId);
+    setTimeout(() => {
+      const messageElement = document.getElementById(messageId);
+      if (messageElement) {
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        messageElement.classList.add('highlight');
+        setTimeout(() => {
+          messageElement.classList.remove('highlight');
+        }, 2000);
+      } else {
+        console.warn('Nachricht nicht gefunden: ', messageId);
+      }
+    }, 500);
   }
 
   get channelResults() {
@@ -168,6 +203,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   get userResults() {
     return this.searchResults.filter(result => result.type === 'user');
   }
+
+  get messageResults() {
+    return this.searchResults.filter(result => result.type === 'message');
+  }
+
+  async getUsername(senderId: string): Promise<string> {
+    try {
+      const user = await this.userEventService.getSingleUserObj(senderId); // Warten auf die Auflösung des Promises
+      return user ? user.username : 'Unbekannt';
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return 'Unbekannt';
+    }
+  }
+
+
+
 
   async subscribeToUserData(): Promise<void> {
     if (this.authService.uid) {

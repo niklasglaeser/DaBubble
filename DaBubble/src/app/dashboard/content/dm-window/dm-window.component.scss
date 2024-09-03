@@ -1,19 +1,19 @@
 .chat-window-container {
-    display: flex;
-    flex-direction: column;
-    z-index: 500;
-    background-color: #FFFFFF;
-    height: 95%;
-    width: 100%;
-    border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  z-index: 500;
+  background-color: #ffffff;
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
 }
 
 .messages {
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-  
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+
   &::-webkit-scrollbar {
     width: 7px;
   }
@@ -23,23 +23,22 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #EDEEFE; 
-    border-radius: 10px; 
+    background-color: #edeefe;
+    border-radius: 10px;
     border: 2px solid transparent;
     background-clip: padding-box;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #EDEEFE; 
+    background-color: #edeefe;
   }
-  
+
   scrollbar-width: thin;
-  scrollbar-color: #EDEEFE transparent;
+  scrollbar-color: #edeefe transparent;
 }
 
-
 .footer {
-    padding-top: 30px;
-    padding-left: 30px;
-    padding-right: 30px;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
 }

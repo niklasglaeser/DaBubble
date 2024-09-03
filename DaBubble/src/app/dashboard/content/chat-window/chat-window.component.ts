@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { ChatMessagesComponent } from './chat-messages/chat-messages.component';
 import { ChatFooterComponent } from './chat-footer/chat-footer.component';
@@ -27,8 +27,9 @@ import { ThreadService } from '../../../services/thread.service';
   styleUrl: './chat-window.component.scss',
 })
 export class ChatWindowComponent implements OnInit {
-
   @Input() workspaceVisible: boolean = true;
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
+
   channelId: string = '';
   channel: Channel | null = null;
 
@@ -140,6 +141,20 @@ export class ChatWindowComponent implements OnInit {
     const currentUser = this.authService.currentUserSig();
     if (currentUser) {
       this.userId = currentUser.userId;
+    }
+  }
+
+  scrollToMessage(messageId: string): void {
+    const messageElement = document.getElementById(messageId);
+    if (messageElement) {
+      messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Optional: Nachricht hervorheben
+      messageElement.classList.add('highlight');
+      setTimeout(() => {
+        messageElement.classList.remove('highlight');
+      }, 2000);
+    } else {
+      console.warn('Nachricht nicht gefunden: ', messageId);
     }
   }
 }
