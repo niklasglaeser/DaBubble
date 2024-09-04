@@ -45,7 +45,6 @@ export class DialogOverviewUsersComponent {
     if (index !== -1) {
       this.members[index] = updatedUser;
     }
-    console.log('updateuserlist');
   }
 
   addUser() {

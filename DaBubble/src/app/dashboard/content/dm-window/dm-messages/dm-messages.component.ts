@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe} from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Message } from '../../../../models/message.model';
@@ -48,7 +48,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | undefined;
   private conversationIdSubscription: Subscription | undefined;
 
-  constructor (private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe, private emojiService: EmojiService) {
+  constructor(private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe, private emojiService: EmojiService) {
     this.recipientUser$ = this.dmService.recipientUser$;
   }
 
@@ -59,7 +59,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Abonniere das Observable für conversationId
     this.conversationIdSubscription = this.dmService.conversationId$.subscribe(id => {
-      if (id) {this.conversationId = id;}
+      if (id) { this.conversationId = id; }
     });
 
     this.userSubscription = this.dmService.currentUser$.subscribe(user => {
@@ -127,11 +127,15 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
+      if (!this.editMessageText.trim()) {
+        this.isMessageEmpty = true;
+        return;
+      }
       try {
         this.selectedMessage.message = this.editMessageText;
         await this.dmService.updateMessage(this.conversationId!, this.selectedMessage.id!, this.editMessageText);
         this.editMessageClicked = false;
-
+        this.isMessageEmpty = false;
         console.log('Message successfully saved.' + this.editMessageText);
         this.selectedMessage = null;
         this.editMessageText = '';
@@ -218,7 +222,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
       this.emojiPickerMessageId = undefined;
     }
   }
-  
+
 
 
 
