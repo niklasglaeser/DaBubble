@@ -133,14 +133,13 @@
 }
 
 .details {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .text {
-  width: 90%;
+  width: 100%;
   padding: 20px;
   background-color: #edeefe;
   border-radius: 30px;
@@ -279,7 +278,6 @@
     }
 
     .text {
-      width: 100%;
       align-self: flex-end;
       border-top-left-radius: 30px;
       border-top-right-radius: 0px;
