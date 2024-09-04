@@ -80,11 +80,27 @@
 }
 
 .checkmark-reaction {
-  background-image: url("/assets/img/main-page/chat/reaction-checkmark.svg");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  >div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scale: 120%;
+  }
 }
 
 .applaud-reaction {
-  background-image: url("/assets/img/main-page/chat/reaction-applaud.svg");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  >div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scale: 120%;
+  }
 }
 
 .emoji-reaction {
@@ -216,9 +232,9 @@
 .emoji {
   height: 24px;
   width: 24px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .emoji-counter {
@@ -388,6 +404,7 @@
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 
 .tool-tip {
   color: white;

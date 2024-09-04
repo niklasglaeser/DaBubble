@@ -28,7 +28,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
 
   hasMessages$!: Observable<boolean>;
-  recipientUser$: Observable<UserLogged | null>;
+  recipientUser$!: Observable<UserLogged | null>;
   conversationId: string | undefined;
 
   currentUser: UserLogged | null = null;
@@ -48,9 +48,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | undefined;
   private conversationIdSubscription: Subscription | undefined;
 
-  constructor(private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe, private emojiService: EmojiService) {
-    this.recipientUser$ = this.dmService.recipientUser$;
-  }
+  constructor(private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe, private emojiService: EmojiService) {}
 
   get currentUserId(): string | undefined {
     return this.authService.currentUserSig()?.userId;
@@ -68,6 +66,8 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
     // Abonniere das Observable, um den Nachrichtenstatus zu überwachen
     this.hasMessages$ = this.dmService.hasMessages$;
+
+    this.recipientUser$ = this.dmService.recipientUser$;
   }
 
 

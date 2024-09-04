@@ -4,8 +4,8 @@
           <div class="message-date">{{ formatDate(message.created_at) }}</div>
           <div class="message-section">
               <div class="reaction-bar">
-                <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')"></div>
-                <div class="applaud-reaction" (click)="toggleReaction(message, '🙌🏻')"></div>
+                <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')"><div>✅</div></div>
+                <div class="applaud-reaction" (click)="toggleReaction(message, '🙌')"><div>🙌</div></div>
                 <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
                 <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction" (click)="editMessage(message)"></div>
               </div>
@@ -29,6 +29,7 @@
                             <span class="edit" (click)="cancelEdit()">Abbrechen</span>
                         </ng-template>
                       <div class="open-thread">
+                        <div class="add-reaction" (click)="toggleEmojiPicker(message.id, $event)"></div>
                         <div class="reactions">
                             <div *ngFor="let reaction of message.reactions" class="emoji-container" (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)" (click)="toggleReaction(message, reaction.emoji)">
                                 <div class="emoji">{{ reaction.emoji }}</div>
