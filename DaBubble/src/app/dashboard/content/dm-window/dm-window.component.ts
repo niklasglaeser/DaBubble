@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { DmHeaderComponent } from './dm-header/dm-header.component';
 import { DmMessagesComponent } from './dm-messages/dm-messages.component';
 import { DmFooterComponent } from './dm-footer/dm-footer.component';
@@ -14,27 +14,33 @@ import { Message } from '../../../models/message.model';
   templateUrl: './dm-window.component.html',
   styleUrl: './dm-window.component.scss'
 })
-export class DmWindowComponent {
+export class DmWindowComponent implements AfterViewInit, AfterViewChecked {
   messages$: Observable<Message[]> | null = null;
 
   @ViewChild('dmMessages') dmMessages!: ElementRef;
 
   constructor(private dmService: DirectMessagesService) { }
 
+  ngAfterViewInit(): void {
+    this.loadMessages();
+  }
+
+  ngAfterViewChecked(): void {
+    this.scrollToBottom(); // Scrollen Sie nach unten, nachdem die Ansicht gecheckt wurde
+  }
+
   loadMessages(): void {
     this.messages$ = this.dmService.loadConversation();
-    console.log('messs loaded');
+    this.messages$.subscribe(() => {
+      this.scrollToBottom(); // Scrollen Sie nach unten, sobald die Nachrichten geladen sind
+    });
   }
 
   scrollToBottom(): void {
-    try {
+    if (this.dmMessages && this.dmMessages.nativeElement) {
       this.dmMessages.nativeElement.scrollTop = this.dmMessages.nativeElement.scrollHeight;
-    } catch (err) {
-      console.error('Scroll to bottom failed', err);
+    } else {
+      console.log('dmMessages or nativeElement is not defined');
     }
   }
-  
-
-
-
 }
