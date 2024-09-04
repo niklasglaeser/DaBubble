@@ -77,16 +77,33 @@ input {
     align-items: center;
     gap: 8px;
     font-family: "Nunito", sans-serif !important;
-    padding: 4px 16px;
+}
+.mat-mdc-optgroup .mat-mdc-option:not(.mat-mdc-option-multiple) {
+    padding: 8px;
 }
 
 mat-option {
     margin-bottom: 8px !important;
-    padding-left: 20px !important;
+    // padding-left: 20px !important;
     &:hover {
         background-color: transparent !important;
     }
 }
+
+.shortText {
+    word-wrap: break-word; 
+    word-break: break-word;
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    padding: 2px 16px;
+} 
+
+
+
+mat-option:nth-child(n){
+    min-height: 20px;
+  }
 
 ::ng-deep .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
     border-radius: 0 0 30px 30px !important;
@@ -97,3 +114,7 @@ mat-option {
     }
 }
 /* MATERIAL DESIGN AUTOCOMPLETE*/
+
+.no-hover:hover {
+    background-color: white;
+}
