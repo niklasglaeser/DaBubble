@@ -14,11 +14,12 @@ import { ChannelStateService } from '../../../services/channel-state.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { DirectMessagesService } from '../../../services/direct-message.service';
 import { User } from '@angular/fire/auth';
+import { SearchComponent } from "../../search/search.component";
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [DialogAddChannelComponent, WorkspaceToggleComponent, CommonModule],
+  imports: [DialogAddChannelComponent, WorkspaceToggleComponent, CommonModule, SearchComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   animations: [
