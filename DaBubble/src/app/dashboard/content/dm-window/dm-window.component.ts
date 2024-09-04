@@ -22,31 +22,50 @@ export class DmWindowComponent {
 
   constructor(private dmService: DirectMessagesService) { }
 
+  loadMessagesAfterSidebarClick(): void {
+    this.messages$ = this.dmService.loadConversation();
+
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 500);
+  }
+
+  private isUserAtBottom(): boolean {
+    const element = this.dmMessages.nativeElement;
+    const threshold = 150; // Pixels above the bottom that we still consider "at the bottom"
+    const position = element.scrollTop + element.offsetHeight;
+    const height = element.scrollHeight;
+
+    return position > height - threshold;
+  }
+
   loadMessages(): void {
     this.messages$ = this.dmService.loadConversation();
     this.messages$.subscribe((messages) => {
       const newMessageCount = messages.length;
-
-      // Check if a new message has been added since the last update
-      if (newMessageCount > this.previousMessageCount) {
+      
+      if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {
         setTimeout(() => {
           this.scrollToBottom();
-        }, 500);
+        }, 100);
       }
-      // Update the previous message count for future comparisons
       this.previousMessageCount = newMessageCount;
     });
   }
 
   scrollToBottom(): void {
     if (this.dmMessages && this.dmMessages.nativeElement) {
-      this.dmMessages.nativeElement.scrollTop = this.dmMessages.nativeElement.scrollHeight;
+      setTimeout(() => {
+        this.dmMessages.nativeElement.scrollTop = this.dmMessages.nativeElement.scrollHeight;
+      }, 100);
     } else {
       console.log('dmMessages or nativeElement is not defined');
     }
   }
 
   onMessageSent(): void {
-    this.scrollToBottom();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 100);
   }
 }
