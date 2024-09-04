@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -41,7 +41,6 @@ export class SearchComponent implements OnInit {
   authService = inject(AuthService);
 
   searchControl = new FormControl();
-  isPanelOpen: boolean = false;
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
@@ -58,6 +57,7 @@ export class SearchComponent implements OnInit {
     );
   }
   handleContentSearch(event: Event): void {
+
     const inputElement = event.target as HTMLInputElement;
     const query = inputElement.value.toLowerCase();
     this.updateFilteredContent(query);
@@ -162,6 +162,7 @@ export class SearchComponent implements OnInit {
     } else if (selectedItem.type === 'message') {
       this.navigateToMessage(selectedItem.channelId, selectedItem.id);
     }
+
     this.searchControl.setValue('');
     this.searchResults = [];
   }
@@ -192,6 +193,14 @@ export class SearchComponent implements OnInit {
 
   get messageResults() {
     return this.searchResults.filter(result => result.type === 'message');
+  }
+
+  onPanelOpened(): void {
+    this.placeholderText = 'Suche nach Channels und Mitgliedern...';
+  }
+
+  onPanelClosed(): void {
+    this.placeholderText = 'Durchsuche DevSpace';
   }
 
   displayFn(value: any): string {
