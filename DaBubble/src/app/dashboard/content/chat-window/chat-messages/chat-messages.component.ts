@@ -25,13 +25,14 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiService } from '../../../../services/emoji.service';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-chat-messages',
   standalone: true,
 
-  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule, PickerComponent, EmojiComponent],
+  imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule, PickerComponent, EmojiComponent, MatIconModule],
 
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.scss'],
@@ -76,8 +77,6 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     if (message.imagePath) {
         const cleanUrl = message.imagePath.split('?')[0];
         const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
-        console.log('Clean URL:', cleanUrl);  
-        console.log('Extracted file extension:', fileExtension); 
         this.isPdf = fileExtension === 'pdf';
     } else {
         this.isPdf = false;

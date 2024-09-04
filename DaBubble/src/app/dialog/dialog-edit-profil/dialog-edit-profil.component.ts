@@ -134,7 +134,15 @@ export class DialogEditProfilComponent implements OnInit {
 
   openProfilAvatar() {
     if (this.edit) {
-      this.dialog.open(AvatarProfileComponent, {});
+      const dialogRef = this.dialog.open(AvatarProfileComponent, {});
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Aktualisieren Sie die Benutzerdaten, nachdem das Bild hochgeladen wurde
+          this.loadProfile();
+        }
+      });
     }
   }
+
 }

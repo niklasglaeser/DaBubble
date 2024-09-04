@@ -18,9 +18,12 @@
 }
 
 .thread-window {
-  max-width: 0;
   width: 0;
-  transition: max-width 0.3s;
+  max-width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: width 0.3s, max-width 0.3s, opacity 0.3s, height 0.3s;
   margin-left: 20px;
   visibility: hidden;
 }
@@ -28,6 +31,8 @@
 .thread-window.open {
   width: 50%;
   max-width: 50%;
+  height: auto;
+  opacity: 1;
   visibility: visible;
 }
 

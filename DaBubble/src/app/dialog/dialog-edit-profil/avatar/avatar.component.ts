@@ -21,7 +21,7 @@ import { user, User } from '@angular/fire/auth';
   styleUrls: ['./avatar.component.scss']
 })
 export class AvatarProfileComponent {
-  profileImg: string | null = null 
+  profileImg: string | null = null
   authService = inject(AuthService);
   userService = inject(UserLoggedService);
   dialogRef = inject(MatDialogRef)
@@ -30,12 +30,12 @@ export class AvatarProfileComponent {
 
   avatars: boolean[] = [false, false, false, false, false, false];
 
-  constructor( private imgUploadService: UploadService,) {
+  constructor(private imgUploadService: UploadService,) {
   }
 
   ngOnInit(): void {
     this.subscribeToUserData()
-    
+
   }
 
   async subscribeToUserData(): Promise<void> {
@@ -48,7 +48,7 @@ export class AvatarProfileComponent {
 
   choseAvatar(index: number) {
     this.avatars = this.avatars.map((_, i) => i === index);
-    this.profileImg = `assets/img/landing-page/men${index}.svg`; 
+    this.profileImg = `assets/img/landing-page/men${index}.svg`;
   }
 
   backToProfile() {
@@ -58,15 +58,14 @@ export class AvatarProfileComponent {
   uploadImage(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
-    
+
     if (file) {
       const currentUser = this.authService.currentUserSig();
       if (currentUser) {
-        this.imgUploadService.uploadImg(currentUser.userId,file).pipe(
+        this.imgUploadService.uploadImg(currentUser.userId, file).pipe(
         ).subscribe({
           next: (photoURL: string) => {
             this.profileImg = photoURL;
-            console.log('Bild erfolgreich hochgeladen:', photoURL);
           },
           error: (err: any) => {
             console.error('Fehler beim Hochladen des Bildes:', err);
@@ -85,7 +84,7 @@ export class AvatarProfileComponent {
       try {
         await this.userService.updateUserImg(this.authService.uid, this.profileImg);
         setTimeout(() => {
-          this.backToProfile()
+          this.dialogRef.close(this.profileImg);
         }, 1500);
       } catch (err) {
         console.error('Error updating user image:', err);
@@ -95,5 +94,6 @@ export class AvatarProfileComponent {
     }
   }
 
- 
+
+
 }
