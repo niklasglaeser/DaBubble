@@ -17,11 +17,24 @@ import { Message } from '../../../models/message.model';
 export class DmWindowComponent {
   messages$: Observable<Message[]> | null = null;
 
+  @ViewChild('dmMessages') dmMessages!: ElementRef;
+
   constructor(private dmService: DirectMessagesService) { }
 
   loadMessages(): void {
     this.messages$ = this.dmService.loadConversation();
     console.log('messs loaded');
   }
+
+  scrollToBottom(): void {
+    try {
+      this.dmMessages.nativeElement.scrollTop = this.dmMessages.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Scroll to bottom failed', err);
+    }
+  }
+  
+
+
 
 }

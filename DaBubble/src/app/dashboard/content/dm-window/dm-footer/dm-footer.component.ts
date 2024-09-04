@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
 import { Message } from '../../../../models/message.model';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Observable } from 'rxjs';
@@ -25,6 +25,7 @@ export class DmFooterComponent {
   currentUserId: string = '';
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
+  @Output() messageSent = new EventEmitter<void>();
 
   symbolSearch = new FormControl();
   selectedNameToInsert: string = '';
@@ -43,7 +44,7 @@ export class DmFooterComponent {
     const textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
     const messageText = textarea.value;
 
-    if (messageText) {
+    if (messageText.trim()) {
       const message: Message = {
         message: messageText,
         senderId: '',
@@ -53,7 +54,7 @@ export class DmFooterComponent {
       this.dmService.addMessage(message).then(() => {
         textarea.value = '';
       });
-      console.log('send');
+      this.messageSent.emit();
     }
   }
 

@@ -213,6 +213,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;

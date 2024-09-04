@@ -149,6 +149,7 @@
 }
 
 .details {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -379,10 +380,19 @@
     overflow: hidden;
     background-color: white !important;
     color: black !important;
+    resize: none;
   }
   :focus {
     border: 1px solid var(--purple1);
   }
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+  padding-right: 30px;
 }
 
 .edit {
