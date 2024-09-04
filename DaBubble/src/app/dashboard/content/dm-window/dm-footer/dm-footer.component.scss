@@ -9,6 +9,7 @@
     border: 1px solid rgba(173, 176, 217, 1);
     border-radius: 20px;
     margin-bottom: 30px;
+    position: relative;
 }
 
 .chat-message-toolbar {
@@ -101,4 +102,42 @@
         cursor: pointer;
         scale: 130%;
     }
+}
+
+.chip-subcontainer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    p {
+        margin: 0;
+        font-size: 18px;
+    }
+}
+
+.avatarStatus {
+    position: relative;
+    > img:first-child {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    > :last-child {
+        position: absolute;
+        width: 14px;
+        bottom: 6px;
+        right: 0;
+    }
+}
+
+.emoji-picker-dialog {
+    position: absolute;
+    bottom: 110%;
+    left: 0;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

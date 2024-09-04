@@ -34,10 +34,10 @@ export class ChatFooterComponent {
   imgUploadService = inject(UploadService);
   currentUserId: string = '';
 
-  chatImg: string | null = null; 
+  chatImg: string | null = null;
   uploadError: string | null = null;
   isPdf: boolean = false;
-  safePath: string | null = null; 
+  safePath: string | null = null;
 
 
   symbolSearch = new FormControl();
@@ -49,8 +49,8 @@ export class ChatFooterComponent {
   showEmojiPicker: boolean = false
 
 
-  constructor(private messageService: MessageService, private authService: AuthService,private sanitizer: DomSanitizer,) {
-  
+  constructor(private messageService: MessageService, private authService: AuthService, private sanitizer: DomSanitizer,) {
+
     this.currentUserId = this.authService.uid;
   }
 
@@ -164,7 +164,7 @@ export class ChatFooterComponent {
     }
   }
 
-  
+
 
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
@@ -172,24 +172,24 @@ export class ChatFooterComponent {
 
   deleteImg() {
     if (this.chatImg) {
-        this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
-            next: () => {
-                this.chatImg = null;
-                this.safePath = null;
-                this.isPdf = false;
+      this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
+        next: () => {
+          this.chatImg = null;
+          this.safePath = null;
+          this.isPdf = false;
 
-                // Reset the file input so it can trigger change event again
-                const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
-                if (fileInput) {
-                    fileInput.value = ''; // Clear the file input value
-                }
-            },
-            error: (err: any) => {
-                console.error('Fehler beim Löschen der Datei:', err);
-            }
-        });
+          // Reset the file input so it can trigger change event again
+          const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
+          if (fileInput) {
+            fileInput.value = ''; // Clear the file input value
+          }
+        },
+        error: (err: any) => {
+          console.error('Fehler beim Löschen der Datei:', err);
+        }
+      });
     }
-}
+  }
 
   toggleEmojiPicker(event: MouseEvent) {
     event.stopPropagation();
