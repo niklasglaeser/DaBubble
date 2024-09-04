@@ -14,25 +14,27 @@ import { Message } from '../../../models/message.model';
   templateUrl: './dm-window.component.html',
   styleUrl: './dm-window.component.scss'
 })
-export class DmWindowComponent implements AfterViewInit, AfterViewChecked {
+export class DmWindowComponent {
   messages$: Observable<Message[]> | null = null;
+  private previousMessageCount: number = 0;
 
   @ViewChild('dmMessages') dmMessages!: ElementRef;
 
   constructor(private dmService: DirectMessagesService) { }
 
-  ngAfterViewInit(): void {
-    this.loadMessages();
-  }
-
-  ngAfterViewChecked(): void {
-    this.scrollToBottom(); // Scrollen Sie nach unten, nachdem die Ansicht gecheckt wurde
-  }
-
   loadMessages(): void {
     this.messages$ = this.dmService.loadConversation();
-    this.messages$.subscribe(() => {
-      this.scrollToBottom(); // Scrollen Sie nach unten, sobald die Nachrichten geladen sind
+    this.messages$.subscribe((messages) => {
+      const newMessageCount = messages.length;
+
+      // Check if a new message has been added since the last update
+      if (newMessageCount > this.previousMessageCount) {
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 500);
+      }
+      // Update the previous message count for future comparisons
+      this.previousMessageCount = newMessageCount;
     });
   }
 
@@ -42,5 +44,9 @@ export class DmWindowComponent implements AfterViewInit, AfterViewChecked {
     } else {
       console.log('dmMessages or nativeElement is not defined');
     }
+  }
+
+  onMessageSent(): void {
+    this.scrollToBottom();
   }
 }
