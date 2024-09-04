@@ -10,12 +10,24 @@
   padding-bottom: 0px;
   background-color: white;
   margin: 0 0px;
+}
+app-search {
+  flex-grow: 1; 
+  max-width: 900px;
+  @media(min-width:1200px) {
+      display: none;
+  }
+  }
 
   .headline {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 24px;
+
+    @media(max-width:1200px) {
+      display: none;
+  }
     > div {
       display: flex;
       align-items: center;
@@ -31,7 +43,6 @@
       &:hover {
         background-color: var(--lighterPurple);
         border-radius: 50%;
-
         path {
           fill: var(--purple3);
         }
@@ -269,4 +280,4 @@
     transform: rotate(-90deg);
     transition: transform 0.2s ease-in-out;
   }
-}
+
