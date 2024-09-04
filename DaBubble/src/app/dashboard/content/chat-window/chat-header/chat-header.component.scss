@@ -8,8 +8,8 @@
   border-top-right-radius: 30px;
   padding-left: 50px;
   padding-right: 50px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .chat-header-left {
@@ -63,7 +63,7 @@
     height: 40px;
     width: 40px;
     border-radius: 20px;
-    border: 1px solid white;
+    border: 2px solid white;
     object-fit: cover;
   }
   &:hover {
@@ -73,6 +73,9 @@
     > div {
       color: #535af1;
     }
+  }
+  @media (max-width: 740px) {
+    display: none;
   }
 }
 

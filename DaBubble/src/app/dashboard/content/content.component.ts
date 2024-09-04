@@ -24,7 +24,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.screenWidth = this.deviceService.screenWidth.subscribe(width => {
-      this.workspaceVisible = width >= 1100
+      this.workspaceVisible = width >= 1200
     })
   }
 
