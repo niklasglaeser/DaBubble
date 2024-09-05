@@ -4,6 +4,7 @@ import {
   arrayUnion,
   collection,
   collectionData,
+  deleteDoc,
   doc,
   Firestore,
   getDoc,
@@ -54,6 +55,15 @@ export class MessageService {
     }
   }
 
+  async deleteMessage(channelId: string, messageId: string): Promise<void> {
+    try {
+      const messageDocRef = this.getSingleMessage(channelId, messageId);
+      await deleteDoc(messageDocRef);
+    } catch (e) {
+      console.error('Error deleting message:', e);
+    }
+  }
+
   async addMessageThread(
     channelId: string,
     message: Message,
@@ -91,6 +101,16 @@ export class MessageService {
       console.error('Error updating document:', e)
     }
   }
+
+  async deleteMessageThread(channelId: string, messageId: string, threadId: string): Promise<void> {
+    try {
+      const messageDocRef = this.getSingleThreadMessage(channelId, messageId, threadId);
+      await deleteDoc(messageDocRef);
+    } catch (e) {
+      console.error('Error deleting message:', e);
+    }
+  }
+
 
   searchUsers(searchText: string): Observable<UserLogged[]> {
     return new Observable(observer => {
@@ -226,16 +246,11 @@ export class MessageService {
   getSingleMessage(channelId: string, messageId: string) {
     return doc(this.firestore, `channels/${channelId}/messages/${messageId}`)
   }
-  getSingleThreadMessage(
-    channelId: string,
-    messageId: string,
-    threadId: string
-  ) {
-    return doc(
-      this.firestore,
-      `channels/${channelId}/messages/${messageId}/thread/${threadId}`
-    )
+  getSingleThreadMessage(channelId: string, messageId: string, threadId: string) {
+    return doc(this.firestore, `channels/${channelId}/messages/${messageId}/thread/${threadId}`)
   }
+
+
   getSingleMessageWithReactions(channelId: string, messageId: string): Observable<Message | null> {
     return new Observable<Message | null>((observer) => {
       const messageDocRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);

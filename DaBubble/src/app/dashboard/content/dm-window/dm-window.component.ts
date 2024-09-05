@@ -47,7 +47,7 @@ export class DmWindowComponent {
       if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {
         setTimeout(() => {
           this.scrollToBottom();
-        }, 300);
+        }, 500);
       }
       this.previousMessageCount = newMessageCount;
     });

@@ -141,6 +141,12 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteMessage() {
+    let selectedMessageId = this.selectedMessage?.id
+    this.messageService.deleteMessage(this.channelId!, selectedMessageId!)
+  }
+
+
   cancelEdit() {
     this.closeEditMode();
     this.isMessageEmpty = false;
@@ -239,17 +245,17 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   adjustHeight(event: any) {
     event.target.style.height = 'auto';
-    event.target.style.width = '100%';
     event.target.style.height = event.target.scrollHeight + 'px';
   }
 
   adjustHeightDirectly(textarea: HTMLTextAreaElement) {
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.width = '100%';
       textarea.style.height = textarea.scrollHeight + 'px';
     }
   }
+
+
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {

@@ -82,9 +82,10 @@
                                 {{message.message}}
                             </div>
                             <ng-template #editTemplate>
-                                <div class="edit-channel-btn">
-                                    <span class="edit" (click)="saveEditedMessage()">Speichern</span>
+                                <div class="edit-buttons">
                                     <span class="edit" (click)="cancelEdit()">Abbrechen</span>
+                                    <span class="edit" (click)="saveEditedMessage()">Speichern</span>
+                                    <span class="edit" (click)="deleteMessage()">Nachricht löschen</span>
                                 </div>
                                 <div class="edit-channel">
                                     <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText"

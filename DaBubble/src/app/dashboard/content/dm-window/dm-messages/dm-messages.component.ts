@@ -120,6 +120,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         if (this.editMessageText) {
           this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
+          // this.adjustWidthDirectly(this.descriptionTextarea.nativeElement);
         }
       }, 0);
     }
@@ -206,17 +207,20 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
   adjustHeight(event: any) {
     event.target.style.height = 'auto';
-    event.target.style.width = '100%';
     event.target.style.height = event.target.scrollHeight + 'px';
   }
 
   adjustHeightDirectly(textarea: HTMLTextAreaElement) {
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.width = '100%';
       textarea.style.height = textarea.scrollHeight + 'px';
     }
   }
+
+  
+
+  
+  
 
 
   @HostListener('document:click', ['$event'])
