@@ -1,6 +1,6 @@
 <app-sidebar *ngIf="workspaceVisible || isMobile" class="sidebar-window"
     (conversationSet)="dmWindow.loadMessagesAfterSidebarClick()" [workspaceVisible]="workspaceVisible"
-    (channelOpened)="closeSidebarOnMobile()">
+    (channelOpened)="openCustomDialog()">
 </app-sidebar>
 
 <app-chat-window *ngIf="!isMobile" class="chat-window" [workspaceVisible]="workspaceVisible"
@@ -8,5 +8,6 @@
 
 <app-dm-window class="dm-window" #dmWindow></app-dm-window>
 <app-thread-window class="thread-window"></app-thread-window>
+<ng-container #dialogContainer></ng-container>
 
 <app-workspace-toggle *ngIf="showWorkspaceToggle" (toggle)="toggleWorkspace()"></app-workspace-toggle>
