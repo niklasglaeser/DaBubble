@@ -99,6 +99,9 @@ mat-chip-grid {
   max-height: 275px !important;
   height: 100% !important;
   overflow-y: auto;
+  @media (max-width:590px) {
+    max-height: 225px !important;
+  }
 }
 
 .chip-subcontainer {

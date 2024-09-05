@@ -12,7 +12,10 @@
   max-height: 600px;
   padding: 40px;
   border-radius: 30px;
-  margin: 0 8px;
+  @media (max-width:590px) {
+    padding: 24px;
+    margin: unset;
+  }
 }
 
 .dialog-header {

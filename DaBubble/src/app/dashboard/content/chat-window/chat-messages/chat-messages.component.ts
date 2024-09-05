@@ -75,14 +75,14 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   checkPdf(message: Message): boolean {
     if (message.imagePath) {
-        const cleanUrl = message.imagePath.split('?')[0];
-        const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
-        this.isPdf = fileExtension === 'pdf';
+      const cleanUrl = message.imagePath.split('?')[0];
+      const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
+      this.isPdf = fileExtension === 'pdf';
     } else {
-        this.isPdf = false;
+      this.isPdf = false;
     }
     return this.isPdf;
-  } 
+  }
 
   transform(message: Message): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(message.imagePath!);
@@ -140,6 +140,12 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  deleteMessage() {
+    let selectedMessageId = this.selectedMessage?.id
+    this.messageService.deleteMessage(this.channelId!, selectedMessageId!)
+  }
+
 
   cancelEdit() {
     this.closeEditMode();
@@ -239,17 +245,18 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   adjustHeight(event: any) {
     event.target.style.height = 'auto';
-    event.target.style.width = '100%';
     event.target.style.height = event.target.scrollHeight + 'px';
   }
 
   adjustHeightDirectly(textarea: HTMLTextAreaElement) {
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.width = '100%';
       textarea.style.height = textarea.scrollHeight + 'px';
     }
   }
+
+
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;

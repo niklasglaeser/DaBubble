@@ -125,11 +125,27 @@
 }
 
 .checkmark-reaction {
-  background-image: url("/assets/img/main-page/chat/reaction-checkmark.svg");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  >div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scale: 120%;
+  }
 }
 
 .applaud-reaction {
-  background-image: url("/assets/img/main-page/chat/reaction-applaud.svg");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  >div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scale: 120%;
+  }
 }
 
 .emoji-reaction {
@@ -179,13 +195,16 @@
 }
 
 .details {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .text {
-  width: 90%;
+  display: flex;
+  justify-content: flex-end;
+  width: fit-content;
   padding: 20px;
   background-color: #edeefe;
   border-radius: 30px;
@@ -200,6 +219,7 @@
 
 .open-thread {
   display: flex;
+  justify-content: flex-start;
   gap: 20px;
   align-items: center;
 }
@@ -210,6 +230,13 @@
     cursor: pointer;
     scale: 110%;
   }
+}
+
+.last-answer {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .reactions {
@@ -262,9 +289,9 @@
 .emoji {
   height: 24px;
   width: 24px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .emoji-counter {
@@ -358,6 +385,7 @@
     overflow: hidden;
     background-color: white !important;
     color: black !important;
+    resize: none;
   }
   :focus {
     border: 1px solid var(--purple1);
@@ -366,15 +394,22 @@
 
 .edit-channel-btn {
   display: flex;
-  gap: 8px;
+  justify-content: center;
+  width: 100%;
+  gap: 40px;
+  padding-right: 30px;
 }
 
 .edit {
   color: var(--purple3);
   cursor: pointer;
+  border: 1px solid var(--purple2);
+  padding: 5px 15px;
+  border-radius: 30px;
+  
 
   &:hover {
-    font-weight: 700;
+    scale: 120%;
   }
 }
 /*Marco CSS edit Message*/

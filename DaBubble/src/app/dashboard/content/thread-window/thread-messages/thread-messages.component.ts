@@ -128,6 +128,12 @@ export class ThreadMessagesComponent {
     }
   }
 
+  deleteMessage() {
+    let selectedMessageId = this.selectedMessage?.id
+    this.messageService.deleteMessageThread(this.channelId!, selectedMessageId!, this.threadId!)
+  }
+
+
   cancelEdit() {
     this.closeEditMode();
     this.isMessageEmpty = false;

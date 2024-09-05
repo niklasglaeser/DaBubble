@@ -358,18 +358,27 @@
     overflow: hidden;
     background-color: white !important;
     color: black !important;
+    resize: none;
   }
   :focus {
     border: 1px solid var(--purple1);
   }
 }
 
+.edit-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 40px;
+}
+
 .edit {
   color: var(--purple3);
   cursor: pointer;
+  font-size: 14px;
 
   &:hover {
-    font-weight: 700;
+    scale: 120%;
   }
 }
 /*Marco CSS edit Message*/

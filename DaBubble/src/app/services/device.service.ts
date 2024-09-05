@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, fromEvent } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
 import { debounceTime, map, startWith } from 'rxjs/operators';
 
 @Injectable({
@@ -21,15 +21,29 @@ export class DeviceService {
     return this.screenWidth$.asObservable();
   }
 
-  isMobile(): boolean {
-    return window.innerWidth < 768;
+  get deviceType$(): Observable<'mobile' | 'tablet' | 'desktop'> {
+    return this.screenWidth.pipe(
+      map(width => {
+        if (width < 768) {
+          return 'mobile';
+        } else if (width >= 768 && width < 1024) {
+          return 'tablet';
+        } else {
+          return 'desktop';
+        }
+      }),
+      startWith(this.getDeviceType(window.innerWidth))
+    );
   }
 
-  isTablet(): boolean {
-    return window.innerWidth >= 768 && window.innerWidth < 1024;
-  }
 
-  isDesktop(): boolean {
-    return window.innerWidth >= 1024;
+  private getDeviceType(width: number): 'mobile' | 'tablet' | 'desktop' {
+    if (width < 768) {
+      return 'mobile';
+    } else if (width >= 768 && width < 1024) {
+      return 'tablet';
+    } else {
+      return 'desktop';
+    }
   }
 }

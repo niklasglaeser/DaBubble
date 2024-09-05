@@ -14,33 +14,14 @@ import { ChannelStateService } from '../../../services/channel-state.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { DirectMessagesService } from '../../../services/direct-message.service';
 import { User } from '@angular/fire/auth';
+import { SearchComponent } from "../../search/search.component";
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [DialogAddChannelComponent, WorkspaceToggleComponent, CommonModule],
+  imports: [DialogAddChannelComponent, WorkspaceToggleComponent, CommonModule, SearchComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
-  animations: [
-    trigger('slideInOut', [
-      state(
-        'in',
-        style({
-          transform: 'translateX(0%)',
-          display: 'flex'
-        })
-      ),
-      state(
-        'out',
-        style({
-          transform: 'translateX(-100%)',
-          display: 'none'
-        })
-      ),
-      transition('in => out', animate('175ms ease-in')),
-      transition('out => in', animate('175ms ease-out'))
-    ])
-  ]
 })
 export class SidebarComponent implements OnInit {
   @ViewChild('dialogAddChannel')
@@ -48,6 +29,7 @@ export class SidebarComponent implements OnInit {
 
   @Output() conversationSet = new EventEmitter<void>();
   @Input() workspaceVisible: boolean = true;
+  @Output() channelOpened = new EventEmitter<void>();
 
   isChannelsDropdownOpen = true;
   isMessagesDropdownOpen = true;
@@ -60,6 +42,7 @@ export class SidebarComponent implements OnInit {
   channelsSubscription!: Subscription;
   selectedChannelId: string | null = null;
   fixedChannelId: string = '';
+  isInitialized: boolean = false;
 
   users: UserLogged[] = [];
   directMessagesUsers: UserLogged[] = [];
@@ -88,8 +71,11 @@ export class SidebarComponent implements OnInit {
       if (this.channels.length > 0) {
         this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
         this.openChannel(this.fixedChannelId);
+        this.isInitialized = true;
       }
     });
+
+
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
       this.openDirectmessage(userId);
     });
@@ -150,16 +136,21 @@ export class SidebarComponent implements OnInit {
   /*TESTING*/
 
   openChannel(channelId: string) {
-    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-    if (dmWindow && chatWindow) {
-      dmWindow.style.display = 'none';
-      chatWindow.style.display = 'flex';
-    }
     this.selectedChannelId = channelId;
     this.selectedUserId = null;
     this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
+
+    if (window.innerWidth < 790 && this.isInitialized) {
+      this.channelOpened.emit();
+    } else {
+      let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+      let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+      if (dmWindow && chatWindow) {
+        dmWindow.style.display = 'none';
+        chatWindow.style.display = 'flex';
+      }
+    }
   }
 
   openDirectmessage(userId: string) {

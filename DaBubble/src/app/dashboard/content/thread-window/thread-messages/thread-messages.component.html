@@ -90,6 +90,11 @@
                                 {{message.message}}
                             </div>
                             <ng-template #editTemplate>
+                                <div class="edit-buttons">
+                                    <span class="edit" (click)="cancelEdit()">Abbrechen</span>
+                                    <span class="edit" (click)="saveEditedMessage()">Speichern</span>
+                                    <span class="edit" (click)="deleteMessage()">Nachricht löschen</span>
+                                </div>
                                 <div class="edit-channel">
                                     <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText"
                                         type="text" (input)="adjustHeight($event)"></textarea>
@@ -97,8 +102,6 @@
                                 <div *ngIf="isMessageEmpty" class="error-message">
                                     Die Nachricht darf nicht leer sein.
                                 </div>
-                                <span class="edit" (click)="saveEditedMessage()">Speichern</span>
-                                <span class="edit" (click)="cancelEdit()">Abbrechen</span>
                             </ng-template>
                             <div class="open-thread">
                                 <div class="reactions">

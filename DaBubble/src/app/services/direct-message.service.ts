@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {addDoc, collection, collectionData, doc, Firestore, getDoc, onSnapshot, orderBy, query, setDoc, updateDoc} from '@angular/fire/firestore';
+import {addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, onSnapshot, orderBy, query, setDoc, updateDoc} from '@angular/fire/firestore';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { AuthService } from './lp-services/auth.service';
@@ -163,6 +163,17 @@ export class DirectMessagesService implements OnDestroy {
       console.error('Error updating document:', e)
     }
   }
+
+  async deleteMessage(conversationId: string, messageId: string): Promise<void> {
+    try {
+      const messageDocRef = this.getSingleMessage(conversationId, messageId);
+      await deleteDoc(messageDocRef);
+      console.log(`Message ${messageId} from conversation ${conversationId} deleted successfully`);
+    } catch (e) {
+      console.error('Error deleting message:', e);
+    }
+  }
+  
 
   getSingleMessage(conversationId: string, messageId: string) {
     return doc(this.firestore, `directChats/${conversationId}/messages/${messageId}`)

@@ -5,12 +5,13 @@
     </div>
     <div class="chat-header-right">
         <div class="user-pictures" #openOverviewPosition (click)="openOverviewChannel($event)">
-            @for (member of members; track $index) {
-            <img src="{{member.photoURL}}">
-            }
-            <div class="fs-20-700" style="padding-left: 15px;">{{members.length}}</div>
+            @for (member of members; track member; let i = $index) {
+            @if (i < 4) { <img [src]="member.photoURL" alt="User Picture"> }
+                }
+                @if (members.length > 4) {
+                <div class="fs-20-700" style="padding-left: 15px;">+ {{members.length - 4}}</div>
+                }
         </div>
         <div class="add-members" #openAddUserPosition (click)="openAddUser($event)"></div>
-
     </div>
 </div>

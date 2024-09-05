@@ -1,0 +1,120 @@
+ .wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    background-color: white;
+    border-radius: 30px;
+    padding: 8px 16px;
+    max-width: 900px;
+
+    @media(max-width: 1200px) {
+        border: 1px solid var(--lightPurple);
+        padding: 4px 8px;
+    }
+}
+
+input {
+    border: 0px solid var(--lightPurple);
+    border-radius: 40px;
+    box-sizing: border-box;
+    font-size: 24px;
+    font-weight: 400;
+    outline: none;
+    width: 100%;
+    padding: 8px;
+    
+    @media(max-width: 1200px) {
+        font-size: 18px;
+    }
+}
+.search-button {
+    flex-shrink: 0;
+}
+
+.search-button:hover {
+    cursor: pointer;
+    scale: 120%;
+}
+.chip-subcontainer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    p {
+        margin: 0;
+        font-size: 18px;
+    }
+}
+
+
+.avatarStatus {
+    position: relative;
+    > img:first-child {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    > :last-child {
+        position: absolute;
+        width: 14px;
+        bottom: 6px;
+        right: 0;
+    }
+}
+
+
+/* MATERIAL DESIGN AUTOCOMPLETE*/
+::ng-deep .mdc-list-item__primary-text {
+    &:hover {
+        background-color: var(--lighterPurple) !important;
+        border-radius: 30px;
+    }
+}
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Nunito", sans-serif !important;
+}
+.mat-mdc-optgroup .mat-mdc-option:not(.mat-mdc-option-multiple) {
+    padding: 8px;
+}
+
+mat-option {
+    margin-bottom: 8px !important;
+    // padding-left: 20px !important;
+    &:hover {
+        background-color: transparent !important;
+    }
+}
+
+.shortText {
+    word-wrap: break-word; 
+    word-break: break-word;
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    padding: 2px 16px;
+} 
+
+
+
+mat-option:nth-child(n){
+    min-height: 20px;
+  }
+
+::ng-deep .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+    border-radius: 0 0 30px 30px !important;
+    margin-top: 16px;
+    @media(max-width: 1200px) {
+        border-radius: 0 0 8px 8px !important;
+        margin-top: 8px;
+    }
+}
+/* MATERIAL DESIGN AUTOCOMPLETE*/
+
+.no-hover:hover {
+    background-color: white;
+}

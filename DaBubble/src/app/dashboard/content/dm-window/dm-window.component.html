@@ -1,5 +1,7 @@
 <div class="chat-window-container">
     <app-dm-header></app-dm-header>
-    <app-dm-messages class="messages" #dmMessages [messages]="messages$ | async"></app-dm-messages>
-    <app-dm-footer class="footer"></app-dm-footer>
+    <div class="messages" #dmMessages>
+        <app-dm-messages [messages]="messages$ | async"></app-dm-messages>
+    </div>
+    <app-dm-footer class="footer" (messageSent)="scrollToBottom()"></app-dm-footer>
 </div>
