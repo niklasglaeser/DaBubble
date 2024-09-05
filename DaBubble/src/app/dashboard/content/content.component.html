@@ -3,7 +3,7 @@
     (channelOpened)="openCustomDialog()">
 </app-sidebar>
 
-<app-chat-window *ngIf="!isMobile" class="chat-window" [workspaceVisible]="workspaceVisible"
+<app-chat-window  class="chat-window" [workspaceVisible]="workspaceVisible"
     [class.no-sidebar]="!workspaceVisible"></app-chat-window>
 
 <app-dm-window class="dm-window" #dmWindow></app-dm-window>

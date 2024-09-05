@@ -98,5 +98,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.dialog.open(DialogEditProfilComponent, {});
   }
 
-
+  goBackToSidebar() {
+    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+    let threadWindow = document.querySelector('.thread-window') as HTMLElement;
+    let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+    dmWindow.style.display = 'none';
+    chatWindow.style.display = 'none';
+    sidebar.style.display = 'flex';
+    threadWindow.style.display = 'none';
+  }
 }

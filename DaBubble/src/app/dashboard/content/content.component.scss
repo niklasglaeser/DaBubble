@@ -5,12 +5,13 @@
   &.no-sidebar {
     margin-left: 0;
   }
-  // @media (max-width: 790px) {
-  //   display: none !important;
-  // }
+  @media (max-width: 790px) {
+   display: none;
+  }
   // padding-right: 30px;
   // padding-left: 30px;
 }
+
 
 .dm-window {
   width: 100%;
@@ -29,6 +30,9 @@
   margin-left: 20px;
   visibility: hidden; 
   display: none;
+  @media (max-width: 790px) {
+    width: 100%;
+  }
 }
 
 .thread-window.open {
@@ -38,14 +42,19 @@
   opacity: 1;
   visibility: visible;
   display: flex;
+  @media (max-width: 790px) {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .sidebar-window {
+  display: flex;
   transition: transform 125ms ease-out, opacity 125ms ease-out;
   @media (max-width: 790px) {
-    display: flex;
-    flex: 1;    
-  }
+    width: 100%;
+    justify-content: center;
+   }
 }
 
 // Einblenden

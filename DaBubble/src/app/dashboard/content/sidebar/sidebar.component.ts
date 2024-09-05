@@ -50,6 +50,11 @@ export class SidebarComponent implements OnInit {
 
   currentUser: UserLogged | null = null;
 
+  dmWindow = document.querySelector('.dm-window') as HTMLElement;
+  chatWindow = document.querySelector('.chat-window') as HTMLElement;
+  threadWindow = document.querySelector('.thread-window') as HTMLElement;
+  sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService) {
 
   }
@@ -140,15 +145,16 @@ export class SidebarComponent implements OnInit {
     this.selectedUserId = null;
     this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
+    this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
 
     if (window.innerWidth < 790 && this.isInitialized) {
-      this.channelOpened.emit();
-    } else {
-      let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-      let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-      if (dmWindow && chatWindow) {
-        dmWindow.style.display = 'none';
-        chatWindow.style.display = 'flex';
+      if (window.innerWidth < 790) {
+        if (this.dmWindow && this.chatWindow) {
+          this.dmWindow.style.display = 'none';
+          this.chatWindow.style.display = 'flex';
+          this.sidebar.style.display = 'none';
+          this.threadWindow.style.display = 'none';
+        }
       }
     }
   }
@@ -164,14 +170,25 @@ export class SidebarComponent implements OnInit {
       this.dmService.setRecipientId(recipientId);
     });
 
-
-    console.log('open Directmessage for User' + userId);
-    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-    if (dmWindow && chatWindow) {
-      dmWindow.style.display = 'flex';
-      chatWindow.style.display = 'none';
+    if (window.innerWidth < 790) {
+      if (this.dmWindow && this.chatWindow) {
+        this.dmWindow.style.display = 'flex';
+        this.chatWindow.style.display = 'none';
+        this.sidebar.style.display = 'none';
+        this.threadWindow.style.display = 'none';
+      }
     }
+
+    if (window.innerWidth > 790) {
+      if (this.dmWindow && this.chatWindow) {
+        this.dmWindow.style.display = 'flex';
+        this.chatWindow.style.display = 'none';
+        this.sidebar.style.display = 'none';
+        this.threadWindow.style.display = 'none';
+      }
+    }
+
+
     this.selectedChannelId = null;
     this.selectedUserId = userId;
     this.isDirectChat = true;

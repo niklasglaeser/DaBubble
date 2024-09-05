@@ -188,16 +188,21 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   }
 
   openThread(channelId: string, messageId: string, originMessage: Message) {
-    this.threadService.checkAndCreateThread(
-      channelId,
-      messageId,
-      originMessage
-    );
-    const threadWindow = document.querySelector(
-      '.thread-window'
-    ) as HTMLElement;
+    this.threadService.checkAndCreateThread(channelId, messageId, originMessage);
+    let threadWindow = document.querySelector('.thread-window') as HTMLElement;
     if (threadWindow) {
       threadWindow.classList.add('open');
+    }
+
+    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+    let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+
+    if (window.innerWidth < 790) {
+      dmWindow.style.display = 'none';
+      chatWindow.style.display = 'none';
+      sidebar.style.display = 'none';
+      threadWindow.style.display = 'flex';
     }
   }
 

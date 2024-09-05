@@ -27,6 +27,17 @@ app-search {
         transform: scale(1.1);
         cursor: pointer;
     }
+    @media(max-width:790px) {
+        display: none;
+    }
+
+}
+
+.header-left-mobile {
+    display: none;
+    @media(max-width:790px) {
+        display: flex;
+    }
 }
 
 .header-right {
