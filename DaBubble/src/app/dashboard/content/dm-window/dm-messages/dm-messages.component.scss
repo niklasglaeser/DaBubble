@@ -391,16 +391,20 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  gap: 20px;
+  gap: 40px;
   padding-right: 30px;
 }
 
 .edit {
   color: var(--purple3);
   cursor: pointer;
+  border: 1px solid var(--purple2);
+  padding: 5px 15px;
+  border-radius: 30px;
+  
 
   &:hover {
-    font-weight: 700;
+    scale: 120%;
   }
 }
 /*Marco CSS edit Message*/

@@ -1,5 +1,5 @@
 <div class="header-container border-red">
-    <img class="header-left" src="/assets/img/general/dabubble-logo.svg">
+    <img class="header-left" src="/assets/img/general/dabubble-logo.svg" (click)="reloadPage()">
     <app-search></app-search>
     <div class="header-right" (click)="openDialog()">
         <div class="fs-32-700 user-name">{{ user?.username }}</div>

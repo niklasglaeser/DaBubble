@@ -145,6 +145,11 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteMessage() {
+    let selectedMessageId = this.selectedMessage?.id
+    this.dmService.deleteMessage(this.conversationId!, selectedMessageId!)
+  }
+
 
   cancelEdit() {
     this.closeEditMode();

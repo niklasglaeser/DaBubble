@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserService } from '../../services/user.service';
 import { Subscription } from 'rxjs';
 import { SearchComponent } from "../search/search.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -49,7 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.subscribeToUserData();
@@ -57,6 +58,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  reloadPage() {
+    window.location.reload();
   }
 
   async getUsername(senderId: string): Promise<string> {
