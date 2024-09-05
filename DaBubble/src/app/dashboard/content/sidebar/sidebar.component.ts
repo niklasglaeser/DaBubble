@@ -67,10 +67,10 @@ export class SidebarComponent implements OnInit {
       this.channels = channels;
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
 
-      // if (this.channels.length > 0) {
-      //   this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
-      //   this.openChannel(this.fixedChannelId);
-      // }
+      if (this.channels.length > 0) {
+        this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
+        this.openChannel(this.fixedChannelId);
+      }
     });
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
       this.openDirectmessage(userId);
