@@ -10,7 +10,7 @@
 
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>
     </div>
-    <textarea type="text" name="message-input" id="dm-message-input"
+    <textarea type="text" name="message-input" id="dm-message-input"></textarea>
 
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
         <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
