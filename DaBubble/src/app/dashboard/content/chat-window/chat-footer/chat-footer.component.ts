@@ -49,7 +49,9 @@ export class ChatFooterComponent {
   showEmojiPicker: boolean = false
 
 
+
   constructor(private messageService: MessageService, private authService: AuthService, private sanitizer: DomSanitizer,) {
+
 
     this.currentUserId = this.authService.uid;
   }
@@ -165,29 +167,29 @@ export class ChatFooterComponent {
   }
 
 
-
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
   }
 
   deleteImg() {
     if (this.chatImg) {
-      this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
-        next: () => {
-          this.chatImg = null;
-          this.safePath = null;
-          this.isPdf = false;
 
-          // Reset the file input so it can trigger change event again
-          const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
-          if (fileInput) {
-            fileInput.value = ''; // Clear the file input value
-          }
-        },
-        error: (err: any) => {
-          console.error('Fehler beim Löschen der Datei:', err);
-        }
-      });
+        this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
+            next: () => {
+                this.chatImg = null;
+                this.safePath = null;
+                this.isPdf = false;
+
+                const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+            },
+            error: (err: any) => {
+                console.error('Fehler beim Löschen der Datei:', err);
+            }
+        });
+
     }
   }
 

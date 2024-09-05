@@ -13,12 +13,14 @@ import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { DialogChatImgComponent } from '../../../../dialog/dialog-chat-img/dialog-chat-img.component';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Component({
   selector: 'app-dm-messages',
   standalone: true,
-  imports: [CommonModule, EmojiComponent, PickerComponent, FormsModule],
+  imports: [CommonModule, EmojiComponent, PickerComponent, FormsModule,MatIconModule],
   templateUrl: './dm-messages.component.html',
   styleUrl: './dm-messages.component.scss',
   providers: [DatePipe],
@@ -41,6 +43,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   editMessageClicked: boolean = false;
   editMessageText: string = '';
   isMessageEmpty: boolean = false;
+  isPdf: boolean = false
 
   emojiPickerMessageId: string | undefined = undefined;
   showTooltip: boolean = false;
@@ -48,7 +51,11 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | undefined;
   private conversationIdSubscription: Subscription | undefined;
 
-  constructor(private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe, private emojiService: EmojiService) {}
+
+  constructor (private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe, private emojiService: EmojiService, private sanitizer: DomSanitizer,) {
+    this.recipientUser$ = this.dmService.recipientUser$;
+    this.messages
+  }
 
   get currentUserId(): string | undefined {
     return this.authService.currentUserSig()?.userId;
@@ -78,6 +85,25 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+  }
+
+  checkPdf(message: Message): boolean {
+    if (message.imagePath) {
+        const cleanUrl = message.imagePath.split('?')[0];
+        const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
+        this.isPdf = fileExtension === 'pdf';
+    } else {
+        this.isPdf = false;
+    }
+    return this.isPdf;
+  } 
+
+  transform(message: Message): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(message.imagePath!);
+  }
+
+  openPdf(message: Message) {
+    window.open(message.imagePath, '_blank');
   }
 
   formatTime(timestamp: Date): string {

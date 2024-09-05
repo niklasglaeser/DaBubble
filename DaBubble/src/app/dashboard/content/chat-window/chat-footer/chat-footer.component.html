@@ -2,7 +2,9 @@
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
         <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
     </div>
+
     <div *ngIf="chatImg || uploadError" class="chatImg">
+
         <img *ngIf="chatImg && !isPdf" [src]="chatImg" alt="Uploaded image">
 
         <a *ngIf="chatImg && isPdf" [href]="safePath" target="_blank">

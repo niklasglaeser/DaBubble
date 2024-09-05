@@ -1,9 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+
+import { Component, EventEmitter, HostListener, Output, ViewChild , inject} from '@angular/core';
 import { Message } from '../../../../models/message.model';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserLogged } from '../../../../models/user-logged.model';
+import { UserLoggedService } from '../../../../services/lp-services/user-logged.service';
+import { UploadService } from '../../../../services/lp-services/upload.service';
+import { DomSanitizer } from '@angular/platform-browser';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MessageService } from '../../../../services/message.service';
 import { AuthService } from '../../../../services/lp-services/auth.service';
 
+
 @Component({
   selector: 'app-dm-footer',
   standalone: true,
@@ -21,9 +26,21 @@ import { AuthService } from '../../../../services/lp-services/auth.service';
   styleUrl: './dm-footer.component.scss'
 })
 export class DmFooterComponent {
-  recipientUser$: Observable<UserLogged | null>;
+  userService = inject(UserLoggedService);
+  imgUploadService = inject(UploadService);
   currentUserId: string = '';
+  recipientUser$: Observable<UserLogged | null>;
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
+
+
+  chatImg: string | null = null; 
+  uploadError: string | null = null;
+  isPdf: boolean = false;
+  safePath: string | null = null; 
+
+  private userSubscription: Subscription | undefined;
+  private conversationIdSubscription: Subscription | undefined;
+  conversationId: string | undefined;
 
   @Output() messageSent = new EventEmitter<void>();
 
@@ -35,25 +52,53 @@ export class DmFooterComponent {
   isPanelOpen = false;
   showEmojiPicker: boolean = false
 
-  constructor(private dmService: DirectMessagesService, private authService: AuthService, private messageService: MessageService) {
+  constructor(private dmService: DirectMessagesService, private authService: AuthService, private messageService: MessageService, private sanitizer: DomSanitizer,) {
     this.recipientUser$ = this.dmService.recipientUser$;
     this.currentUserId = this.authService.uid;
+
   }
+  
+  ngOnInit() {
+    // Abonniere das Observable für conversationId
+    this.conversationIdSubscription = this.dmService.conversationId$.subscribe(id => {
+      if (id) {this.conversationId = id;}
+    });
+
+  }
+
+  ngOnDestroy(): void {
+    if (this.conversationIdSubscription) {
+      this.conversationIdSubscription.unsubscribe();
+    }
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+
+  }
+
+  
 
   sendMessage(): void {
     const textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
     const messageText = textarea.value;
 
-    if (messageText.trim()) {
+
+    if (messageText || this.chatImg) {
+
       const message: Message = {
         message: messageText,
         senderId: '',
+        imagePath: this.chatImg!,
         created_at: new Date(),
       };
 
       this.dmService.addMessage(message).then(() => {
         textarea.value = '';
+        this.chatImg = null
       });
+
+      console.log('send');
+    
       this.messageSent.emit();
     }
   }
@@ -140,6 +185,7 @@ export class DmFooterComponent {
     const isClickInside = target.closest('.emoji-picker-dialog') || target.closest('.add-emojis');
     if (!isClickInside && this.showEmojiPicker) {
       this.showEmojiPicker = false;
+
     }
   }
 
@@ -147,5 +193,60 @@ export class DmFooterComponent {
   onEnter(event: KeyboardEvent): void {
     this.sendMessage();
   }
+
+  uploadImage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      this.isPdf = file.type === 'application/pdf';
+
+      const currentUser = this.authService.currentUserSig();
+      if (currentUser) {
+        this.imgUploadService.uploadImgChat(currentUser.userId, file, this.conversationId).pipe(
+        ).subscribe({
+          next: (imagePath: string) => {
+            this.chatImg = imagePath;
+            this.safePath = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string : null
+            this.uploadError = null;
+          },
+          error: (err: any) => {
+            this.uploadError = err.message || 'Fehler beim Hochladen des Bildes.';
+            this.chatImg = null;
+            this.safePath = null;
+            this.isPdf = false;
+
+            setTimeout(() => {
+              this.uploadError = null;
+            }, 3000);
+          }
+        });
+      }
+    }
+  }
+
+  triggerFileUpload(inputElement: HTMLInputElement) {
+    inputElement.click();
+  }
+
+  deleteImg() {
+    if (this.chatImg) {
+        this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
+            next: () => {
+                this.chatImg = null;
+                this.safePath = null;
+                this.isPdf = false;
+
+                const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+            },
+            error: (err: any) => {
+                console.error('Fehler beim Löschen der Datei:', err);
+            }
+        });
+    }
+}
 
 }

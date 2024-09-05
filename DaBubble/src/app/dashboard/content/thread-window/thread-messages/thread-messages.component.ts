@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../../../../models/message.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -8,14 +8,26 @@ import { EmojiService } from '../../../../services/emoji.service';
 import { AuthService } from '../../../../services/lp-services/auth.service';
 import { Reaction } from '../../../../models/reaction.model';
 import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { UserLogged } from '../../../../models/user-logged.model';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
+import { DialogChatImgComponent } from '../../../../dialog/dialog-chat-img/dialog-chat-img.component';
 
 @Component({
   selector: 'app-thread-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTooltipModule, MatDialogModule, PickerComponent, ReactiveFormsModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    MatTooltipModule, 
+    MatDialogModule, 
+    PickerComponent, 
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+  ],
   templateUrl: './thread-messages.component.html',
   styleUrl: './thread-messages.component.scss',
   providers: [DatePipe],
@@ -29,10 +41,13 @@ export class ThreadMessagesComponent {
   @Input() channelId: string = '';
   @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
 
+  dialog = inject(MatDialog);
+
   selectedMessage: Message | null = null;
   editMessageClicked: boolean = false;
   editMessageText: string = '';
   isMessageEmpty: boolean = false;
+  isPdf: boolean = false
 
   emojiPickerMessageId: string | undefined = undefined;
   showTooltip: boolean = false;
@@ -42,13 +57,39 @@ export class ThreadMessagesComponent {
     private datePipe: DatePipe,
     private messageService: MessageService,
     private emojiService: EmojiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer,
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['channelId'] && !changes['channelId'].isFirstChange()) {
       this.closeEditMode();
     }
+  }
+
+  checkPdf(message: Message): boolean {
+    if (message.imagePath) {
+        const cleanUrl = message.imagePath.split('?')[0];
+        const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
+        this.isPdf = fileExtension === 'pdf';
+    } else {
+        this.isPdf = false;
+    }
+    return this.isPdf;
+  } 
+
+  transform(message: Message): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(message.imagePath!);
+  }
+
+  openPdf(message: Message) {
+    window.open(message.imagePath, '_blank');
+  }
+
+  openImg(message: Message) {
+    this.dialog.open(DialogChatImgComponent, {
+      data: { imagePath: message.imagePath }
+    });
   }
 
   editMessage(message: Message) {
