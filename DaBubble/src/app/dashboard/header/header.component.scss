@@ -33,7 +33,6 @@ app-search {
     display: flex;
     align-items: center;
     gap: 20px;
-    padding-right: 30px;
     &:hover {
         .user-name {
             color: var(--purple1);

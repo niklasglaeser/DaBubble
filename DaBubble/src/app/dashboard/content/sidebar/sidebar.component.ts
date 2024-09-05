@@ -28,20 +28,24 @@ import { SearchComponent } from "../../search/search.component";
         'in',
         style({
           transform: 'translateX(0%)',
-          display: 'flex'
+          opacity: 1,
+          visibility: 'visible'
         })
       ),
       state(
         'out',
         style({
           transform: 'translateX(-100%)',
-          display: 'none'
+          opacity: 0,
+          visibility: 'hidden'
         })
       ),
-      transition('in => out', animate('175ms ease-in')),
-      transition('out => in', animate('175ms ease-out'))
+      transition('in => out', animate('2705ms ease-in')),
+      transition('out => in', animate('2750ms ease-out'))
     ])
   ]
+
+
 })
 export class SidebarComponent implements OnInit {
   @ViewChild('dialogAddChannel')

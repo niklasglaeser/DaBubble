@@ -23,13 +23,20 @@ export class ContentComponent {
     this.checkWindowSize();
   }
 
-  toggleWorkspace() {
-    this.workspaceVisible = !this.workspaceVisible;
-  }
-
   checkWindowSize() {
     let screenWidth = window.innerWidth;
     this.showWorkspaceToggle = screenWidth > 790 && screenWidth <= 1920;
+    if (screenWidth <= 790) {
+      this.workspaceVisible = true;
+    } else if (screenWidth > 790 && screenWidth <= 1200) {
+      this.workspaceVisible = false;
+    } else if (screenWidth > 1200) {
+      this.workspaceVisible = true;;
+    }
+  }
+
+  toggleWorkspace() {
+    this.workspaceVisible = !this.workspaceVisible;
   }
 
   @HostListener('window:resize', ['$event'])
