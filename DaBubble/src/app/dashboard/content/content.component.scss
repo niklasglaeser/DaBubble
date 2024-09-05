@@ -2,9 +2,11 @@
   width: 100%;
   display: flex;
   margin-left: 20px;
-
   &.no-sidebar {
     margin-left: 0;
+  }
+  @media (max-width: 790px) {
+    display: none !important;
   }
   // padding-right: 30px;
   // padding-left: 30px;
@@ -39,7 +41,9 @@
 }
 
 .sidebar-window {
-  // padding-left: 50px;
-  // height: 95%;
   box-sizing: border-box;
+  @media (max-width: 790px) {
+    display: flex;
+    flex: 1;    
+  }
 }

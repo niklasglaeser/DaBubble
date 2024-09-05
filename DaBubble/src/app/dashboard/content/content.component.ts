@@ -6,43 +6,34 @@ import { DmWindowComponent } from './dm-window/dm-window.component';
 import { WorkspaceToggleComponent } from "../../dialog/workspace-toggle/workspace-toggle.component";
 import { Subscription } from 'rxjs';
 import { DeviceService } from '../../services/device.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [ChatWindowComponent, ThreadWindowComponent, SidebarComponent, DmWindowComponent, WorkspaceToggleComponent],
+  imports: [CommonModule, ChatWindowComponent, ThreadWindowComponent, SidebarComponent, DmWindowComponent, WorkspaceToggleComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
-export class ContentComponent implements OnInit, OnDestroy {
+export class ContentComponent {
   workspaceVisible: boolean = true;
-  showWorkspaceToggle = true;
-  screenWidth!: Subscription;
+  showWorkspaceToggle: boolean = true;
 
-  constructor(private deviceService: DeviceService) {
+  constructor() {
     this.checkWindowSize();
-  }
-  ngOnInit(): void {
-    this.screenWidth = this.deviceService.screenWidth.subscribe(width => {
-      this.workspaceVisible = width >= 1200
-    })
   }
 
   toggleWorkspace() {
     this.workspaceVisible = !this.workspaceVisible;
   }
 
+  checkWindowSize() {
+    let screenWidth = window.innerWidth;
+    this.showWorkspaceToggle = screenWidth > 790 && screenWidth <= 1920;
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.checkWindowSize();
-  }
-
-  checkWindowSize() {
-    this.showWorkspaceToggle = window.innerWidth <= 1980;
-  }
-  ngOnDestroy(): void {
-    if (this.screenWidth) {
-      this.screenWidth.unsubscribe();
-    }
   }
 }
