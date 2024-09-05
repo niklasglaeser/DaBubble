@@ -44,26 +44,51 @@
 }
 
 .container-profil {
+  position: relative;
   display: flex;
   justify-content: center;
   width: 100%;
 
-  > img {
+  .img {
+    position: relative;
+    display: flex;
+    justify-content: center;
     max-width: 200px;
-    max-height: 200px;
     width: 100%;
-    height: 100%;
-    border-radius: 100%;
-    object-fit: cover;
-    
-  }
-  .scale{
-    cursor: pointer;
-    transition: transform 0.2s ease; 
-    &:hover{
-      scale: 0.95;
+
+    > img {
+      max-width: 200px;
+      max-height: 200px;
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+      object-fit: cover;
+      
+    }
+    .icon{
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 32px;
+      max-height: 32px;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      bottom: 5px;
+      right: 10px;
+      background-color: var(--bgColor);
+      border: 4px solid white;
+      cursor: pointer;
+      transition: transform 0.2s ease; 
+      color: var(--purple1);
+      border-radius: 50%;
+      &:hover{
+        scale: 1.2;
+      }
     }
   }
+  
 }
 
 

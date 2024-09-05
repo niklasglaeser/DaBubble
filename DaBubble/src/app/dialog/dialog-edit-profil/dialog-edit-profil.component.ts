@@ -14,11 +14,12 @@ import { AvatarComponent } from '../../landing-page/avatar/avatar.component';
 import { AvatarProfileComponent } from './avatar/avatar.component';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dialog-edit-profil',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent],
+  imports: [CommonModule, FormsModule, SidebarComponent,MatIconModule],
   templateUrl: './dialog-edit-profil.component.html',
   styleUrl: './dialog-edit-profil.component.scss'
 })
