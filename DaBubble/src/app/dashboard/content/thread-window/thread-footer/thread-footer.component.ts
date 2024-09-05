@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, Input, ViewChild } from '@angular/core';
 import { Message } from '../../../../models/message.model';
 import { ThreadService } from '../../../../services/thread.service';
 import { AuthService } from '../../../../services/lp-services/auth.service';
@@ -12,6 +12,9 @@ import { Observable } from 'rxjs';
 import { UserLogged } from '../../../../models/user-logged.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { UserLoggedService } from '../../../../services/lp-services/user-logged.service';
+import { UploadService } from '../../../../services/lp-services/upload.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-thread-footer',
@@ -24,7 +27,8 @@ export class ThreadFooterComponent {
   @Input() channelId: string = '';
   @Input() messageId: string = '';
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
-
+  userService = inject(UserLoggedService);
+  imgUploadService = inject(UploadService);
   channel: Channel | null = null;
   currentUserId: string = '';
 
@@ -37,10 +41,16 @@ export class ThreadFooterComponent {
 
   showEmojiPicker: boolean = false
 
+  chatImg: string | null = null; 
+  uploadError: string | null = null;
+  isPdf: boolean = false;
+  safePath: string | null = null; 
+
   constructor(
     private threadService: ThreadService,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private sanitizer: DomSanitizer,
   ) { this.currentUserId = this.authService.uid; }
 
   sendMessage(): void {
@@ -49,11 +59,12 @@ export class ThreadFooterComponent {
     ) as HTMLTextAreaElement;
     const messageText = textarea.value;
 
-    if (messageText.trim()) {
+    if (messageText.trim() || this.chatImg ) {
       const message: Message = {
         message: messageText,
         senderId: '',
         // senderName: '',
+        imagePath: this.chatImg!,
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -66,6 +77,7 @@ export class ThreadFooterComponent {
           .addMessageThread(this.channelId, message, this.messageId)
           .then(() => {
             textarea.value = '';
+            this.chatImg = null
           });
       } else {
         console.error('Channel ID is undefined.');
@@ -125,6 +137,60 @@ export class ThreadFooterComponent {
   }
 
 
+  uploadImage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      this.isPdf = file.type === 'application/pdf';
+
+      const currentUser = this.authService.currentUserSig();
+      if (currentUser) {
+        this.imgUploadService.uploadImgChat(currentUser.userId, file, this.channel?.id).pipe(
+        ).subscribe({
+          next: (imagePath: string) => {
+            this.chatImg = imagePath;
+            this.safePath = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string : null
+            this.uploadError = null;
+          },
+          error: (err: any) => {
+            this.uploadError = err.message || 'Fehler beim Hochladen des Bildes.';
+            this.chatImg = null;
+            this.safePath = null;
+            this.isPdf = false;
+
+            setTimeout(() => {
+              this.uploadError = null;
+            }, 3000);
+          }
+        });
+      }
+    }
+  }
+
+  triggerFileUpload(inputElement: HTMLInputElement) {
+    inputElement.click();
+  }
+
+  deleteImg() {
+    if (this.chatImg) {
+        this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
+            next: () => {
+                this.chatImg = null;
+                this.safePath = null;
+                this.isPdf = false;
+
+                const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+            },
+            error: (err: any) => {
+                console.error('Fehler beim Löschen der Datei:', err);
+            }
+        });
+    }
+}
 
 
   toggleEmojiPicker(event: MouseEvent) {

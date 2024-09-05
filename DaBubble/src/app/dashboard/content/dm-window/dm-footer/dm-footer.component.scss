@@ -12,6 +12,60 @@
     position: relative;
 }
 
+.chatImg {
+    margin-top: 16px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 144px;
+    max-height: 144px;
+    padding: 24px;
+    color: red;
+    border-radius: 10px;
+    background-color: var(--bgColor);
+    img {
+        max-width: 120px;
+        width: 100%;
+        max-height: 120px;
+        height: auto;
+        object-fit: cover;
+    }
+    .delete {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        z-index: 10;
+        bottom: 4px;
+        right: 4px;
+        cursor: pointer;
+        transition: transform 0.5s ease-in-out;
+        &:hover {
+            scale: 1.2;
+        }
+    }
+    a{
+        cursor: pointer;
+        object{
+            cursor: pointer;
+        }
+    }
+}
+
+.pdf {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--purple1);
+    border-radius: 10px;
+    font-size: 64px;
+}
+
+
 .chat-message-toolbar {
     display: flex;
     width: 100%;
