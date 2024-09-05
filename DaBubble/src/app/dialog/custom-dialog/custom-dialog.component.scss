@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 899;
 }
 
 .custom-dialog {
@@ -15,7 +15,7 @@
   right: 0;
   bottom: 0;
   background-color: white;
-  z-index: 1001;
+  z-index: 900;
   display: flex;
   flex-direction: column;
   padding: 0;
