@@ -5,9 +5,9 @@
   &.no-sidebar {
     margin-left: 0;
   }
-  @media (max-width: 790px) {
-    display: none !important;
-  }
+  // @media (max-width: 790px) {
+  //   display: none !important;
+  // }
   // padding-right: 30px;
   // padding-left: 30px;
 }
@@ -41,7 +41,7 @@
 }
 
 .sidebar-window {
-  transition: transform 2750ms ease-out, opacity 2750ms ease-out;
+  transition: transform 125ms ease-out, opacity 125ms ease-out;
   @media (max-width: 790px) {
     display: flex;
     flex: 1;    
@@ -61,3 +61,16 @@
   opacity: 0;
   visibility: hidden;
 }
+
+::ng-deep .mobile-chat-dialog .mat-dialog-container {
+  background-color: aqua !important;
+  padding: 0; /* Entfernt Standard-Padding */
+  margin: 0;  /* Entfernt Standard-Margin */
+  width: 100vw; /* Stellt sicher, dass der Dialog die volle Breite des Viewports einnimmt */
+  height: 100vh; /* Stellt sicher, dass der Dialog die volle Höhe des Viewports einnimmt */
+  overflow: hidden; /* Verhindert Scrollen innerhalb des Dialogs */
+  border-radius: 40px !important; /* Entfernt abgerundete Ecken, um es wie eine native mobile Ansicht aussehen zu lassen */
+}
+
+/* content.component.scss */
+
