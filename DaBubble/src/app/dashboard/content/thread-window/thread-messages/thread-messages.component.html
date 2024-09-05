@@ -79,6 +79,14 @@
                             </div>
                             <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
                                 class="text fs-18">
+                                <div *ngIf="message.imagePath && !checkPdf(message)" class="message-image" (click)="openImg(message)">
+                                    <img [src]="transform(message)" alt="Message Image">
+                                </div>
+                                <div *ngIf="message.imagePath && checkPdf(message)" class="message-image">
+                                    <a  [href]="message.imagePath" target="_blank">
+                                        <mat-icon class="pdf">picture_as_pdf</mat-icon>
+                                    </a>
+                                </div>
                                 {{message.message}}
                             </div>
                             <ng-template #editTemplate>

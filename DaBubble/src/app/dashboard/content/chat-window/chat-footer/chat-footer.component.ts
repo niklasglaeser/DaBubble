@@ -50,7 +50,7 @@ export class ChatFooterComponent {
 
 
   constructor(private messageService: MessageService, private authService: AuthService,private sanitizer: DomSanitizer,) {
-  
+ 
     this.currentUserId = this.authService.uid;
   }
 
@@ -164,8 +164,6 @@ export class ChatFooterComponent {
     }
   }
 
-  
-
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
   }
@@ -178,10 +176,9 @@ export class ChatFooterComponent {
                 this.safePath = null;
                 this.isPdf = false;
 
-                // Reset the file input so it can trigger change event again
                 const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
                 if (fileInput) {
-                    fileInput.value = ''; // Clear the file input value
+                    fileInput.value = '';
                 }
             },
             error: (err: any) => {
