@@ -8,6 +8,7 @@ import { Component, EventEmitter, Output, ViewChild, ViewContainerRef } from '@a
 <div class="custom-dialog-overlay" (click)="closeDialog()"></div>
 <div class="custom-dialog">
     <ng-container #dialogContentContainer></ng-container>
+    <button class="close-button" (click)="closeDialog()">Close</button>
 </div>
 `,
   styleUrls: ['./custom-dialog.component.scss']

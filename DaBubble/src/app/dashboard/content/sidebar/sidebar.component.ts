@@ -42,6 +42,7 @@ export class SidebarComponent implements OnInit {
   channelsSubscription!: Subscription;
   selectedChannelId: string | null = null;
   fixedChannelId: string = '';
+  isInitialized: boolean = false;
 
   users: UserLogged[] = [];
   directMessagesUsers: UserLogged[] = [];
@@ -70,8 +71,11 @@ export class SidebarComponent implements OnInit {
       if (this.channels.length > 0) {
         this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
         this.openChannel(this.fixedChannelId);
+        this.isInitialized = true;
       }
     });
+
+
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
       this.openDirectmessage(userId);
     });
@@ -137,7 +141,7 @@ export class SidebarComponent implements OnInit {
     this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
 
-    if (window.innerWidth < 790) {
+    if (window.innerWidth < 790 && this.isInitialized) {
       this.channelOpened.emit();
     } else {
       let dmWindow = document.querySelector('.dm-window') as HTMLElement;
