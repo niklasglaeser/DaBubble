@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe} from '@angular/common';
 import { AfterViewInit, Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Message } from '../../../../models/message.model';
@@ -27,10 +27,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class DmMessagesComponent implements OnInit, OnDestroy {
   @Input() messages: Message[] | null = null;
-  @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
 
   hasMessages$!: Observable<boolean>;
-  recipientUser$!: Observable<UserLogged | null>;
+  recipientUser$: Observable<UserLogged | null>;
   conversationId: string | undefined;
 
   currentUser: UserLogged | null = null;
@@ -51,10 +50,8 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | undefined;
   private conversationIdSubscription: Subscription | undefined;
 
-
   constructor (private dmService: DirectMessagesService, private authService: AuthService, private datePipe: DatePipe, private emojiService: EmojiService, private sanitizer: DomSanitizer,) {
     this.recipientUser$ = this.dmService.recipientUser$;
-    this.messages
   }
 
   get currentUserId(): string | undefined {
@@ -64,7 +61,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Abonniere das Observable für conversationId
     this.conversationIdSubscription = this.dmService.conversationId$.subscribe(id => {
-      if (id) { this.conversationId = id; }
+      if (id) {this.conversationId = id;}
     });
 
     this.userSubscription = this.dmService.currentUser$.subscribe(user => {
@@ -73,8 +70,6 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
     // Abonniere das Observable, um den Nachrichtenstatus zu überwachen
     this.hasMessages$ = this.dmService.hasMessages$;
-
-    this.recipientUser$ = this.dmService.recipientUser$;
   }
 
 
@@ -88,6 +83,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   }
 
   checkPdf(message: Message): boolean {
+    
     if (message.imagePath) {
         const cleanUrl = message.imagePath.split('?')[0];
         const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
@@ -143,26 +139,16 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
       this.editMessageClicked = true;
       this.editMessageText = message.message;
       this.selectedMessage = message;
-      setTimeout(() => {
-        if (this.editMessageText) {
-          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
-          // this.adjustWidthDirectly(this.descriptionTextarea.nativeElement);
-        }
-      }, 0);
     }
   }
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
-      if (!this.editMessageText.trim()) {
-        this.isMessageEmpty = true;
-        return;
-      }
       try {
         this.selectedMessage.message = this.editMessageText;
         await this.dmService.updateMessage(this.conversationId!, this.selectedMessage.id!, this.editMessageText);
         this.editMessageClicked = false;
-        this.isMessageEmpty = false;
+
         console.log('Message successfully saved.' + this.editMessageText);
         this.selectedMessage = null;
         this.editMessageText = '';
@@ -170,11 +156,6 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
         console.error('Error saving message:', e);
       }
     }
-  }
-
-  deleteMessage() {
-    let selectedMessageId = this.selectedMessage?.id
-    this.dmService.deleteMessage(this.conversationId!, selectedMessageId!)
   }
 
 
@@ -231,24 +212,6 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     return this.emojiService.getReactionText(reaction, this.currentUser);
   }
 
-  adjustHeight(event: any) {
-    event.target.style.height = 'auto';
-    event.target.style.height = event.target.scrollHeight + 'px';
-  }
-
-  adjustHeightDirectly(textarea: HTMLTextAreaElement) {
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    }
-  }
-
-  
-
-  
-  
-
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -258,7 +221,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
       this.emojiPickerMessageId = undefined;
     }
   }
-
+  
 
 
 

@@ -76,8 +76,6 @@ export class DmFooterComponent {
 
   }
 
-  
-
   sendMessage(): void {
     const textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
     const messageText = textarea.value;

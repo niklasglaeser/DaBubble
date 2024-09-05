@@ -21,6 +21,51 @@
   border-top: 1px solid rgba(173, 176, 217, 1);
 }
 
+.message-image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 144px;
+  max-height: 144px;
+  padding: 24px;
+  color: red;
+  border-radius: 10px;
+  background-color: var(--bgColor);
+
+  .pdf {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--purple1);
+    border-radius: 10px;
+    font-size: 64px;
+    transition: transform 0.3s ease;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+}
+
+  img {
+    max-width: 120px;
+    width: 100%;
+    max-height: 120px;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+  }
+
+}
+
 .message-date {
   position: relative;
   bottom: 20px;
