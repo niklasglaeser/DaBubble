@@ -156,7 +156,9 @@
 }
 
 .text {
-  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  width: fit-content;
   padding: 20px;
   background-color: #edeefe;
   border-radius: 30px;
@@ -366,8 +368,9 @@
 
 /*Marco CSS edit Message*/
 .edit-channel {
-
-  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
 
   > input,
   textarea {
