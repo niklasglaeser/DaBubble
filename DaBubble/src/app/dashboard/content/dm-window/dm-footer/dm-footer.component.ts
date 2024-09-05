@@ -30,7 +30,6 @@ export class DmFooterComponent {
   imgUploadService = inject(UploadService);
   currentUserId: string = '';
   recipientUser$: Observable<UserLogged | null>;
-  currentUserId: string = '';
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
 
@@ -74,6 +73,8 @@ export class DmFooterComponent {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+
+  }
 
   
 
