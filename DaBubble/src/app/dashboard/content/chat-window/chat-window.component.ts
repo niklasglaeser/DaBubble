@@ -13,6 +13,7 @@ import { MessageService } from '../../../services/message.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { CommonModule } from '@angular/common';
 import { ThreadService } from '../../../services/thread.service';
+import { DeviceService } from '../../../services/device.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -29,6 +30,7 @@ import { ThreadService } from '../../../services/thread.service';
 export class ChatWindowComponent implements OnInit {
   @Input() workspaceVisible: boolean = true;
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  showChatMessage: boolean = true;
 
   channelId: string = '';
   channel: Channel | null = null;
@@ -46,6 +48,8 @@ export class ChatWindowComponent implements OnInit {
   currentUser: UserLogged | null = null;
   userId: string | null = null;
 
+  deviceType: 'mobile' | 'tablet' | 'desktop' | undefined;
+
   unsubscribe: (() => void) | undefined;
 
   constructor(
@@ -54,7 +58,8 @@ export class ChatWindowComponent implements OnInit {
     private messageService: MessageService,
     private channelStateService: ChannelStateService,
     private authService: AuthService,
-    private threadService: ThreadService
+    private threadService: ThreadService,
+    private deviceService: DeviceService
   ) { }
 
   ngOnInit() {
@@ -70,6 +75,10 @@ export class ChatWindowComponent implements OnInit {
         }
       }
     });
+
+    this.deviceService.deviceType$.subscribe((type) => {
+      this.deviceType = type;
+    })
   }
 
   ngOnDestroy() {
@@ -156,5 +165,9 @@ export class ChatWindowComponent implements OnInit {
     } else {
       console.warn('Nachricht nicht gefunden: ', messageId);
     }
+  }
+
+  toggleChatMessage() {
+    this.showChatMessage = !this.showChatMessage;
   }
 }

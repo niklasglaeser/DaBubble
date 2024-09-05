@@ -9,7 +9,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class WorkspaceToggleComponent {
   hide: boolean = false;
-
   @Output() toggle = new EventEmitter<boolean>();
 
   toggleWorkspace() {

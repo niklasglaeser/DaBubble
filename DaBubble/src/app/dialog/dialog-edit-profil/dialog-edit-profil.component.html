@@ -11,7 +11,7 @@
     @if (!editNameClicked) {
     <div class="container-title">
       <div class="fs-18-400">
-        <span class="fs-32-700">{{data.user.username}}</span>
+        <span class=" username">{{data.user.username}}</span>
         <span class="edit fs-18" *ngIf="(currentUserId$ | async) === data.user.uid"
           (click)="editProfilBtn($event)">{{editName}}</span>
       </div>
