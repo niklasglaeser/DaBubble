@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLogged } from '../../models/user-logged.model';
@@ -39,6 +39,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('arrowButton') arrowButton!: ElementRef;
   private subscription: Subscription = new Subscription();
+  @Output() goMobileMenu = new EventEmitter<void>();
 
   dialog = inject(MatDialog);
   userLogged = inject(UserLoggedService);

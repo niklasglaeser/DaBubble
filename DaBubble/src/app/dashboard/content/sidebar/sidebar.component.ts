@@ -157,6 +157,17 @@ export class SidebarComponent implements OnInit {
         }
       }
     }
+
+    if (window.innerWidth > 790 && this.isInitialized) {
+      if (window.innerWidth > 790) {
+        if (this.dmWindow && this.chatWindow) {
+          this.dmWindow.style.display = 'none';
+          this.chatWindow.style.display = 'flex';
+          this.sidebar.style.display = 'flex';
+          this.threadWindow.style.display = 'none';
+        }
+      }
+    }
   }
 
   openDirectmessage(userId: string) {
@@ -183,7 +194,7 @@ export class SidebarComponent implements OnInit {
       if (this.dmWindow && this.chatWindow) {
         this.dmWindow.style.display = 'flex';
         this.chatWindow.style.display = 'none';
-        this.sidebar.style.display = 'none';
+        this.sidebar.style.display = 'flex';
         this.threadWindow.style.display = 'none';
       }
     }

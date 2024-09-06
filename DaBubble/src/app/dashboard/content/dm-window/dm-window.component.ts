@@ -27,7 +27,7 @@ export class DmWindowComponent {
 
     setTimeout(() => {
       this.scrollToBottom();
-    }, 100);
+    }, 500);
   }
 
   private isUserAtBottom(): boolean {

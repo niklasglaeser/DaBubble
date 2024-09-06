@@ -5,9 +5,6 @@
   &.no-sidebar {
     margin-left: 0;
   }
-  @media (max-width: 790px) {
-   display: none;
-  }
   // padding-right: 30px;
   // padding-left: 30px;
 }
@@ -46,6 +43,7 @@
     width: 100%;
     max-width: 100%;
   }
+
 }
 
 .sidebar-window {

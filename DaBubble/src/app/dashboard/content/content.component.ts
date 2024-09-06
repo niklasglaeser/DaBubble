@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, AfterContentChecked, ChangeDetectorRef, ViewContainerRef, ViewChild, ComponentRef } from '@angular/core';
+import { Component, HostListener, OnInit, AfterContentChecked, ChangeDetectorRef, ViewContainerRef, ViewChild, ComponentRef, Output, EventEmitter } from '@angular/core';
 import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { ThreadWindowComponent } from './thread-window/thread-window.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -43,18 +43,15 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
     if (screenWidth <= 790) {
       this.isMobile = true;
-      this.sidebarOpen = true;
       this.workspaceVisible = false;
+
     } else {
       this.isMobile = false;
-      this.sidebarOpen = false;
-      if (screenWidth > 790 && screenWidth <= 1200) {
-        this.workspaceVisible = false;
-      } else if (screenWidth > 1200) {
-        this.workspaceVisible = true;
-      }
+      this.workspaceVisible = true;
+      
     }
   }
+
   openChatAsDialog() {
     if (this.isMobile && !this.chatDialogRef) {
       this.chatDialogRef = this.dialog.open(ChatWindowComponent, {
@@ -89,6 +86,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   toggleWorkspace() {
     this.workspaceVisible = !this.workspaceVisible;
+    
   }
 
 
