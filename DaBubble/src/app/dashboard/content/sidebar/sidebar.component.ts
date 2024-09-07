@@ -146,34 +146,32 @@ export class SidebarComponent implements OnInit {
     this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
     this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+    this.chatWindow = document.querySelector('.chat-window') as HTMLElement;
 
-    if (window.innerWidth < 790 && this.isInitialized) {
-      if (window.innerWidth < 790) {
-        if (this.dmWindow && this.chatWindow) {
-          this.dmWindow.style.display = 'none';
-          this.chatWindow.style.display = 'flex';
-          this.sidebar.style.display = 'none';
-          this.threadWindow.style.display = 'none';
-        }
-      }
-    }
+    if (window.innerWidth < 790) {
 
-    if (window.innerWidth > 790 && this.isInitialized) {
-      if (window.innerWidth > 790) {
-        if (this.dmWindow && this.chatWindow) {
-          this.dmWindow.style.display = 'none';
-          this.chatWindow.style.display = 'flex';
-          this.sidebar.style.display = 'flex';
-          this.threadWindow.style.display = 'none';
-        }
-      }
+      this.sidebar.classList.remove('flex');
+      this.sidebar.classList.add('none');
+      this.chatWindow.classList.remove('none');
+      this.chatWindow.classList.add('flex');
+    } else {
+
+      this.chatWindow.classList.remove('none');
+      this.dmWindow.classList.add('none');
     }
   }
 
+
+
   openDirectmessage(userId: string) {
+    console.log('direct');
+
     let recipientId = userId;
     let currentUser = this.authService.currentUserSig();
     let currentUserId = currentUser!.userId;
+    this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+    this.dmWindow = document.querySelector('.dm-window') as HTMLElement;
+    this.chatWindow = document.querySelector('.chat-window') as HTMLElement;
 
     this.dmService.setConversationMembers(currentUserId, recipientId).then(() => {
       // Notify the DM window that the conversation is ready to be loaded
@@ -182,24 +180,15 @@ export class SidebarComponent implements OnInit {
     });
 
     if (window.innerWidth < 790) {
-      if (this.dmWindow && this.chatWindow) {
-        this.dmWindow.style.display = 'flex';
-        this.chatWindow.style.display = 'none';
-        this.sidebar.style.display = 'none';
-        this.threadWindow.style.display = 'none';
-      }
+
+      this.sidebar.classList.remove('flex');
+      this.sidebar.classList.add('none');
+      this.dmWindow.classList.remove('none');
+      this.dmWindow.classList.add('flex');
+    } else {
+      this.chatWindow.classList.add('none');
+      this.dmWindow.classList.add('flex');
     }
-
-    if (window.innerWidth > 790) {
-      if (this.dmWindow && this.chatWindow) {
-        this.dmWindow.style.display = 'flex';
-        this.chatWindow.style.display = 'none';
-        this.sidebar.style.display = 'flex';
-        this.threadWindow.style.display = 'none';
-      }
-    }
-
-
     this.selectedChannelId = null;
     this.selectedUserId = userId;
     this.isDirectChat = true;

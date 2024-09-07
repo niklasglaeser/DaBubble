@@ -15,9 +15,9 @@
     width: 100%;
     padding: 16px 16px;
     border-radius: unset;
-    align-items: center;
   }
 }
+
 app-search {
   flex-grow: 1; 
   max-width: 900px;
@@ -294,4 +294,3 @@ app-search {
     transform: rotate(-90deg);
     transition: transform 0.2s ease-in-out;
   }
-

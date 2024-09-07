@@ -36,7 +36,6 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   ngAfterContentChecked() {
     this.cdref.detectChanges();
   }
-
   checkWindowSize() {
     let screenWidth = window.innerWidth;
     this.showWorkspaceToggle = screenWidth > 790 && screenWidth <= 1920;
@@ -44,58 +43,26 @@ export class ContentComponent implements OnInit, AfterContentChecked {
     if (screenWidth <= 790) {
       this.isMobile = true;
       this.workspaceVisible = false;
+      let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+      let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+      if (dmWindow && dmWindow.classList.contains('none')) {
+        dmWindow.classList.remove('none');
+      }
+      if (chatWindow && chatWindow.classList.contains('none')) {
+        chatWindow.classList.remove('none');
+      }
 
     } else {
       this.isMobile = false;
       this.workspaceVisible = true;
-      
-    }
-  }
-
-  openChatAsDialog() {
-    if (this.isMobile && !this.chatDialogRef) {
-      this.chatDialogRef = this.dialog.open(ChatWindowComponent, {
-        width: '100%',
-        height: '100%',
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        panelClass: 'mobile-chat-dialog'
-      });
-
-      this.chatDialogRef.afterClosed().subscribe(() => {
-        this.chatDialogRef = null;
-      });
-    }
-  }
-
-  openCustomDialog() {
-    if (this.isMobile && !this.dialogRef) {
-      this.dialogRef = this.dialogContainer.createComponent(CustomDialogComponent);
-      this.dialogRef.instance.closed.subscribe(() => this.closeCustomDialog());
-      const chatWindowRef = this.dialogRef.instance.dialogContainer.createComponent(ChatWindowComponent);
-
-    }
-  }
-
-  closeCustomDialog() {
-    if (this.dialogRef) {
-      this.dialogRef.destroy();
-      this.dialogRef = null;
     }
   }
 
   toggleWorkspace() {
     this.workspaceVisible = !this.workspaceVisible;
-    
+
   }
 
-
-  closeSidebarOnMobile() {
-    if (this.isMobile) {
-      this.sidebarOpen = false;
-      this.openChatAsDialog();
-    }
-  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {

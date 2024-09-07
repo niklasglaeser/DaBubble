@@ -104,9 +104,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     let chatWindow = document.querySelector('.chat-window') as HTMLElement;
     let threadWindow = document.querySelector('.thread-window') as HTMLElement;
     let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-    dmWindow.style.display = 'none';
-    chatWindow.style.display = 'none';
-    sidebar.style.display = 'flex';
-    threadWindow.style.display = 'none';
+    sidebar.classList.remove('none');
+    chatWindow.classList.add('none');
+    dmWindow.classList.add('none');
+    threadWindow.classList.add('none');
   }
 }
