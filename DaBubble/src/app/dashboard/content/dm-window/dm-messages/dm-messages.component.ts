@@ -35,6 +35,7 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   currentUser: UserLogged | null = null;
 
   @ViewChild('tooltip') tooltip!: MatTooltip;
+  @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
 
   dialog = inject(MatDialog);
 
@@ -139,6 +140,11 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
       this.editMessageClicked = true;
       this.editMessageText = message.message;
       this.selectedMessage = message;
+      setTimeout(() => {
+        if (this.editMessageText) {
+          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
+        }
+      }, 0);
     }
   }
 
@@ -148,14 +154,17 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
         this.selectedMessage.message = this.editMessageText;
         await this.dmService.updateMessage(this.conversationId!, this.selectedMessage.id!, this.editMessageText);
         this.editMessageClicked = false;
-
-        console.log('Message successfully saved.' + this.editMessageText);
         this.selectedMessage = null;
         this.editMessageText = '';
       } catch (e) {
         console.error('Error saving message:', e);
       }
     }
+  }
+
+  deleteMessage() {
+    let selectedMessageId = this.selectedMessage?.id
+    this.dmService.deleteMessage(this.conversationId!, selectedMessageId!)
   }
 
 
@@ -210,6 +219,18 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
   getReactionText(reaction: Reaction): string {
     return this.emojiService.getReactionText(reaction, this.currentUser);
+  }
+
+  adjustHeight(event: any) {
+    event.target.style.height = 'auto';
+    event.target.style.height = event.target.scrollHeight + 'px';
+  }
+
+  adjustHeightDirectly(textarea: HTMLTextAreaElement) {
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
   }
 
   @HostListener('document:click', ['$event'])

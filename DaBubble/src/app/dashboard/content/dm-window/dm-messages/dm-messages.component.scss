@@ -412,10 +412,7 @@
 }
 
 /*Marco CSS edit Message*/
-.edit-channel {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
+.edit-dm {
 
   > input,
   textarea {
@@ -435,7 +432,7 @@
   }
 }
 
-.edit-buttons {
+.edit-dm-btn{
   display: flex;
   justify-content: center;
   width: 100%;

@@ -4,8 +4,8 @@
           <div class="message-date">{{ formatDate(message.created_at) }}</div>
           <div class="message-section">
               <div class="reaction-bar">
-                <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')"></div>
-                <div class="applaud-reaction" (click)="toggleReaction(message, '🙌🏻')"></div>
+                <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')">✅</div>
+                <div class="applaud-reaction" (click)="toggleReaction(message, '🙌🏻')">🙌🏻</div>
                 <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
                 <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction" (click)="editMessage(message)"></div>
               </div>
@@ -16,9 +16,7 @@
                           <div class="author-name fs-18-700">{{message.senderName}} </div>
                           <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                       </div>
-                      
-                      <!-- <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate" class="text fs-18" [innerHTML]="formatMessage(message.message)"> -->
-                      <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate" class="text fs-18" >
+                      <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate" class="text fs-18" [innerHTML]="formatMessage(message.message)">
 
                         <div *ngIf="message.imagePath && !checkPdf(message)" class="message-image" (click)="openImg(message)">
                             <img [src]="message.imagePath" alt="Message Image">
@@ -28,16 +26,18 @@
                                 <mat-icon class="pdf">picture_as_pdf</mat-icon>
                             </a>
                         </div>
-
                         {{message.message}}
                       </div>
                         <ng-template #editTemplate class="edit-template">
-                            <div class="edit-channel">
-                                <textarea class="text fs-18"[(ngModel)]="editMessageText"></textarea>
+                            <div class="edit-dm-btn">
+                                <span class="edit" (click)="cancelEdit()">Abbrechen</span>
+                                <span class="edit" (click)="saveEditedMessage()">Speichern</span>
+                                <span class="edit" (click)="deleteMessage()">Nachricht löschen</span>
+                            </div>
+                            <div class="edit-dm">
+                                <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText" type="text" (input)="adjustHeight($event)"></textarea>
                             </div>
                             <div *ngIf="isMessageEmpty" class="error-message">Die Nachricht darf nicht leer sein.</div>
-                            <span class="edit" (click)="saveEditedMessage()">Speichern</span>
-                            <span class="edit" (click)="cancelEdit()">Abbrechen</span>
                         </ng-template>
                       <div class="open-thread">
                         <div class="reactions">

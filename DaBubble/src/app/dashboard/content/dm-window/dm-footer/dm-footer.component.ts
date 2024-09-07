@@ -94,9 +94,6 @@ export class DmFooterComponent {
         textarea.value = '';
         this.chatImg = null
       });
-
-      console.log('send');
-    
       this.messageSent.emit();
     }
   }

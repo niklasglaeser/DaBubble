@@ -168,7 +168,6 @@ export class DirectMessagesService implements OnDestroy {
     try {
       const messageDocRef = this.getSingleMessage(conversationId, messageId);
       await deleteDoc(messageDocRef);
-      console.log(`Message ${messageId} from conversation ${conversationId} deleted successfully`);
     } catch (e) {
       console.error('Error deleting message:', e);
     }
