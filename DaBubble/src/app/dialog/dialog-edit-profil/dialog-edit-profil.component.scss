@@ -48,20 +48,23 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  height: 200px;
 
   .img {
     position: relative;
     display: flex;
     justify-content: center;
     max-width: 200px;
+    max-height: 200px;
     width: 100%;
+    height: 100%;
 
-    > img {
+     img {
       max-width: 200px;
       max-height: 200px;
       width: 100%;
       height: 100%;
-      border-radius: 100%;
+      border-radius: 50%;
       object-fit: cover;
       
     }

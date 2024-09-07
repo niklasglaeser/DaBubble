@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Inject } from '@angular/core';
+import { Component, HostListener, inject, Inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/lp-services/auth.service';
@@ -8,6 +8,7 @@ import { UserLoggedService } from '../../../services/lp-services/user-logged.ser
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserLogged } from '../../../models/user-logged.model';
 import { user, User } from '@angular/fire/auth';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-avatar',
@@ -27,13 +28,24 @@ export class AvatarProfileComponent {
   dialogRef = inject(MatDialogRef)
   router = inject(Router)
   currentUser = this.authService.currentUserSig();
+  mobileVersion = new BehaviorSubject<boolean>(window.innerWidth <= 650);
 
   avatars: boolean[] = [false, false, false, false, false, false];
 
   constructor(private imgUploadService: UploadService,) {
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkMobileVersion();
+  }
+
+  checkMobileVersion() {
+    this.mobileVersion.next(window.innerWidth <= 650);
+  }
+
   ngOnInit(): void {
+    this.checkMobileVersion()
     this.subscribeToUserData()
 
   }
@@ -93,7 +105,6 @@ export class AvatarProfileComponent {
       console.error('No profile image selected or user not found.');
     }
   }
-
 
 
 }

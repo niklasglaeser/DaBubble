@@ -170,36 +170,42 @@ input:focus ~ mat-icon{
     }
 }
 
-.google-btn{
+.google-btn {
     width: 100%;
-    button{
+    
+    button {
         display: flex;
         justify-content: center;
         align-items: center;
-        max-width: (500px);
+        max-width: 500px; 
         width: 100%;
-        height: (60px);
+        height: 60px; 
         padding: 18px 32px;
         border-radius: 100px;
         outline: unset;
         border: unset;
         background-color: var(--bgColor);
         color: var(--purple1);
-        span{
+        transition: transform 0.3s ease-in-out; 
+        
+        span {
             margin-left: 10px;
         }
-        &:hover{
+
+        &:hover {
             border: 1px solid var(--purple1);
-            span,img{
-                scale: 1.05;
+
+            span, img {
+                transform: scale(1.05);
             }
         }
+
         @media (max-width: 400px) {
             padding: 18px 26px;
         }
     }
-    
 }
+
 
 .login-btn-box{
     display: flex;
