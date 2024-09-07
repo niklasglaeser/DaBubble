@@ -25,21 +25,34 @@
     position: absolute;
     top: 75px;
     left: 75px;
+    cursor: pointer;
     .logo {
         width: 242px;
         height: 70px;
     }
+    transition: transform 0.3s ease-in-out;
+    
+    &:hover {
+        transform: scale(1.1); 
+    }
+
     @media (max-width: 650px) {
         position: relative;
+        opacity: 0;
         top: unset;
         left: unset;
         margin-bottom: 30px;
+        
         .logo {
             width: 204px;
             height: 56px;
         }
+
+        animation: moveTop 0.4s ease-in 2.3s forwards; 
     }
+
 }
+
 
 .create-acc{
     position: absolute;
@@ -127,6 +140,14 @@ a{
         animation: textAnimation 0.5s ease-in 1s forwards,
                     changeFontColor 0.4s ease-in 1.8s forwards;
     }
+    @media (max-width: 650px) {
+        span{
+            display: none;
+        }
+        top: calc(50% - 50px );
+        left: calc(50% - 50px);
+        animation:  showLogo 0.5s ease-in forwards, 
+    }
 }
 
 .box{
@@ -139,6 +160,13 @@ a{
         height: 184px;
         width: auto;
         animation: changeLogoSize 0.4s ease-in 1.8s forwards;
+        @media (max-width: 650px) {
+            animation: unset;
+            height: 70px;
+        }
+    }
+    @media (max-width: 650px) {
+        animation:unset; 
     }
 }
 
@@ -193,99 +221,117 @@ app-pop-up{
     height: 100%;
 }
 
-@keyframes showLogo{
-    0% {
-        opacity: 0;
-    }
-    50%{
-        opacity: 0.2;
-    }
-    100%{
-        opacity: 1;
-    }
-}
 
-@keyframes moveLeft{
-    0% {
-        top: calc(50% - 92px );
-        left: calc(50% - 92px);
-    }
-    50% {
-        top: calc(50% - 92px );
-        left: calc(50% - 92px);
-    }
-    100%{
-        top: calc(50% - 92px );
-        left: calc(50% - (255px));
-    }
-}
 
-@keyframes textAnimation {
-    0% {
-        transform: translateX(0);
-        opacity: 0;
+    @keyframes showLogo{
+        0% {
+            opacity: 0;
+        }
+        50%{
+            opacity: 0.2;
+        }
+        100%{
+            opacity: 1;
+        }
     }
-    65% {
-        
-        opacity: 0;
+    
+    @keyframes moveLeft{
+        0% {
+            top: calc(50% - 92px );
+            left: calc(50% - 92px);
+        }
+        50% {
+            top: calc(50% - 92px );
+            left: calc(50% - 92px);
+        }
+        100%{
+            top: calc(50% - 92px );
+            left: calc(50% - (255px));
+        }
     }
-    100% {
-        transform: translateX(100%);
-        opacity: 1;
+    
+    @keyframes textAnimation {
+        0% {
+            transform: translateX(0);
+            opacity: 0;
+        }
+        65% {
+            
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(100%);
+            opacity: 1;
+        }
     }
-}
+   
+    @keyframes moveTopLeft {
+        0%{
+            top: calc(50% - 92px );
+            left: calc(50% - (255px));
+        }
+        100%{
+            top:75px;
+            left:75px;
+            color: black;
+        }
+    }
+    
+    @keyframes changeFontColor{
+        0%{
+            color: white;
+        }
+        100%{
+            color: black;
+            font-size: 34px;
+            transform: translateX(78.5%);
+        }
+    }
+    
+    @keyframes changeLogoSize{
+        0%{
+            height: 184px;
+        }
+        100%{
+            height: 70px;
+        }
+    }
+    
+    @keyframes rmPadding{
+        0%{
+            padding: 24px;
+        }
+        100%{
+            padding: 0px;
+        }
+    }
+    
+    @keyframes hideIntro {
+        0% {
+            opacity: 1;
+        }
+        99% {
+            opacity: 0;
+            display: flex;  
+        }
+        100% {
+            display: none;
+        }
+    }
 
-@keyframes moveTopLeft {
-    0%{
-        top: calc(50% - 92px );
-        left: calc(50% - (255px));
+    @keyframes moveTop {
+        0%{
+            opacity: 0;
+            top: calc(50% - 50px );
+        }
+        50%{
+            opacity: 0;
+        }
+        100%{
+            opacity: 1;
+            top: 0%;
+        }
     }
-    100%{
-        top:75px;
-        left:75px;
-        color: black;
-    }
-}
 
-@keyframes changeFontColor{
-    0%{
-        color: white;
-    }
-    100%{
-        color: black;
-        font-size: 34px;
-        transform: translateX(78.5%);
-    }
-}
 
-@keyframes changeLogoSize{
-    0%{
-        height: 184px;
-    }
-    100%{
-        height: 70px;
-    }
-}
-
-@keyframes rmPadding{
-    0%{
-        padding: 24px;
-    }
-    100%{
-        padding: 0px;
-    }
-}
-
-@keyframes hideIntro {
-    0% {
-        opacity: 1;
-    }
-    99% {
-        opacity: 0;
-        display: flex;  
-    }
-    100% {
-        display: none;
-    }
-}
 

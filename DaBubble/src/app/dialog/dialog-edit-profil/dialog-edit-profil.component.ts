@@ -135,7 +135,10 @@ export class DialogEditProfilComponent implements OnInit {
 
   openProfilAvatar() {
     if (this.edit) {
-      const dialogRef = this.dialog.open(AvatarProfileComponent, {});
+      const dialogRef = this.dialog.open(AvatarProfileComponent, {
+        width: '100vw', // Setze die Breite auf 80% des Viewports
+      maxWidth: '550px', // Maximalbreite von 600px
+      });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
@@ -144,6 +147,6 @@ export class DialogEditProfilComponent implements OnInit {
         }
       });
     }
+    this.close()
   }
-
 }
