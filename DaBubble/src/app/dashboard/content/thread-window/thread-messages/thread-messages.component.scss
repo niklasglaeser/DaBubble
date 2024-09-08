@@ -171,11 +171,15 @@
 }
 
 .text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   width: 95%;
   padding: 20px;
   background-color: #edeefe;
   border-radius: 30px;
   border-top-left-radius: 0px;
+  gap: 20px;
 }
 
 .author {
