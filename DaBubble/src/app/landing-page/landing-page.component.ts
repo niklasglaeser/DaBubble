@@ -98,7 +98,7 @@ export class LandingPageComponent implements OnInit {
       this.router.navigate(['']);
     }
   }
-  
+ 
    resetAllStates(): void {
     this.$login = false;
     this.$signUp = false;
@@ -149,5 +149,10 @@ export class LandingPageComponent implements OnInit {
     }
   }
 
-
+  toLandingPage() {
+    this.resetAllStates();
+    this.$login = true; 
+    this.router.navigate(['']); 
+  }
+  
 }
