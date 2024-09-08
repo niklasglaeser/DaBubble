@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DmHeaderComponent } from './dm-header/dm-header.component';
 import { DmMessagesComponent } from './dm-messages/dm-messages.component';
 import { DmFooterComponent } from './dm-footer/dm-footer.component';
@@ -14,13 +14,19 @@ import { Message } from '../../../models/message.model';
   templateUrl: './dm-window.component.html',
   styleUrl: './dm-window.component.scss'
 })
-export class DmWindowComponent {
+export class DmWindowComponent implements OnInit {
   messages$: Observable<Message[]> | null = null;
   private previousMessageCount: number = 0;
 
   @ViewChild('dmMessages') dmMessages!: ElementRef;
 
   constructor(private dmService: DirectMessagesService) { }
+
+  ngOnInit(): void {
+    this.dmService.loadMessages$.subscribe(() => {
+      this.loadMessagesAfterSidebarClick();
+    });
+  }
 
   loadMessagesAfterSidebarClick(): void {
     this.messages$ = this.dmService.loadConversation();

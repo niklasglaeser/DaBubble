@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
@@ -58,7 +58,7 @@ export class SidebarComponent implements OnInit {
   threadWindow = document.querySelector('.thread-window') as HTMLElement;
   sidebar = document.querySelector('.sidebar-window') as HTMLElement;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService) {
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef) {
 
   }
 
@@ -152,31 +152,27 @@ export class SidebarComponent implements OnInit {
   }
 
   openDirectmessage(userId: string) {
-
     let recipientId = userId;
     let currentUser = this.authService.currentUserSig();
     let currentUserId = currentUser!.userId;
-    console.log('open recipientId ' + recipientId);
-    console.log('open currentUser' + currentUser);
-    console.log('open currentUserId ' + currentUserId);
 
-    // this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-    // this.dmWindow = document.querySelector('.dm-window') as HTMLElement;
-    // this.chatWindow = document.querySelector('.chat-window') as HTMLElement;
+    this.directMessageOpened.emit();
 
     this.dmService.setConversationMembers(currentUserId, recipientId)
       .then(() => {
         this.conversationSet.emit();
         this.dmService.setRecipientId(recipientId);
-        this.directMessageOpened.emit();
+        this.dmService.triggerLoadMessages();
       })
       .catch(error => {
         console.error('Error setting conversation members:', error);
       });
+
     this.selectedChannelId = null;
     this.selectedUserId = userId;
     this.isDirectChat = true;
   }
+
 
   openSearchBar() {
     this.channelStateService.openSearchBar();

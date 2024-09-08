@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, onSnapshot, orderBy, query, setDoc, updateDoc} from '@angular/fire/firestore';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, onSnapshot, orderBy, query, setDoc, updateDoc } from '@angular/fire/firestore';
+import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
 import { Message } from '../models/message.model';
 import { AuthService } from './lp-services/auth.service';
 import { UserLogged } from '../models/user-logged.model';
 
-@Injectable({providedIn: 'root',})
+@Injectable({ providedIn: 'root', })
 export class DirectMessagesService implements OnDestroy {
 
   currentUserId!: string;
@@ -29,6 +29,9 @@ export class DirectMessagesService implements OnDestroy {
 
   private conversationIdSource = new BehaviorSubject<string | null>(null);
   conversationId$ = this.conversationIdSource.asObservable();
+
+  private loadMessagesSource = new Subject<void>();
+  loadMessages$ = this.loadMessagesSource.asObservable();
 
   private unsubscribeRecipientSnapshot: (() => void) | null = null;
   private unsubscribeCurrentUserSnapshot: (() => void) | null = null;
@@ -97,10 +100,10 @@ export class DirectMessagesService implements OnDestroy {
 
   async createConversation() {
     this.conversationId = this.currentUserId < this.recipientId ? `${this.currentUserId}_${this.recipientId}` : `${this.recipientId}_${this.currentUserId}`;
-      
+
     const conversationRef = doc(this.firestore, 'directChats', this.conversationId);
     const conversationDoc = await getDoc(conversationRef);
-  
+
     if (!conversationDoc.exists()) {
       await setDoc(conversationRef, {
         members: [this.currentUserId, this.recipientId],
@@ -118,7 +121,7 @@ export class DirectMessagesService implements OnDestroy {
   loadConversation(): Observable<Message[]> {
     const messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
     const messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
-  
+
     return combineLatest([
       collectionData(messagesQuery, { idField: 'id' }) as Observable<Message[]>,
       this.currentUser$,
@@ -128,7 +131,7 @@ export class DirectMessagesService implements OnDestroy {
         // Check if messages exist
         const hasMessages = messages.length > 0;
         this.hasMessagesSource.next(hasMessages);
-  
+
         // Map the messages to include user data
         return messages.map(message => {
           if (message.senderId === this.currentUserId) {
@@ -143,10 +146,10 @@ export class DirectMessagesService implements OnDestroy {
       })
     );
   }
-  
+
   async addMessage(message: Message) {
     const messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
-    
+
     await addDoc(messagesRef, {
       ...message,
       created_at: Date.now(),
@@ -155,10 +158,10 @@ export class DirectMessagesService implements OnDestroy {
     });
   }
 
-  async updateMessage(conversationId: string,messageId: string,newMessageText: string) {
+  async updateMessage(conversationId: string, messageId: string, newMessageText: string) {
     try {
       const messageDocRef = this.getSingleMessage(conversationId, messageId)
-      await updateDoc(messageDocRef, {message: newMessageText,updated_at: Date.now(),})
+      await updateDoc(messageDocRef, { message: newMessageText, updated_at: Date.now(), })
     } catch (e) {
       console.error('Error updating document:', e)
     }
@@ -172,7 +175,7 @@ export class DirectMessagesService implements OnDestroy {
       console.error('Error deleting message:', e);
     }
   }
-  
+
 
   getSingleMessage(conversationId: string, messageId: string) {
     return doc(this.firestore, `directChats/${conversationId}/messages/${messageId}`)
@@ -182,30 +185,33 @@ export class DirectMessagesService implements OnDestroy {
     this.unsubscribeListener(this.unsubscribeConversationsSnapshot);
     const conversationsRef = collection(this.firestore, 'directChats');
     const conversationsQuery = query(conversationsRef, orderBy('created_at', 'desc'));
-  
-    this.unsubscribeConversationsSnapshot = onSnapshot(conversationsQuery, (querySnapshot) => {const userIds: string[] = [];
-      querySnapshot.forEach(docSnapshot => {const members = docSnapshot.data()['members'] as string[];
+
+    this.unsubscribeConversationsSnapshot = onSnapshot(conversationsQuery, (querySnapshot) => {
+      const userIds: string[] = [];
+      querySnapshot.forEach(docSnapshot => {
+        const members = docSnapshot.data()['members'] as string[];
         if (members.includes(currentUserId)) {
           const otherUserId = members.find(id => id !== currentUserId);
-          if (otherUserId) {userIds.push(otherUserId);}
+          if (otherUserId) { userIds.push(otherUserId); }
         }
       });
       this.setupUsersListeners(userIds);
     });
   }
-  
+
   private setupUsersListeners(userIds: string[]) {
     this.unsubscribeUserListeners();
-  
+
     const users: UserLogged[] = [];
     const unsubscribes: (() => void)[] = [];
-  
-    userIds.forEach(userId => {const userDocRef = doc(this.firestore, `Users/${userId}`);
+
+    userIds.forEach(userId => {
+      const userDocRef = doc(this.firestore, `Users/${userId}`);
       const unsubscribe = onSnapshot(userDocRef, (userDoc) => {
         if (userDoc.exists()) {
           const user = { uid: userDoc.id, ...userDoc.data() } as UserLogged;
           const existingIndex = users.findIndex(u => u.uid === user.uid);
-          if (existingIndex >= 0) {users[existingIndex] = user;} else {users.push(user);}
+          if (existingIndex >= 0) { users[existingIndex] = user; } else { users.push(user); }
           this.conversationsSource.next([...users]);
         }
       });
@@ -213,14 +219,18 @@ export class DirectMessagesService implements OnDestroy {
     });
     this.currentUsersUnsubscribes = unsubscribes;
   }
-  
+
   private currentUsersUnsubscribes: (() => void)[] = [];
-  
+
   private unsubscribeUserListeners() {
     if (this.currentUsersUnsubscribes.length) {
       this.currentUsersUnsubscribes.forEach(unsubscribe => unsubscribe());
       this.currentUsersUnsubscribes = [];
     }
   }
-  
+
+  triggerLoadMessages() {
+    this.loadMessagesSource.next();
+  }
+
 }

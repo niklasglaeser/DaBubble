@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +15,11 @@ export class GlobalService {
   isDirectChat$ = this.isDirectChatSubject.asObservable();
   isThread$ = this.isThreadSubject.asObservable();
 
+
   toggleSidebar() {
     const currentStatus = this.showSidebarSubject.getValue();
     this.showSidebarSubject.next(!currentStatus);
   }
-
 
   isChannel(status: boolean) {
     this.isChannelSubject.next(status);
