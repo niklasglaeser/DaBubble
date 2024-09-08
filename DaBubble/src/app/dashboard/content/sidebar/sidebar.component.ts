@@ -74,12 +74,14 @@ export class SidebarComponent implements OnInit {
     this.channelService.channels$.subscribe((channels) => {
       this.channels = channels;
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
+      if (!this.isMobile) {
 
-      // if (this.channels.length > 0) {
-      //   this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
-      //   this.openChannel(this.fixedChannelId);
-      //   this.isInitialized = true;
-      // }
+        if (this.channels.length > 0) {
+          this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
+          this.openChannel(this.fixedChannelId);
+          this.isInitialized = true;
+        }
+      }
     });
 
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
@@ -98,13 +100,12 @@ export class SidebarComponent implements OnInit {
     });
 
     this.loadDmConvos();
-
-    console.log('sidebarstatus device ' + this.isMobile);
-
   }
 
   loadDmConvos() {
     const currentUserId = this.currentUserId;
+    console.log('loadDMConvos:', currentUserId);
+
     if (currentUserId) {
       this.dmService.setCurrentUserId(currentUserId);
 
@@ -128,7 +129,6 @@ export class SidebarComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => { });
   }
 
-  /*TESTING*/
   openEditDialog(channelId: string) {
     const dialogRef = this.dialog.open(DialogChannelEditComponent, {
       data: { channelId: channelId }
@@ -142,45 +142,41 @@ export class SidebarComponent implements OnInit {
       }
     });
   }
-  /*TESTING*/
 
   openChannel(channelId: string) {
     this.selectedChannelId = channelId;
     this.selectedUserId = null;
     this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
-
-    if (this.isMobile) {
-      this.channelOpened.emit();
-    }
+    this.channelOpened.emit();
   }
-
-
 
   openDirectmessage(userId: string) {
 
     let recipientId = userId;
     let currentUser = this.authService.currentUserSig();
     let currentUserId = currentUser!.userId;
+    console.log('open recipientId ' + recipientId);
+    console.log('open currentUser' + currentUser);
+    console.log('open currentUserId ' + currentUserId);
+
     // this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
     // this.dmWindow = document.querySelector('.dm-window') as HTMLElement;
     // this.chatWindow = document.querySelector('.chat-window') as HTMLElement;
 
-    this.dmService.setConversationMembers(currentUserId, recipientId).then(() => {
-      // Notify the DM window that the conversation is ready to be loaded
-      // this.conversationSet.emit();
-      this.dmService.setRecipientId(recipientId);
-    });
-
+    this.dmService.setConversationMembers(currentUserId, recipientId)
+      .then(() => {
+        this.conversationSet.emit();
+        this.dmService.setRecipientId(recipientId);
+        this.directMessageOpened.emit();
+      })
+      .catch(error => {
+        console.error('Error setting conversation members:', error);
+      });
     this.selectedChannelId = null;
     this.selectedUserId = userId;
     this.isDirectChat = true;
-
-    if (this.isMobile) {
-      this.directMessageOpened.emit();  // Event wird hier ausgelöst
-    }
   }
-
 
   openSearchBar() {
     this.channelStateService.openSearchBar();

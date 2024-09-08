@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { ChatMessagesComponent } from './chat-messages/chat-messages.component';
 import { ChatFooterComponent } from './chat-footer/chat-footer.component';
@@ -29,6 +29,7 @@ import { DeviceService } from '../../../services/device.service';
 })
 export class ChatWindowComponent implements OnInit {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  @Output() threadOpened = new EventEmitter<void>();
   showChatMessage: boolean = true;
 
   channelId: string = '';
@@ -164,6 +165,11 @@ export class ChatWindowComponent implements OnInit {
     } else {
       console.warn('Nachricht nicht gefunden: ', messageId);
     }
+  }
+
+  openThread() {
+    this.threadOpened.emit();
+    console.log('Thread from cht-window');
   }
 
   toggleChatMessage() {

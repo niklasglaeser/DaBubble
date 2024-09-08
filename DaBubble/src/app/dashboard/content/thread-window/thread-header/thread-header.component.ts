@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { GlobalService } from '../../../../services/global.service';
 
 @Component({
   selector: 'app-thread-header',
@@ -9,9 +10,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ThreadHeaderComponent {
   @Input() channelName: string | undefined = '';
-  @Output() closeThreadEvent = new EventEmitter<void>();
 
+  constructor(private globalService: GlobalService) { }
   onCloseThread() {
-    this.closeThreadEvent.emit(); // Sende das Ereignis an die Parent-Komponente
+    this.globalService.isThread(false);
   }
 }

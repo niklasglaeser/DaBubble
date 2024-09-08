@@ -100,17 +100,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.dialog.open(DialogEditProfilComponent, {});
   }
 
-  // Methode zum Umschalten der Sidebar
   toggleSidebar() {
-    const isChannelActive = this.sidebarService.getIsChannelStatus();
-
-    // Toggle Sidebar-Status
+    //const isChannelActive = this.sidebarService.getChannelStatus();
     this.sidebarService.toggleSidebar();
 
     // Wenn ein Channel aktiv ist, zeige das Chat-Fenster, wenn die Sidebar geschlossen wird
-    if (isChannelActive && !this.sidebarService.getSidebarStatus()) {
-      this.sidebarService.setIsChannel(true);  // Stelle sicher, dass das Chat-Fenster offen bleibt
-    }
+    // if (isChannelActive && !this.sidebarService.getSidebarStatus()) {
+    //   this.sidebarService.isChannel(true);  // Stelle sicher, dass das Chat-Fenster offen bleibt
+    // }
   }
 
   // goBackToSidebar() {

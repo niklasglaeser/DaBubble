@@ -24,7 +24,8 @@ app-search {
   @media(min-width:1200px) {
       display: none;
   }
-  @media(max-width:790px) {
+
+    @media(max-width:1200px) {
     flex-grow: 0; 
   }
   }

@@ -43,7 +43,7 @@ export class DmWindowComponent {
     this.messages$ = this.dmService.loadConversation();
     this.messages$.subscribe((messages) => {
       const newMessageCount = messages.length;
-      
+
       if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {
         setTimeout(() => {
           this.scrollToBottom();

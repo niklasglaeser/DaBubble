@@ -27,8 +27,9 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   isTablet: boolean = false
   isMobile: boolean = false;
 
-  isChannel: boolean = false;
+  isChannel: boolean = true;
   isDirectChat: boolean = false;
+  isThread: boolean = false;
 
   chatDialogRef: MatDialogRef<ChatWindowComponent> | null = null;
 
@@ -37,13 +38,21 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   ngOnInit() {
     this.checkWindowSize();
-
     this.sidebarService.showSidebar$.subscribe(status => {
       this.showSidebar = status;
     });
 
     this.sidebarService.isChannel$.subscribe(status => {
       this.isChannel = status;
+    });
+
+    this.sidebarService.isDirectChat$.subscribe(status => {
+      this.isDirectChat = status;
+    });
+
+    this.sidebarService.isThread$.subscribe(status => {
+      this.isThread = status;
+      console.log('isThread status in ContentComponent:', status);
     });
   }
 
@@ -53,43 +62,56 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   checkWindowSize() {
     let screenWidth = window.innerWidth;
-
     this.showWorkspaceToggle = screenWidth > 790 && screenWidth <= 1920;
 
     if (screenWidth > 1200) {
       this.isMobile = false;
       this.showSidebar = true;
-      console.log('Desktop view detected');
+      if (this.sidebarService.getDirectChatStatus()) {
+        this.sidebarService.isChannel(false);
+        this.sidebarService.isDirectChat(true);
+      } else {
+        this.sidebarService.isChannel(true);
+        this.sidebarService.isDirectChat(false);
+      }
     } else if (screenWidth <= 1200 && screenWidth > 790) {
       this.isMobile = false;
-      this.showSidebar = true;
-      this.isChannel = true;
-      console.log('Tablet view detected');
+      if (this.sidebarService.getDirectChatStatus()) {
+        this.sidebarService.isDirectChat(true);
+        this.sidebarService.isChannel(false);
+      } else {
+        this.sidebarService.isChannel(true);
+        this.sidebarService.isDirectChat(false);
+      }
     } else {
       this.isMobile = true;
-      // Wenn kein Channel offen ist, Sidebar anzeigen
-      this.showSidebar = !this.isChannel;
-      console.log('Mobile view detected');
-      console.log('isChannel ' + this.isChannel);
     }
   }
-
 
   handleChannelOpen() {
-    this.sidebarService.setIsChannel(true);
-    if (this.showSidebar) {
-      this.sidebarService.setSidebarStatus(false);  // Schließe die Sidebar im mobilen Modus
+    this.sidebarService.isChannel(true);
+    this.sidebarService.isDirectChat(false);
+    if (this.showSidebar && this.isMobile) {
+      this.sidebarService.isSidebar(false);
     }
   }
 
-
-
-  toggleSidebar() {
-    console.log('toggle sidebar');
-
-    this.showSidebar = !this.showSidebar;
+  handleDirectMessageOpen() {
+    this.sidebarService.isChannel(false);
+    this.sidebarService.isDirectChat(true);
+    if (this.showSidebar && this.isMobile) {
+      this.sidebarService.isSidebar(false);
+    }
   }
 
+  handleThreadOpen() {
+    console.log('handleThreadOpen');
+    this.sidebarService.isThread(true);
+  }
+
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {

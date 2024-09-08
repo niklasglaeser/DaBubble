@@ -26,6 +26,7 @@ import { EmojiService } from '../../../../services/emoji.service';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
+import { GlobalService } from '../../../../services/global.service';
 
 
 @Component({
@@ -68,6 +69,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private emojiService: EmojiService,
     private sanitizer: DomSanitizer,
+    private globalService: GlobalService
   ) { }
 
 
@@ -189,22 +191,30 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   openThread(channelId: string, messageId: string, originMessage: Message) {
     this.threadService.checkAndCreateThread(channelId, messageId, originMessage);
-    let threadWindow = document.querySelector('.thread-window') as HTMLElement;
-    if (threadWindow) {
-      threadWindow.classList.add('open');
-    }
-
-    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-    let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-
-    if (window.innerWidth < 790) {
-      dmWindow.style.display = 'none';
-      chatWindow.style.display = 'none';
-      sidebar.style.display = 'none';
-      threadWindow.style.display = 'flex';
-    }
+    this.globalService.isThread(true);
+    const currentThreadStatus = this.globalService.getThreadStatus();
+    console.log('open thread from message, isThread status:', currentThreadStatus);
   }
+
+
+  //   openThread(channelId: string, messageId: string, originMessage: Message) {
+  //   this.threadService.checkAndCreateThread(channelId, messageId, originMessage);
+  //   let threadWindow = document.querySelector('.thread-window') as HTMLElement;
+  //   if (threadWindow) {
+  //     threadWindow.classList.add('open');
+  //   }
+
+  //   let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+  //   let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+  //   let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+
+  //   if (window.innerWidth < 790) {
+  //     dmWindow.style.display = 'none';
+  //     chatWindow.style.display = 'none';
+  //     sidebar.style.display = 'none';
+  //     threadWindow.style.display = 'flex';
+  //   }
+  // }
 
   openImg(message: Message) {
     this.dialog.open(DialogChatImgComponent, {

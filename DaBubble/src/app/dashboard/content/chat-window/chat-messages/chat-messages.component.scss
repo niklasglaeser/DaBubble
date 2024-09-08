@@ -189,15 +189,15 @@
 .author-picture {
   height: 70px;
   width: 70px;
-  border-radius: 40px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
 .details {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
 }
 
 .text {

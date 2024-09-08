@@ -2,32 +2,39 @@
   width: 100%;
   display: flex;
   margin-left: 20px;
-  &.no-sidebar {
-    margin-left: 0;
+  @media (max-width: 790px) {
+    margin-left: unset;
   }
 }
 
 .dm-window {
   width: 100%;
-  // padding-right: 30px;
+  display: flex;
   margin-left: 20px;
-  display: none;
-}
-
-.thread-window {
-  width: 0;
-  max-width: 0;
-  height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: width 0.3s, max-width 0.3s, opacity 0.3s, height 0.3s;
-  margin-left: 20px;
-  visibility: hidden; 
-  display: none;
-  @media (max-width: 790px) {
-    width: 100%;
+  &.no-sidebar {
+    margin-left: 0;
   }
 }
+
+ .thread-window {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+   margin-left: 20px;
+   border-radius: 30px;
+   width: 50%;
+   max-width: 50%;
+//   width: 0;
+//   max-width: 0;
+//   height: 0;
+//   overflow: hidden;
+//   opacity: 0;
+//   transition: width 0.3s, max-width 0.3s, opacity 0.3s, height 0.3s;
+//   // visibility: hidden; 
+//   @media (max-width: 790px) {
+//     width: 100%;
+//   }
+ }
 
 .thread-window.open {
   width: 50%;

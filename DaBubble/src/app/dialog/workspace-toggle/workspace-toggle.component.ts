@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { GlobalService } from '../../services/global.service';
 
 @Component({
   selector: 'app-workspace-toggle',
@@ -7,12 +8,17 @@ import { Component, EventEmitter, Output } from '@angular/core';
   templateUrl: './workspace-toggle.component.html',
   styleUrl: './workspace-toggle.component.scss',
 })
-export class WorkspaceToggleComponent {
-  hide: boolean = false;
-  @Output() toggleSidebar = new EventEmitter<boolean>();
+export class WorkspaceToggleComponent implements OnInit {
+  showSidebar: boolean = true;
+  constructor(private sidebarService: GlobalService) { }
+
+  ngOnInit(): void {
+    this.sidebarService.showSidebar$.subscribe(status => {
+      this.showSidebar = status;
+    });
+  }
 
   toggleWorkspace() {
-    this.hide = !this.hide;
-    this.toggleSidebar.emit(this.hide);
+    this.sidebarService.toggleSidebar();
   }
 }

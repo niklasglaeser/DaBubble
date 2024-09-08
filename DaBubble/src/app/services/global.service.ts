@@ -7,32 +7,47 @@ import { BehaviorSubject } from 'rxjs';
 export class GlobalService {
   private showSidebarSubject = new BehaviorSubject<boolean>(true);
   private isChannelSubject = new BehaviorSubject<boolean>(false);
+  private isDirectChatSubject = new BehaviorSubject<boolean>(false);
+  private isThreadSubject = new BehaviorSubject<boolean>(false);
 
   showSidebar$ = this.showSidebarSubject.asObservable();
   isChannel$ = this.isChannelSubject.asObservable();
+  isDirectChat$ = this.isDirectChatSubject.asObservable();
+  isThread$ = this.isThreadSubject.asObservable();
 
   toggleSidebar() {
     const currentStatus = this.showSidebarSubject.getValue();
-    this.showSidebarSubject.next(!currentStatus); // Sidebar Status umschalten
+    this.showSidebarSubject.next(!currentStatus);
   }
 
-  // Setze den Zustand von isChannel
-  setIsChannel(status: boolean) {
+
+  isChannel(status: boolean) {
     this.isChannelSubject.next(status);
   }
 
-  // Seitenleiste explizit öffnen/schließen
-  setSidebarStatus(status: boolean) {
+  isDirectChat(status: boolean) {
+    this.isDirectChatSubject.next(status);
+  }
+  isThread(status: boolean) {
+    this.isThreadSubject.next(status);
+  }
+
+  isSidebar(status: boolean) {
     this.showSidebarSubject.next(status);
   }
 
-  // Prüfe den aktuellen Zustand von isChannel
-  getIsChannelStatus() {
+  getSidebarStatus() {
+    return this.showSidebarSubject.getValue();
+  }
+
+  getChannelStatus() {
     return this.isChannelSubject.getValue();
   }
 
-  // Prüfe den aktuellen Sidebar-Status
-  getSidebarStatus() {
-    return this.showSidebarSubject.getValue();
+  getDirectChatStatus() {
+    return this.isDirectChatSubject.getValue();
+  }
+  getThreadStatus() {
+    return this.isThreadSubject.getValue();
   }
 }  
