@@ -86,6 +86,10 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     return this.isPdf;
   }
 
+  formatMessage(message: string): string {
+    return message.replace(/\n/g, '<br>');
+  }
+
   transform(message: Message): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(message.imagePath!);
   }

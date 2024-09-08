@@ -16,6 +16,10 @@
                             <div class="message-send-time fs-14">{{ formatTime(originMessage!.created_at) }} Uhr</div>
                         </div>
 
+                        
+
+                       <div class="text fs-18">
+
                         <div *ngIf="originMessage.imagePath && !checkPdf(originMessage)" class="message-image" (click)="openImg(originMessage)">
                             <img [src]="transform(originMessage)" alt="Message Image">
                         </div>
@@ -24,8 +28,9 @@
                                 <mat-icon class="pdf">picture_as_pdf</mat-icon>
                             </a>
                         </div>
-
-                       <div *ngIf="checkOrginMessage(originMessage.message)" class="text fs-18">{{ originMessage.message }}</div>
+                        <div [innerHTML]="formatMessage(originMessage.message)">  {{ originMessage.message }} </div>
+                      
+                        </div>
                         <div class="reactions">
                             <div *ngFor="let reaction of originMessage.reactions" class="emoji-container"
                                 (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"
@@ -97,7 +102,8 @@
                                         <mat-icon class="pdf">picture_as_pdf</mat-icon>
                                     </a>
                                 </div>
-                                {{message.message}}
+                                <div [innerHTML]="formatMessage(message.message)"> {{message.message}} </div>
+                                
                             </div>
                             <ng-template #editTemplate>
                                 <div class="edit-buttons">

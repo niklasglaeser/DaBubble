@@ -86,6 +86,10 @@ export class ThreadMessagesComponent {
     }
   }
 
+  formatMessage(message: string): string {
+    return message.replace(/\n/g, '<br>');
+  }
+
   transform(message: Message): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(message.imagePath!);
   }

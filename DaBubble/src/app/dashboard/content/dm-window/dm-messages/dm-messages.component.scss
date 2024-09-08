@@ -202,12 +202,14 @@
 
 .text {
   display: flex;
-  justify-content: flex-end;
+  align-items: flex-end;
+  flex-direction: column;
   width: fit-content;
   padding: 20px;
   background-color: #edeefe;
   border-radius: 30px;
   border-top-left-radius: 0px;
+  gap: 20px;
 }
 
 .author {
