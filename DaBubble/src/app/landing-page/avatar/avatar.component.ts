@@ -49,25 +49,37 @@ export class AvatarComponent {
   }
 
   uploadImage(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+    const file = this.getFileFromEvent(event);
     
     if (file) {
       const currentUser = this.authService.currentUserSig();
       if (currentUser) {
-        this.imgUploadService.uploadImg(currentUser.userId,file).pipe(
-        ).subscribe({
-          next: (photoURL: string) => {
-            this.profileImg = photoURL;
-            console.log('Bild erfolgreich hochgeladen:', photoURL);
-          },
-          error: (err: any) => {
-            console.error('Fehler beim Hochladen des Bildes:', err);
-          }
-        });
+        this.uploadUserImage(currentUser.userId, file);
       }
     }
   }
+  
+  getFileFromEvent(event: Event): File | undefined {
+    const input = event.target as HTMLInputElement;
+    return input.files?.[0];
+  }
+  
+  uploadUserImage(userId: string, file: File) {
+    this.imgUploadService.uploadImg(userId, file).subscribe({
+      next: (photoURL: string) => this.handleUploadSuccess(photoURL),
+      error: (err: any) => this.handleUploadError(err)
+    });
+  }
+  
+  handleUploadSuccess(photoURL: string) {
+    this.profileImg = photoURL;
+    console.log('Bild erfolgreich hochgeladen:', photoURL);
+  }
+  
+  handleUploadError(err: any) {
+    console.error('Fehler beim Hochladen des Bildes:', err);
+  }
+  
 
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
