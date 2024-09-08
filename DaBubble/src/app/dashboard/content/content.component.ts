@@ -18,6 +18,8 @@ import { GlobalService } from '../../services/global.service';
   styleUrl: './content.component.scss'
 })
 export class ContentComponent implements OnInit, AfterContentChecked {
+  @ViewChild('dialogContainer', { read: ViewContainerRef }) dialogContainer!: ViewContainerRef;
+  @ViewChild('dmWindow') dmWindow!: DmWindowComponent;
 
   showSidebar: boolean = true;
   sidebarOpen: boolean = true;
