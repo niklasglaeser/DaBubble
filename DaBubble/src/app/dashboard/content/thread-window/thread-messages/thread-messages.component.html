@@ -15,7 +15,17 @@
                             <div class="author-name fs-18-700">{{ originMessage.senderName }}</div>
                             <div class="message-send-time fs-14">{{ formatTime(originMessage!.created_at) }} Uhr</div>
                         </div>
-                        <div class="text fs-18">{{ originMessage.message }}</div>
+
+                        <div *ngIf="originMessage.imagePath && !checkPdf(originMessage)" class="message-image" (click)="openImg(originMessage)">
+                            <img [src]="transform(originMessage)" alt="Message Image">
+                        </div>
+                        <div *ngIf="originMessage.imagePath && checkPdf(originMessage)" class="message-image">
+                            <a  [href]="originMessage.imagePath" target="_blank">
+                                <mat-icon class="pdf">picture_as_pdf</mat-icon>
+                            </a>
+                        </div>
+
+                       <div *ngIf="checkOrginMessage(originMessage.message)" class="text fs-18">{{ originMessage.message }}</div>
                         <div class="reactions">
                             <div *ngFor="let reaction of originMessage.reactions" class="emoji-container"
                                 (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"

@@ -76,7 +76,15 @@ export class ThreadMessagesComponent {
         this.isPdf = false;
     }
     return this.isPdf;
-  } 
+  }
+
+  checkOrginMessage(message: string):boolean{
+    if(message === ''){
+      return false
+    } else{
+      return true
+    }
+  }
 
   transform(message: Message): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(message.imagePath!);
