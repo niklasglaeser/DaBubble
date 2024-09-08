@@ -8,6 +8,7 @@
     height: 100%;
     width: 100%;
     display: flex;
+    z-index: 10;
 }
 
 .content{
@@ -29,6 +30,16 @@
         font-weight: 700;
     }
     animation: slid-in 0.75s ease-in forwards;
+    @media (max-width: 650px) {
+        max-width: 323px;
+        max-height: 70px;
+        padding: 30px 20px;
+        bottom: 36px;
+        right: 16px;
+        span{
+            font-size: 22px;
+        }
+    }
 }
 
 @keyframes slid-in {
