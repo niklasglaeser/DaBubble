@@ -7,11 +7,11 @@
         <h1 [ngClass]="{'fs-46': !mobileVersion, 'fs-32-700': mobileVersion}">Wähle deinen Avatar</h1>
         <img class="profile-img" [src]="profileImg ?? 'assets/img/landing-page/unknown.svg'" alt="">
         <div class="profile-name">
-            <span class="fs-32-700">Frederik Beck</span>
+            <span class="fs-32-700">{{ name }}</span>
         </div>
         <div class="list">
             <span class="fs-20">Aus der Liste wählen</span>
-        
+       
             <div class="chose-avatar">
                 <div *ngFor="let avatar of avatars; let i=index" class="avatar-box" 
                 [ngClass]="{'chosen': avatar}"

@@ -28,6 +28,7 @@ export class AvatarProfileComponent {
   dialogRef = inject(MatDialogRef)
   router = inject(Router)
   currentUser = this.authService.currentUserSig();
+  name: string = ''
   mobileVersion = new BehaviorSubject<boolean>(window.innerWidth <= 650);
 
   avatars: boolean[] = [false, false, false, false, false, false];
@@ -54,6 +55,7 @@ export class AvatarProfileComponent {
     if (this.authService.uid) {
       await this.userService.subscribeUser(this.authService.uid).subscribe((data) => {
         this.profileImg = data?.photoURL!
+        this.name = data?.username!
       });
     }
   }

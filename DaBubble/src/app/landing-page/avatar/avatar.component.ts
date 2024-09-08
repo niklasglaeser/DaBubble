@@ -7,6 +7,8 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { UserInterface } from '../../models/user.interface';
 
 @Component({
   selector: 'app-avatar',
@@ -24,18 +26,35 @@ export class AvatarComponent {
   authService = inject(AuthService);
   userService = inject(UserLoggedService);
   router = inject(Router)
-  currentUser = this.authService.currentUserSig();
+  currentUser: any
   mobileVersion: boolean = false
+  name: string = ''
 
   avatars: boolean[] = [false, false, false, false, false, false];
 
   constructor(private lp: LandingPageComponent, private imgUploadService: UploadService, private toast: HotToastService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.lp.$mobileVersion.subscribe(isMobile => {
       this.mobileVersion = isMobile;
     });
+    await this.subscribeToUserData()
+  }
+
+  async subscribeToUserData(): Promise<void> {
+    if (this.authService.uid) {
+      await this.userService.subscribeUser(this.authService.uid).subscribe((data) => {
+        this.currentUser = data;
+        this.name = this.currentUser.username
+        this.setDefaultProfileImage()
+      });
+    }
+  }
+
+  setDefaultProfileImage() {
+    const defaultImage = 'assets/img/landing-page/unknown.svg';
+    this.userService.updateUserImg(this.authService.uid, defaultImage);
   }
 
   choseAvatar(index: number) {
