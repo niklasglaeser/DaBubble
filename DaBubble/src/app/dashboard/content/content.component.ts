@@ -107,7 +107,8 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   }
 
   handleThreadOpen() {
-    console.log('handleThreadOpen');
+    this.sidebarService.isChannel(false);
+    this.sidebarService.isDirectChat(false);
     this.sidebarService.isThread(true);
   }
 

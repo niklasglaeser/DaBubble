@@ -77,7 +77,7 @@ export class SidebarComponent implements OnInit {
       if (!this.isMobile) {
 
         if (this.channels.length > 0) {
-          this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
+          this.fixedChannelId = 'an0PBDcZenSVLPqWSqiy';
           this.openChannel(this.fixedChannelId);
           this.isInitialized = true;
         }
