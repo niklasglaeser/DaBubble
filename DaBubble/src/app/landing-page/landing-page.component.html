@@ -3,7 +3,7 @@
 
     <div class="content">
 
-        <div  class="logo-box" (click)="toLandingPage()">
+        <div [ngClass]="{'animation': !animated}" class="logo-box" (click)="toLandingPage()">
             <img src="assets/img/landing-page/Logo-text.svg" alt="logo" class="logo">
         </div>
         <div *ngIf="$login && !$mobileVersion" class="create-acc">
