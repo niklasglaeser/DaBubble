@@ -28,7 +28,6 @@ import { DeviceService } from '../../../services/device.service';
   styleUrl: './chat-window.component.scss',
 })
 export class ChatWindowComponent implements OnInit {
-  @Input() workspaceVisible: boolean = true;
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   showChatMessage: boolean = true;
 

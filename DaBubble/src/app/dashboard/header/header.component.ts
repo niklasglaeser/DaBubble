@@ -16,6 +16,7 @@ import { UserService } from '../../services/user.service';
 import { Subscription } from 'rxjs';
 import { SearchComponent } from "../search/search.component";
 import { Router } from '@angular/router';
+import { GlobalService } from '../../services/global.service';
 
 @Component({
   selector: 'app-header',
@@ -51,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private sidebarService: GlobalService) { }
 
   ngOnInit(): void {
     this.subscribeToUserData();
@@ -99,14 +100,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.dialog.open(DialogEditProfilComponent, {});
   }
 
-  goBackToSidebar() {
-    let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-    let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-    let threadWindow = document.querySelector('.thread-window') as HTMLElement;
-    let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-    sidebar.classList.remove('none');
-    chatWindow.classList.add('none');
-    dmWindow.classList.add('none');
-    threadWindow.classList.add('none');
+  // Methode zum Umschalten der Sidebar
+  toggleSidebar() {
+    const isChannelActive = this.sidebarService.getIsChannelStatus();
+
+    // Toggle Sidebar-Status
+    this.sidebarService.toggleSidebar();
+
+    // Wenn ein Channel aktiv ist, zeige das Chat-Fenster, wenn die Sidebar geschlossen wird
+    if (isChannelActive && !this.sidebarService.getSidebarStatus()) {
+      this.sidebarService.setIsChannel(true);  // Stelle sicher, dass das Chat-Fenster offen bleibt
+    }
   }
+
+  // goBackToSidebar() {
+  //   let dmWindow = document.querySelector('.dm-window') as HTMLElement;
+  //   let chatWindow = document.querySelector('.chat-window') as HTMLElement;
+  //   let threadWindow = document.querySelector('.thread-window') as HTMLElement;
+  //   let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+  //   sidebar.classList.remove('none');
+  //   chatWindow.classList.add('none');
+  //   dmWindow.classList.add('none');
+  //   threadWindow.classList.add('none');
+  // }
 }

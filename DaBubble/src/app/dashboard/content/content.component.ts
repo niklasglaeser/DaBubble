@@ -7,6 +7,7 @@ import { WorkspaceToggleComponent } from "../../dialog/workspace-toggle/workspac
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CustomDialogComponent } from '../../dialog/custom-dialog/custom-dialog.component';
+import { GlobalService } from '../../services/global.service';
 
 
 @Component({
@@ -17,50 +18,76 @@ import { CustomDialogComponent } from '../../dialog/custom-dialog/custom-dialog.
   styleUrl: './content.component.scss'
 })
 export class ContentComponent implements OnInit, AfterContentChecked {
-  @ViewChild('dialogContainer', { read: ViewContainerRef }) dialogContainer!: ViewContainerRef;
-  dialogRef: ComponentRef<CustomDialogComponent> | null = null;
 
-  workspaceVisible: boolean = true;
-  showWorkspaceToggle: boolean = true;
-  isMobile: boolean = false;
+  showSidebar: boolean = true;
   sidebarOpen: boolean = true;
+  showWorkspaceToggle: boolean = true;
+
+  isDektop: boolean = false
+  isTablet: boolean = false
+  isMobile: boolean = false;
+
+  isChannel: boolean = false;
+  isDirectChat: boolean = false;
+
   chatDialogRef: MatDialogRef<ChatWindowComponent> | null = null;
 
-  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog) {
+  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) {
   }
 
   ngOnInit() {
     this.checkWindowSize();
+
+    this.sidebarService.showSidebar$.subscribe(status => {
+      this.showSidebar = status;
+    });
+
+    this.sidebarService.isChannel$.subscribe(status => {
+      this.isChannel = status;
+    });
   }
 
   ngAfterContentChecked() {
     this.cdref.detectChanges();
   }
+
   checkWindowSize() {
     let screenWidth = window.innerWidth;
+
     this.showWorkspaceToggle = screenWidth > 790 && screenWidth <= 1920;
 
-    if (screenWidth <= 790) {
-      this.isMobile = true;
-      this.workspaceVisible = false;
-      let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-      let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-      if (dmWindow && dmWindow.classList.contains('none')) {
-        dmWindow.classList.remove('none');
-      }
-      if (chatWindow && chatWindow.classList.contains('none')) {
-        chatWindow.classList.remove('none');
-      }
-
-    } else {
+    if (screenWidth > 1200) {
       this.isMobile = false;
-      this.workspaceVisible = true;
+      this.showSidebar = true;
+      console.log('Desktop view detected');
+    } else if (screenWidth <= 1200 && screenWidth > 790) {
+      this.isMobile = false;
+      this.showSidebar = true;
+      this.isChannel = true;
+      console.log('Tablet view detected');
+    } else {
+      this.isMobile = true;
+      // Wenn kein Channel offen ist, Sidebar anzeigen
+      this.showSidebar = !this.isChannel;
+      console.log('Mobile view detected');
+      console.log('isChannel ' + this.isChannel);
     }
   }
 
-  toggleWorkspace() {
-    this.workspaceVisible = !this.workspaceVisible;
 
+  handleChannelOpen() {
+    this.sidebarService.setIsChannel(true);
+    if (this.showSidebar) {
+      this.sidebarService.setSidebarStatus(false);  // Schließe die Sidebar im mobilen Modus
+    }
+  }
+
+
+
+  toggleSidebar() {
+    console.log('toggle sidebar');
+
+    this.showSidebar = !this.showSidebar;
   }
 
 

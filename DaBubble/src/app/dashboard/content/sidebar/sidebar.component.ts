@@ -28,8 +28,11 @@ export class SidebarComponent implements OnInit {
   dialogAddChannelComponent!: DialogAddChannelComponent;
 
   @Output() conversationSet = new EventEmitter<void>();
-  @Input() workspaceVisible: boolean = true;
   @Output() channelOpened = new EventEmitter<void>();
+  @Output() directMessageOpened = new EventEmitter<void>();
+
+  @Input() showSidebar: boolean = true;
+  @Input() isMobile: boolean = false;
 
   isChannelsDropdownOpen = true;
   isMessagesDropdownOpen = true;
@@ -68,18 +71,16 @@ export class SidebarComponent implements OnInit {
       this.users = users;
     });
 
-
     this.channelService.channels$.subscribe((channels) => {
       this.channels = channels;
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
 
-      if (this.channels.length > 0) {
-        this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
-        this.openChannel(this.fixedChannelId);
-        this.isInitialized = true;
-      }
+      // if (this.channels.length > 0) {
+      //   this.fixedChannelId = '2eELSnZJ5InLSZUJgmLC';
+      //   this.openChannel(this.fixedChannelId);
+      //   this.isInitialized = true;
+      // }
     });
-
 
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
       this.openDirectmessage(userId);
@@ -97,6 +98,9 @@ export class SidebarComponent implements OnInit {
     });
 
     this.loadDmConvos();
+
+    console.log('sidebarstatus device ' + this.isMobile);
+
   }
 
   loadDmConvos() {
@@ -145,54 +149,38 @@ export class SidebarComponent implements OnInit {
     this.selectedUserId = null;
     this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
-    this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-    this.chatWindow = document.querySelector('.chat-window') as HTMLElement;
 
-    if (window.innerWidth < 790) {
-
-      this.sidebar.classList.remove('flex');
-      this.sidebar.classList.add('none');
-      this.chatWindow.classList.remove('none');
-      this.chatWindow.classList.add('flex');
-    } else {
-
-      this.chatWindow.classList.remove('none');
-      this.dmWindow.classList.add('none');
+    if (this.isMobile) {
+      this.channelOpened.emit();
     }
   }
 
 
 
   openDirectmessage(userId: string) {
-    console.log('direct');
 
     let recipientId = userId;
     let currentUser = this.authService.currentUserSig();
     let currentUserId = currentUser!.userId;
-    this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-    this.dmWindow = document.querySelector('.dm-window') as HTMLElement;
-    this.chatWindow = document.querySelector('.chat-window') as HTMLElement;
+    // this.sidebar = document.querySelector('.sidebar-window') as HTMLElement;
+    // this.dmWindow = document.querySelector('.dm-window') as HTMLElement;
+    // this.chatWindow = document.querySelector('.chat-window') as HTMLElement;
 
     this.dmService.setConversationMembers(currentUserId, recipientId).then(() => {
       // Notify the DM window that the conversation is ready to be loaded
-      this.conversationSet.emit();
+      // this.conversationSet.emit();
       this.dmService.setRecipientId(recipientId);
     });
 
-    if (window.innerWidth < 790) {
-
-      this.sidebar.classList.remove('flex');
-      this.sidebar.classList.add('none');
-      this.dmWindow.classList.remove('none');
-      this.dmWindow.classList.add('flex');
-    } else {
-      this.chatWindow.classList.add('none');
-      this.dmWindow.classList.add('flex');
-    }
     this.selectedChannelId = null;
     this.selectedUserId = userId;
     this.isDirectChat = true;
+
+    if (this.isMobile) {
+      this.directMessageOpened.emit();  // Event wird hier ausgelöst
+    }
   }
+
 
   openSearchBar() {
     this.channelStateService.openSearchBar();

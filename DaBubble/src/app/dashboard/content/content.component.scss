@@ -1,15 +1,9 @@
 .chat-window {
   width: 100%;
-  // display: flex;
+  display: flex;
   margin-left: 20px;
   &.no-sidebar {
     margin-left: 0;
-  }
-  @media (max-width: 790px) {
-    display: none;
-  }
-   @media (min-width: 790px) {
-    display: flex;
   }
 }
 
@@ -56,10 +50,6 @@
     width: 100%;
     justify-content: center;
    }
-
-   @media (min-width: 790px) {
-    display: flex;
-  }
 }
 
 // Einblenden
@@ -87,10 +77,3 @@
 }
 
 /* content.component.scss */
-
-.flex {
-  display: flex;
-}
-.none {
-  display: none;
-}

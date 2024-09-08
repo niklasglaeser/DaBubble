@@ -1,40 +1,38 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
+  private showSidebarSubject = new BehaviorSubject<boolean>(true);
+  private isChannelSubject = new BehaviorSubject<boolean>(false);
 
-  constructor() { }
+  showSidebar$ = this.showSidebarSubject.asObservable();
+  isChannel$ = this.isChannelSubject.asObservable();
 
-  /*TESTING OPENING DIALOG*/
-
-  /*
-  calculateLeftPosition(event: MouseEvent, dialogWidth: number): { top: string; left: string } {
-    let leftPosition = event.clientX - dialogWidth;
-    if (leftPosition < 0) {
-      leftPosition = 0;
-    }
-    return {
-      top: `${event.clientY}px`,
-      left: `${leftPosition}px`
-    };
+  toggleSidebar() {
+    const currentStatus = this.showSidebarSubject.getValue();
+    this.showSidebarSubject.next(!currentStatus); // Sidebar Status umschalten
   }
 
-  calculateRightPosition(event: MouseEvent, dialogWidth: number): { top: string; left: string } {
-    const windowWidth = window.innerWidth;
-    let rightPosition = event.clientX;
+  // Setze den Zustand von isChannel
+  setIsChannel(status: boolean) {
+    this.isChannelSubject.next(status);
+  }
 
-    if (rightPosition + dialogWidth > windowWidth) {
-      rightPosition = windowWidth - dialogWidth;
-    }
+  // Seitenleiste explizit öffnen/schließen
+  setSidebarStatus(status: boolean) {
+    this.showSidebarSubject.next(status);
+  }
 
-    return {
-      top: `${event.clientY}px`,
-      left: `${rightPosition}px`
-    };
-  }*/
+  // Prüfe den aktuellen Zustand von isChannel
+  getIsChannelStatus() {
+    return this.isChannelSubject.getValue();
+  }
 
-
-  /*TESTING OPENING DIALOG*/
+  // Prüfe den aktuellen Sidebar-Status
+  getSidebarStatus() {
+    return this.showSidebarSubject.getValue();
+  }
 }  

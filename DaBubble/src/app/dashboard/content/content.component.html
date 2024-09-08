@@ -1,12 +1,12 @@
-<app-sidebar *ngIf="workspaceVisible || isMobile" class="sidebar-window"
-    (conversationSet)="dmWindow.loadMessagesAfterSidebarClick()" [workspaceVisible]="workspaceVisible">
+<app-sidebar *ngIf="(showSidebar && isMobile) || (showSidebar && !isChannel) || !isMobile" class="sidebar-window"
+    (conversationSet)="dmWindow.loadMessagesAfterSidebarClick()" [isMobile]="isMobile" [showSidebar]="showSidebar"
+    (channelOpened)="handleChannelOpen()">
 </app-sidebar>
 
-<app-chat-window class="chat-window" [workspaceVisible]="workspaceVisible"
-    [class.no-sidebar]="!workspaceVisible"></app-chat-window>
+<app-chat-window *ngIf="isChannel && !showSidebar || (showSidebar && !isChannel) || !isMobile" class="chat-window"
+    [class.no-sidebar]="!showSidebar"></app-chat-window>
 
 <app-dm-window class="dm-window" #dmWindow></app-dm-window>
 <app-thread-window class="thread-window"></app-thread-window>
-<ng-container #dialogContainer></ng-container>
 
-<app-workspace-toggle *ngIf="showWorkspaceToggle" (toggle)="toggleWorkspace()"></app-workspace-toggle>
+<app-workspace-toggle *ngIf="showWorkspaceToggle" (toggleSidebar)="toggleSidebar()"></app-workspace-toggle>
