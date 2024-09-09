@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user?: UserLogged;
 
   searchControl = new FormControl();
-  isPanelOpen: boolean = false;
+  isPanelOpen: boolean = true;
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
@@ -56,6 +56,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscribeToUserData();
+    this.sidebarService.showSidebar$.subscribe((status) => {
+      this.isPanelOpen = status;
+    });
   }
 
   ngOnDestroy(): void {
