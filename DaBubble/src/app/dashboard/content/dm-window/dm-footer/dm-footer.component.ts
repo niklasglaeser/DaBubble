@@ -192,33 +192,33 @@ export class DmFooterComponent {
   uploadImage(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
+    if (!file) return;
+  
+    this.isPdf = file.type === 'application/pdf';
+    const currentUser = this.authService.currentUserSig();
+    if (!currentUser) return;
+  
+    this.imgUploadService.uploadImgChat(currentUser.userId, file, this.conversationId)
+      .subscribe({
+        next: (imagePath: string) => this.handleUploadSuccess(imagePath),
+        error: (err: any) => this.handleUploadError(err)
+      });
 
-    if (file) {
-      this.isPdf = file.type === 'application/pdf';
-
-      const currentUser = this.authService.currentUserSig();
-      if (currentUser) {
-        this.imgUploadService.uploadImgChat(currentUser.userId, file, this.conversationId).pipe(
-        ).subscribe({
-          next: (imagePath: string) => {
-            this.chatImg = imagePath;
-            this.safePath = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string : null
-            this.uploadError = null;
-          },
-          error: (err: any) => {
-            this.uploadError = err.message || 'Fehler beim Hochladen des Bildes.';
-            this.chatImg = null;
-            this.safePath = null;
-            this.isPdf = false;
-
-            setTimeout(() => {
-              this.uploadError = null;
-            }, 3000);
-          }
-        });
-      }
-    }
+      input.value = '';
   }
+  
+  handleUploadSuccess(imagePath: string) {
+    this.chatImg = imagePath;
+    this.safePath = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string : null;
+  }
+  
+  handleUploadError(err: any) {
+    this.uploadError = err.message || 'Fehler beim Hochladen des Bildes.';
+    this.chatImg = this.safePath = null;
+    this.isPdf = false;
+    setTimeout(() => this.uploadError = null, 3000);
+  }
+  
 
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
