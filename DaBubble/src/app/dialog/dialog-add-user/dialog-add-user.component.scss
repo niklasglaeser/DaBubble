@@ -93,6 +93,9 @@ mat-option {
 
 .mdc-evolution-chip-set {
   margin-top: 16px !important;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #edeefe transparent;
 }
 
 mat-chip-grid {

@@ -11,7 +11,7 @@ import { GlobalService } from '../../services/global.service';
 export class WorkspaceToggleComponent {
   showSidebar: boolean = true;
   @Output() toggleSidebar = new EventEmitter<void>();
-  constructor(private sidebarService: GlobalService) {}
+  constructor(private sidebarService: GlobalService) { }
 
   // ngOnInit(): void {
   //   this.sidebarService.showSidebar$.subscribe(status => {
@@ -20,6 +20,7 @@ export class WorkspaceToggleComponent {
   // }
 
   toggleWorkspace() {
+    this.showSidebar = !this.showSidebar;
     this.toggleSidebar.emit();
   }
 }
