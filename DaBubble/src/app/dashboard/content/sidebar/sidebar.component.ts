@@ -14,14 +14,14 @@ import { ChannelStateService } from '../../../services/channel-state.service';
 import { AuthService } from '../../../services/lp-services/auth.service';
 import { DirectMessagesService } from '../../../services/direct-message.service';
 import { User } from '@angular/fire/auth';
-import { SearchComponent } from "../../search/search.component";
+import { SearchComponent } from '../../search/search.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [DialogAddChannelComponent, WorkspaceToggleComponent, CommonModule, SearchComponent],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
+  styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit {
   @ViewChild('dialogAddChannel')
@@ -58,9 +58,7 @@ export class SidebarComponent implements OnInit {
   threadWindow = document.querySelector('.thread-window') as HTMLElement;
   sidebar = document.querySelector('.sidebar-window') as HTMLElement;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef) {
-
-  }
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef) {}
 
   get currentUserId(): string | undefined {
     return this.authService.uid;
@@ -75,7 +73,6 @@ export class SidebarComponent implements OnInit {
       this.channels = channels;
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
       if (!this.isMobile) {
-
         if (this.channels.length > 0) {
           this.fixedChannelId = 'an0PBDcZenSVLPqWSqiy';
           this.openChannel(this.fixedChannelId);
@@ -109,14 +106,13 @@ export class SidebarComponent implements OnInit {
     if (currentUserId) {
       this.dmService.setCurrentUserId(currentUserId);
 
-      this.dmService.conversations$.subscribe(users => {
+      this.dmService.conversations$.subscribe((users) => {
         this.directMessagesUsers = users;
       });
     } else {
       console.error('Current user ID is undefined, unable to load direct message conversations.');
     }
   }
-
 
   getList(): Channel[] {
     return this.channelService.channels;
@@ -126,7 +122,7 @@ export class SidebarComponent implements OnInit {
   addChannel() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
-    dialogRef.afterClosed().subscribe((result) => { });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   openEditDialog(channelId: string) {
@@ -158,13 +154,14 @@ export class SidebarComponent implements OnInit {
 
     this.directMessageOpened.emit();
 
-    this.dmService.setConversationMembers(currentUserId, recipientId)
+    this.dmService
+      .setConversationMembers(currentUserId, recipientId)
       .then(() => {
         this.conversationSet.emit();
         this.dmService.setRecipientId(recipientId);
         this.dmService.triggerLoadMessages();
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error setting conversation members:', error);
       });
 
@@ -172,7 +169,6 @@ export class SidebarComponent implements OnInit {
     this.selectedUserId = userId;
     this.isDirectChat = true;
   }
-
 
   openSearchBar() {
     this.channelStateService.openSearchBar();

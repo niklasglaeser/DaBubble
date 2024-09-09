@@ -16,30 +16,30 @@
   }
 }
 
- .thread-window {
+.thread-window {
   display: flex;
   flex-direction: column;
   background-color: white;
-   margin-left: 20px;
-   border-radius: 30px;
-   width: 50%;
-   max-width: 50%;
+  margin-left: 20px;
+  border-radius: 30px;
+  width: 50%;
+  max-width: 50%;
 
-   @media (max-width: 790px) {
+  @media (max-width: 790px) {
     width: unset;
     max-width: unset;
   }
-//   width: 0;
-//   max-width: 0;
-//   height: 0;
-//   overflow: hidden;
-//   opacity: 0;
-//   transition: width 0.3s, max-width 0.3s, opacity 0.3s, height 0.3s;
-//   // visibility: hidden; 
-//   @media (max-width: 790px) {
-//     width: 100%;
-//   }
- }
+  //   width: 0;
+  //   max-width: 0;
+  //   height: 0;
+  //   overflow: hidden;
+  //   opacity: 0;
+  //   transition: width 0.3s, max-width 0.3s, opacity 0.3s, height 0.3s;
+  //   // visibility: hidden;
+  //   @media (max-width: 790px) {
+  //     width: 100%;
+  //   }
+}
 
 .thread-window.open {
   width: 50%;
@@ -52,7 +52,6 @@
     width: 100%;
     max-width: 100%;
   }
-
 }
 
 .sidebar-window {
@@ -61,7 +60,7 @@
   @media (max-width: 790px) {
     width: 100%;
     justify-content: center;
-   }
+  }
 }
 
 // Einblenden
@@ -81,11 +80,13 @@
 ::ng-deep .mobile-chat-dialog .mat-dialog-container {
   background-color: aqua !important;
   padding: 0; /* Entfernt Standard-Padding */
-  margin: 0;  /* Entfernt Standard-Margin */
+  margin: 0; /* Entfernt Standard-Margin */
   width: 100vw; /* Stellt sicher, dass der Dialog die volle Breite des Viewports einnimmt */
   height: 100vh; /* Stellt sicher, dass der Dialog die volle Höhe des Viewports einnimmt */
   overflow: hidden; /* Verhindert Scrollen innerhalb des Dialogs */
   border-radius: 40px !important; /* Entfernt abgerundete Ecken, um es wie eine native mobile Ansicht aussehen zu lassen */
 }
 
-/* content.component.scss */
+.sidebar-window.hidden {
+  display: none;
+}
