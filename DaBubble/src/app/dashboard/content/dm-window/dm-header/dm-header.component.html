@@ -1,5 +1,5 @@
-<div class="chat-header" *ngIf="recipientUser$ | async as recipientUser">
-    <div class="chat-header-left" (click)="openProfile(recipientUser.uid)">
+<div class="dm-header" *ngIf="recipientUser$ | async as recipientUser">
+    <div class="dm-header-left" (click)="openProfile(recipientUser.uid)">
         <div class="avatarStatus">
             <img [src]="recipientUser?.photoURL" alt="User Avatar">
             <img [src]="recipientUser?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'"

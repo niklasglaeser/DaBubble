@@ -21,6 +21,7 @@ main {
     @media (max-width:790px) {
         // height: 100%;
         padding: unset;
+        height: calc(100svh - 76px);
     }
 
     // width: 100%;

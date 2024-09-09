@@ -71,7 +71,6 @@
     width: 100%;
     height: 40px;
     justify-content: space-between;
-
 }
 
 #dm-message-input {
@@ -194,4 +193,39 @@
     border-radius: 16px;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+@media (max-height: 950px) {
+    #dm-message-input {
+        height: 50px;
+    }
+
+    .chat-message-toolbar {
+        height: 30px;
+    }
+
+    .dm-footer {
+        margin-bottom: 15px;
+        padding: 5px 30px 15px 30px;
+    }
+
+    .add-file {
+        height: 30px;
+        width: 30px;
+    }
+
+    .add-emojis {
+        height: 30px;
+        width: 30px;
+    }
+
+    .tag-user {
+        height: 30px;
+        width: 30px;
+    }
+
+    .seperator {
+        height: 30px;
+    }
 }

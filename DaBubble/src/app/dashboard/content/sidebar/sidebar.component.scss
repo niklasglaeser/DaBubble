@@ -295,3 +295,10 @@ app-search {
     transform: rotate(-90deg);
     transition: transform 0.2s ease-in-out;
   }
+
+
+  @media (max-width: 1100px) {
+    .container {
+      width: 300px;
+    }
+  }

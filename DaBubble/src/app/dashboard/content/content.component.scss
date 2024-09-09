@@ -10,9 +10,13 @@
 .dm-window {
   width: 100%;
   display: flex;
-  margin-left: 20px;
+  padding-left: 20px;
   &.no-sidebar {
     margin-left: 0;
+  }
+  @media (max-width: 790px) {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }
 

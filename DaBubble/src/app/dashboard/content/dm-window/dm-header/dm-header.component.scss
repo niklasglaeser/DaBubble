@@ -1,4 +1,4 @@
-.chat-header {
+.dm-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -12,7 +12,7 @@
     padding-bottom: 20px;
 }
 
-.chat-header-left {
+.dm-header-left {
     display: flex;
     gap: 10px;
     padding: 10px;
@@ -60,3 +60,27 @@
     }
   }
 
+
+  @media (max-height: 950px) {
+    .dm-header {
+        padding: 5px 50px;
+    }
+
+    .dm-header-left {
+        >div {
+            font-size: 20px;
+        }
+    }
+
+    .avatarStatus {
+        >img:first-child {
+            width: 35px;
+            height: 35px;
+        }
+
+        > :last-child {
+            width: 10px;
+        }
+    }
+  
+  }

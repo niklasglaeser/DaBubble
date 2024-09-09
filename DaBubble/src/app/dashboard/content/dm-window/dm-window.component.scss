@@ -1,4 +1,4 @@
-.chat-window-container {
+.dm-window-container {
   display: flex;
   flex-direction: column;
   z-index: 500;
@@ -42,3 +42,8 @@
   padding-left: 30px;
   padding-right: 30px;
 }
+
+@media (pointer: coarse) {
+  
+}
+
