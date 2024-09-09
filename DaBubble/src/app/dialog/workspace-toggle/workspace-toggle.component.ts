@@ -6,19 +6,20 @@ import { GlobalService } from '../../services/global.service';
   standalone: true,
   imports: [],
   templateUrl: './workspace-toggle.component.html',
-  styleUrl: './workspace-toggle.component.scss',
+  styleUrl: './workspace-toggle.component.scss'
 })
-export class WorkspaceToggleComponent implements OnInit {
+export class WorkspaceToggleComponent {
   showSidebar: boolean = true;
-  constructor(private sidebarService: GlobalService) { }
+  @Output() toggleSidebar = new EventEmitter<void>();
+  constructor(private sidebarService: GlobalService) {}
 
-  ngOnInit(): void {
-    this.sidebarService.showSidebar$.subscribe(status => {
-      this.showSidebar = status;
-    });
-  }
+  // ngOnInit(): void {
+  //   this.sidebarService.showSidebar$.subscribe(status => {
+  //     this.showSidebar = status;
+  //   });
+  // }
 
   toggleWorkspace() {
-    this.sidebarService.toggleSidebar();
+    this.toggleSidebar.emit();
   }
 }

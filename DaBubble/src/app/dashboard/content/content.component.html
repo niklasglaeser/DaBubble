@@ -1,4 +1,4 @@
-<app-sidebar *ngIf="showSidebar" class="sidebar-window" [isMobile]="isMobile" [showSidebar]="showSidebar"
+<app-sidebar [class.hidden]="!showSidebar" class="sidebar-window" [isMobile]="isMobile" [showSidebar]="showSidebar"
     (channelOpened)="handleChannelOpen()" (directMessageOpened)="handleDirectMessageOpen()"
     (conversationSet)="dmWindow.loadMessagesAfterSidebarClick()"></app-sidebar>
 <app-chat-window
