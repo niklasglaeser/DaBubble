@@ -3,12 +3,11 @@ import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { ThreadWindowComponent } from './thread-window/thread-window.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { DmWindowComponent } from './dm-window/dm-window.component';
-import { WorkspaceToggleComponent } from "../../dialog/workspace-toggle/workspace-toggle.component";
+import { WorkspaceToggleComponent } from '../../dialog/workspace-toggle/workspace-toggle.component';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CustomDialogComponent } from '../../dialog/custom-dialog/custom-dialog.component';
 import { GlobalService } from '../../services/global.service';
-
 
 @Component({
   selector: 'app-content',
@@ -25,8 +24,8 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   sidebarOpen: boolean = true;
   showWorkspaceToggle: boolean = true;
 
-  isDektop: boolean = false
-  isTablet: boolean = false
+  isDektop: boolean = false;
+  isTablet: boolean = false;
   isMobile: boolean = false;
 
   isChannel: boolean = true;
@@ -35,24 +34,23 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   chatDialogRef: MatDialogRef<ChatWindowComponent> | null = null;
 
-  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) {
-  }
+  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) {}
 
   ngOnInit() {
     this.checkWindowSize();
-    this.sidebarService.showSidebar$.subscribe(status => {
+    this.sidebarService.showSidebar$.subscribe((status) => {
       this.showSidebar = status;
     });
 
-    this.sidebarService.isChannel$.subscribe(status => {
+    this.sidebarService.isChannel$.subscribe((status) => {
       this.isChannel = status;
     });
 
-    this.sidebarService.isDirectChat$.subscribe(status => {
+    this.sidebarService.isDirectChat$.subscribe((status) => {
       this.isDirectChat = status;
     });
 
-    this.sidebarService.isThread$.subscribe(status => {
+    this.sidebarService.isThread$.subscribe((status) => {
       this.isThread = status;
       console.log('isThread status in ContentComponent:', status);
     });
@@ -107,8 +105,9 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   }
 
   handleThreadOpen() {
-    this.sidebarService.isChannel(false);
-    this.sidebarService.isDirectChat(false);
+    if (this.isMobile) {
+      this.sidebarService.isChannel(false);
+    }
     this.sidebarService.isThread(true);
   }
 

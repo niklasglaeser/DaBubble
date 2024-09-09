@@ -1,7 +1,8 @@
 <app-sidebar *ngIf="showSidebar" class="sidebar-window" [isMobile]="isMobile" [showSidebar]="showSidebar"
     (channelOpened)="handleChannelOpen()" (directMessageOpened)="handleDirectMessageOpen()"
     (conversationSet)="dmWindow.loadMessagesAfterSidebarClick()"></app-sidebar>
-<app-chat-window *ngIf="(isChannel && !isDirectChat && !isThread && (!showSidebar || !isMobile))"
+<app-chat-window
+    *ngIf="(isChannel && !isDirectChat && !isThread && (!showSidebar || !isMobile)) || (!isMobile && isThread)"
     (threadOpened)="handleThreadOpen()" class="chat-window"></app-chat-window>
 <app-dm-window *ngIf="(isDirectChat && !isChannel && (!showSidebar || !isMobile))" class="dm-window"
     #dmWindow></app-dm-window>
