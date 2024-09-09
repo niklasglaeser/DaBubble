@@ -1,4 +1,4 @@
-import { Component, inject, SimpleChanges } from '@angular/core';
+import { Component, HostListener, inject, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -52,9 +52,22 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
+        this.errorMessage()
       }
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.errorMessage()
+  }
+
+  errorMessage():string{
+    if(window.innerWidth <= 395){
+      return this.errorM = 'Falsches Passwort oder E-Mail.';
+    } else{
+       return this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
+    }
   }
 
   guestLogin(): void {
