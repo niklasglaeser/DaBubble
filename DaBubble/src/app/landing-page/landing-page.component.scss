@@ -1,344 +1,358 @@
-.container {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
+// Variables
+$main-padding: 16px;
+$logo-size-lg: 242px;
+$logo-size-sm: 204px;
+$logo-height-lg: 70px;
+$logo-height-sm: 56px;
+$accent-color: var(--purple2);
+$accent-color-light: var(--lightPurple);
+$animation-time-short: 0.4s;
+$animation-time-long: 0.5s;
+
+// Mixins
+@mixin flex-center($direction: row) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
 }
 
-.content{
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    max-width: 1920px;
-    min-height: 1040px;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-    padding: 16px;
-    @media (max-width: 650px) {
-        min-height: 950px;
-    }
+@mixin responsive-logo {
+  .logo {
+    width: $logo-size-sm;
+    height: $logo-height-sm;
+  }
+}
+
+@mixin transition-scale {
+  transition: transform $animation-time-short ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+// Base styles
+.container {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+.content {
+  position: relative;
+  @include flex-center(column);
+  max-width: 1920px;
+  min-height: 1040px;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  padding: $main-padding;
+
+  @media (max-width: 650px) {
+    min-height: 950px;
+  }
 }
 
 .logo-box {
+  position: absolute;
+  top: 75px;
+  left: 75px;
+  cursor: pointer;
+  @include transition-scale;
+
+  .logo {
+    width: $logo-size-lg;
+    height: $logo-height-lg;
+  }
+
+  @media (max-width: 650px) {
+    position: relative;
+    opacity: 1;
+    top: unset;
+    left: unset;
+    margin-bottom: 30px;
+    @include responsive-logo;
+  }
+}
+
+.animation {
+  @media (max-width: 650px) {
+    opacity: 0;
+    animation: moveTop $animation-time-short ease-in 2.3s forwards;
+    @include responsive-logo;
+  }
+}
+
+.create-acc {
+  position: absolute;
+  @include flex-center(column);
+  right: 75px;
+  top: 75px;
+  gap: 16px;
+
+  @media (max-width: 650px) {
+    position: relative;
+    top: unset;
+    right: unset;
+    margin-top: 30px;
+  }
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.footer {
+  position: absolute;
+  @include flex-center(row);
+  gap: 16px;
+  bottom: 50px;
+
+  @media (max-width: 650px) {
+    display: none;
+  }
+}
+
+.link {
+  transition: border-color 0.125s ease-in-out;
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  border-radius: 25px;
+  color: $accent-color;
+
+  &:hover {
+    border-color: $accent-color-light;
+  }
+}
+
+.intro-animation {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom left, #777CF2, #333CE6);
+  animation: hideIntro $animation-time-short ease-out 2.2s forwards;
+}
+
+.intro-content {
+  position: relative;
+  max-width: 1920px;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+
+.logo-animation {
+  position: absolute;
+  top: calc(50% - 92px);
+  left: calc(50% - 92px);
+  @include flex-center(center);
+  animation: showLogo $animation-time-long ease-in forwards, moveLeft $animation-time-long ease-in 0.5s forwards, moveTopLeft $animation-time-short ease-in 1.8s forwards;
+
+  span {
     position: absolute;
+    color: white;
+    font-size: 56px;
+    font-weight: 700;
+    opacity: 0;
+    animation: textAnimation $animation-time-short ease-in 1s forwards, changeFontColor $animation-time-short ease-in 1.8s forwards;
+  }
+
+  @media (max-width: 650px) {
+    span {
+      display: none;
+    }
+    top: calc(50% - 50px);
+    left: calc(50% - 50px);
+    animation: showLogo $animation-time-long ease-in forwards;
+  }
+}
+
+.box {
+  padding: 24px;
+  z-index: 5;
+  background-color: transparent;
+  animation: rmPadding $animation-time-short ease-in 1.8s forwards;
+  overflow: hidden;
+
+  img {
+    height: 184px;
+    width: auto;
+    animation: changeLogoSize $animation-time-short ease-in 1.8s forwards;
+
+    @media (max-width: 650px) {
+      animation: unset;
+      height: $logo-height-sm;
+    }
+  }
+
+  @media (max-width: 650px) {
+    animation: unset;
+  }
+}
+
+// Components width settings
+app-login {
+  max-width: 606px;
+  width: 100%;
+  @media (max-width: 650px) {
+    max-width: 550px;
+  }
+}
+
+app-sign-up {
+  max-width: 606px;
+  width: 100%;
+  @media (max-width: 650px) {
+    max-width: 500px;
+  }
+}
+
+app-avatar {
+  max-width: 606px;
+  width: 100%;
+}
+
+app-reset-password {
+  max-width: 698px;
+  width: 100%;
+}
+
+app-set-password {
+  max-width: 698px;
+  width: 100%;
+}
+
+app-imprint {
+  max-width: 500px;
+  width: 100%;
+}
+
+app-privacy-policy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 900px;
+  width: 100%;
+  height: 65vh;
+}
+
+app-pop-up {
+  max-width: 1920px;
+  width: 100%;
+  height: 100%;
+}
+
+// Animations and keyframes
+@keyframes showLogo {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes moveLeft {
+  0% {
+    top: calc(50% - 92px);
+    left: calc(50% - 92px);
+  }
+  50% {
+    top: calc(50% - 92px);
+    left: calc(50% - 92px);
+  }
+  100% {
+    top: calc(50% - 92px);
+    left: calc(50% - 255px);
+  }
+}
+
+@keyframes textAnimation {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  65% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
+@keyframes moveTopLeft {
+  0% {
+    top: calc(50% - 92px);
+    left: calc(50% - 255px);
+  }
+  100% {
     top: 75px;
     left: 75px;
-    cursor: pointer;
-    .logo {
-        width: 242px;
-        height: 70px;
-    }
-    transition: transform 0.3s ease-in-out;
-    
-    &:hover {
-        transform: scale(1.1); 
-    }
-    @media (max-width: 650px) {
-        position: relative;
-        opacity: 1;
-        top: unset;
-        left: unset;
-        margin-bottom: 30px;
-        .logo {
-            width: 204px;
-            height: 56px;
-        } 
-    }
-
+    color: black;
+  }
 }
 
-.animation{
-    
-    @media (max-width: 650px) {
-        opacity: 0;
-        animation: moveTop 0.4s ease-in 2.3s forwards;
-        .logo {
-            width: 204px;
-            height: 56px;
-        } 
-    }
+@keyframes changeFontColor {
+  0% {
+    color: white;
+  }
+  100% {
+    color: black;
+    font-size: 34px;
+    transform: translateX(78.5%);
+  }
 }
 
-.create-acc{
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    right: 75px;
-    top: 75px;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    @media (max-width: 650px) {
-        position: relative;
-        top: unset;
-        right:unset;
-        margin-top: 30px;
-    }
+@keyframes changeLogoSize {
+  0% {
+    height: 184px;
+  }
+  100% {
+    height: $logo-height-lg;
+  }
 }
 
-a{
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.footer{
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 16px;
-    bottom: 50px;
-    @media (max-width: 650px) {
-        display: none;
-    }
-}
-
-.link{
-    transition: border-color 0.125s ease-in-out;
-    padding: 10px 15px;
-    border: 1px solid transparent;
-    border-radius: 25px;
-    color: var(--purple2);
-    &:hover{
-        border-color: var(--lightPurple);
-    }
-}
-
-.intro-animation{
-    position: fixed;
-    z-index: 10;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(to bottom left, #777CF2, #333CE6);
-    animation: hideIntro 0.4s ease-out 2.2s forwards;
-}
-
-.intro-content{
-    position: relative;
-    max-width: 1920px;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-}
-
-.logo-animation{
-    position: absolute;
-    top: calc(50% - 92px );
-    left: calc(50% - 92px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation:  showLogo 0.5s ease-in forwards, 
-                moveLeft 0.5s ease-in 0.5s forwards,
-                moveTopLeft 0.4s ease-in 1.8s forwards;
-
-    span{
-        position: absolute;
-        color: white;
-        font-size: 56px;
-        font-weight: 700;
-        opacity: 0;
-        animation: textAnimation 0.5s ease-in 1s forwards,
-                    changeFontColor 0.4s ease-in 1.8s forwards;
-    }
-    @media (max-width: 650px) {
-        span{
-            display: none;
-        }
-        top: calc(50% - 50px );
-        left: calc(50% - 50px);
-        animation:  showLogo 0.5s ease-in forwards, 
-    }
-}
-
-.box{
+@keyframes rmPadding {
+  0% {
     padding: 24px;
-    z-index: 5;
-    background-color: transparent;
-    animation: rmPadding 0.4s ease-in 1.8s forwards;
-    overflow: hidden; 
-    img{
-        height: 184px;
-        width: auto;
-        animation: changeLogoSize 0.4s ease-in 1.8s forwards;
-        @media (max-width: 650px) {
-            animation: unset;
-            height: 70px;
-        }
-    }
-    @media (max-width: 650px) {
-        animation:unset; 
-    }
+  }
+  100% {
+    padding: 0px;
+  }
 }
 
-app-login{
-    max-width: 606px;
-    width: 100%;
-    @media (max-width:650px) {
-        max-width: 550px ;
-    }
-}
-
-app-sign-up{
-    max-width: 606px;
-    width: 100%;
-    @media (max-width:650px) {
-        max-width: 500px ;
-    }
-}
-
-app-avatar{
-    max-width: 606px;
-    width: 100%;
-}
-
-app-reset-password{
-    max-width: 698px;
-    width: 100%;
-}
-
-app-set-password{
-    max-width: 698px;
-    width: 100%;
-}
-
-app-imprint{
-    max-width: 500px;
-    width: 100%;
-}
-
-app-privacy-policy{
+@keyframes hideIntro {
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 900px;
-    width: 100%;
-    height: 65vh;
+  }
+  100% {
+    display: none;
+  }
 }
 
-app-pop-up{
-    max-width: 1920px;
-    width: 100%;
-    height: 100%;
+@keyframes moveTop {
+  0% {
+    opacity: 0;
+    top: calc(50% - 50px);
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    top: 0%;
+  }
 }
-
-
-
-    @keyframes showLogo{
-        0% {
-            opacity: 0;
-        }
-        50%{
-            opacity: 0.2;
-        }
-        100%{
-            opacity: 1;
-        }
-    }
-    
-    @keyframes moveLeft{
-        0% {
-            top: calc(50% - 92px );
-            left: calc(50% - 92px);
-        }
-        50% {
-            top: calc(50% - 92px );
-            left: calc(50% - 92px);
-        }
-        100%{
-            top: calc(50% - 92px );
-            left: calc(50% - (255px));
-        }
-    }
-    
-    @keyframes textAnimation {
-        0% {
-            transform: translateX(0);
-            opacity: 0;
-        }
-        65% {
-            
-            opacity: 0;
-        }
-        100% {
-            transform: translateX(100%);
-            opacity: 1;
-        }
-    }
-   
-    @keyframes moveTopLeft {
-        0%{
-            top: calc(50% - 92px );
-            left: calc(50% - (255px));
-        }
-        100%{
-            top:75px;
-            left:75px;
-            color: black;
-        }
-    }
-    
-    @keyframes changeFontColor{
-        0%{
-            color: white;
-        }
-        100%{
-            color: black;
-            font-size: 34px;
-            transform: translateX(78.5%);
-        }
-    }
-    
-    @keyframes changeLogoSize{
-        0%{
-            height: 184px;
-        }
-        100%{
-            height: 70px;
-        }
-    }
-    
-    @keyframes rmPadding{
-        0%{
-            padding: 24px;
-        }
-        100%{
-            padding: 0px;
-        }
-    }
-    
-    @keyframes hideIntro {
-        0% {
-            opacity: 1;
-        }
-        99% {
-            opacity: 0;
-            display: flex;  
-        }
-        100% {
-            display: none;
-        }
-    }
-
-    @keyframes moveTop {
-        0%{
-            opacity: 0;
-            top: calc(50% - 50px );
-        }
-        50%{
-            opacity: 0;
-        }
-        100%{
-            opacity: 1;
-            top: 0%;
-        }
-    }
-
-
-

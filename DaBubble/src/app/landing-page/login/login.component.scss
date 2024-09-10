@@ -149,17 +149,18 @@ input:focus ~ mat-icon{
     }
 }
 
-.separtate-box{
+.separate-box{
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
     width: 100%;
     height: 35px;
-    .separate{
+    .separate {
         flex: 1;
         height: 1px;
-        border: 0.5px solid var(--lighterPurple);
-    }
+        background-color: var(--lightPurple); 
+      }
     span{
         display: flex;
         justify-content: center;

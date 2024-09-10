@@ -52,24 +52,15 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.errorMessage()
+        if(window.innerWidth <= 395){
+          return this.errorM = 'Falsches Passwort oder E-Mail.';
+        } else{
+           return this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
+        }
       }
     });
   }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.errorMessage()
-  }
-
-  errorMessage():string{
-    if(window.innerWidth <= 395){
-      return this.errorM = 'Falsches Passwort oder E-Mail.';
-    } else{
-       return this.errorM = 'Falsches Passwort oder E-Mail. Bitte versuchen Sie es noch einmal.';
-    }
-  }
-
+  
   guestLogin(): void {
     this.authService.login('guest@guest.com', 'Safa123').subscribe({
       next: () => {
