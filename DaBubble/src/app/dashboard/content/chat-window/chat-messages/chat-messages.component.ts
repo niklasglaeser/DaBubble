@@ -138,7 +138,6 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
         );
         this.editMessageClicked = false;
         this.isMessageEmpty = false;
-        console.log('Message successfully saved.' + this.editMessageText);
         this.selectedMessage = null;
         this.editMessageText = '';
       } catch (e) {
@@ -197,35 +196,13 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     this.threadService.checkAndCreateThread(channelId, messageId, originMessage);
     this.globalService.isThread(true);
     const currentThreadStatus = this.globalService.getThreadStatus();
-    console.log('open thread from message, isThread status:', currentThreadStatus);
   }
-
-
-  //   openThread(channelId: string, messageId: string, originMessage: Message) {
-  //   this.threadService.checkAndCreateThread(channelId, messageId, originMessage);
-  //   let threadWindow = document.querySelector('.thread-window') as HTMLElement;
-  //   if (threadWindow) {
-  //     threadWindow.classList.add('open');
-  //   }
-
-  //   let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-  //   let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-  //   let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-
-  //   if (window.innerWidth < 790) {
-  //     dmWindow.style.display = 'none';
-  //     chatWindow.style.display = 'none';
-  //     sidebar.style.display = 'none';
-  //     threadWindow.style.display = 'flex';
-  //   }
-  // }
 
   openImg(message: Message) {
     this.dialog.open(DialogChatImgComponent, {
       data: { imagePath: message.imagePath }
     });
   }
-  /* EMOJI */
 
   async toggleReaction(message: Message, emoji: string) {
     const userId = this.currentUser?.uid!;
@@ -285,7 +262,5 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       this.emojiPickerMessageId = undefined;
     }
   }
-
-  /* EMOJI */
 }
 

@@ -49,6 +49,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   searchControl = new FormControl();
   isPanelOpen: boolean = true;
+  isThread: boolean = false;
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
@@ -58,6 +59,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscribeToUserData();
     this.sidebarService.showSidebar$.subscribe((status) => {
       this.isPanelOpen = status;
+    });
+    this.sidebarService.isThread$.subscribe((status) => {
+      this.isThread = status;
     });
   }
 
@@ -104,23 +108,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleSidebar() {
-    //const isChannelActive = this.sidebarService.getChannelStatus();
     this.sidebarService.toggleSidebar();
-
-    // Wenn ein Channel aktiv ist, zeige das Chat-Fenster, wenn die Sidebar geschlossen wird
-    // if (isChannelActive && !this.sidebarService.getSidebarStatus()) {
-    //   this.sidebarService.isChannel(true);  // Stelle sicher, dass das Chat-Fenster offen bleibt
-    // }
+    if (this.isThread) {
+      this.sidebarService.isThread(false);
+    }
   }
-
-  // goBackToSidebar() {
-  //   let dmWindow = document.querySelector('.dm-window') as HTMLElement;
-  //   let chatWindow = document.querySelector('.chat-window') as HTMLElement;
-  //   let threadWindow = document.querySelector('.thread-window') as HTMLElement;
-  //   let sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-  //   sidebar.classList.remove('none');
-  //   chatWindow.classList.add('none');
-  //   dmWindow.classList.add('none');
-  //   threadWindow.classList.add('none');
-  // }
 }

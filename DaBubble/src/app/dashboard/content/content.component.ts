@@ -34,7 +34,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   chatDialogRef: MatDialogRef<ChatWindowComponent> | null = null;
 
-  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) {}
+  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) { }
 
   ngOnInit() {
     this.checkWindowSize();
@@ -52,7 +52,6 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
     this.sidebarService.isThread$.subscribe((status) => {
       this.isThread = status;
-      console.log('isThread status in ContentComponent:', status);
     });
   }
 
