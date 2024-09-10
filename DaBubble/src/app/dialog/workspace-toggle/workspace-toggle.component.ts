@@ -13,14 +13,16 @@ export class WorkspaceToggleComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
   constructor(private sidebarService: GlobalService) { }
 
-  // ngOnInit(): void {
-  //   this.sidebarService.showSidebar$.subscribe(status => {
-  //     this.showSidebar = status;
-  //   });
-  // }
+  ngOnInit(): void {
+    this.sidebarService.showSidebar$.subscribe(status => {
+      this.showSidebar = status;
+    });
+  }
 
   toggleWorkspace() {
     this.showSidebar = !this.showSidebar;
     this.toggleSidebar.emit();
+    this.sidebarService.isSidebar(this.showSidebar);
+
   }
 }

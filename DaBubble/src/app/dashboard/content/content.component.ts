@@ -66,6 +66,8 @@ export class ContentComponent implements OnInit, AfterContentChecked {
     if (screenWidth > 1200) {
       this.isMobile = false;
       this.showSidebar = true;
+      this.sidebarService.setIsMobile(this.isMobile);
+      this.sidebarService.isSidebar(this.showSidebar);
       if (this.sidebarService.getDirectChatStatus()) {
         this.sidebarService.isChannel(false);
         this.sidebarService.isDirectChat(true);
@@ -75,6 +77,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
       }
     } else if (screenWidth <= 1200 && screenWidth > 790) {
       this.isMobile = false;
+      this.sidebarService.setIsMobile(this.isMobile);
       if (this.sidebarService.getDirectChatStatus()) {
         this.sidebarService.isDirectChat(true);
         this.sidebarService.isChannel(false);
@@ -84,6 +87,8 @@ export class ContentComponent implements OnInit, AfterContentChecked {
       }
     } else {
       this.isMobile = true;
+      this.sidebarService.setIsMobile(this.isMobile);
+      this.sidebarService.isSidebar(true);
     }
   }
 

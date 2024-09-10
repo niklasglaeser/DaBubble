@@ -48,8 +48,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user?: UserLogged;
 
   searchControl = new FormControl();
-  isPanelOpen: boolean = true;
+  showSidebar: boolean = true;
   isThread: boolean = false;
+  isMobile: boolean = true;
+  isChannel: boolean = true;
+  isDirectChat: boolean = false;
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
@@ -58,10 +61,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscribeToUserData();
     this.sidebarService.showSidebar$.subscribe((status) => {
-      this.isPanelOpen = status;
+      this.showSidebar = status;
+    });
+    this.sidebarService.isChannel$.subscribe((status) => {
+      this.isChannel = status;
+    });
+
+    this.sidebarService.isDirectChat$.subscribe((status) => {
+      this.isDirectChat = status;
     });
     this.sidebarService.isThread$.subscribe((status) => {
       this.isThread = status;
+    });
+    this.sidebarService.isMobile$.subscribe((status) => {
+      this.isMobile = status;
     });
   }
 

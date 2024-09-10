@@ -9,11 +9,13 @@ export class GlobalService {
   private isChannelSubject = new BehaviorSubject<boolean>(false);
   private isDirectChatSubject = new BehaviorSubject<boolean>(false);
   private isThreadSubject = new BehaviorSubject<boolean>(false);
+  private isMobileSubject = new BehaviorSubject<boolean>(false);
 
   showSidebar$ = this.showSidebarSubject.asObservable();
   isChannel$ = this.isChannelSubject.asObservable();
   isDirectChat$ = this.isDirectChatSubject.asObservable();
   isThread$ = this.isThreadSubject.asObservable();
+  isMobile$ = this.isMobileSubject.asObservable();
 
 
   toggleSidebar() {
@@ -36,6 +38,10 @@ export class GlobalService {
     this.showSidebarSubject.next(status);
   }
 
+  setIsMobile(status: boolean) {
+    this.isMobileSubject.next(status);
+  }
+
   getSidebarStatus() {
     return this.showSidebarSubject.getValue();
   }
@@ -47,7 +53,12 @@ export class GlobalService {
   getDirectChatStatus() {
     return this.isDirectChatSubject.getValue();
   }
+
   getThreadStatus() {
     return this.isThreadSubject.getValue();
+  }
+
+  getIsMobileStatus() {
+    return this.isMobileSubject.getValue();
   }
 }  
