@@ -2,6 +2,9 @@
   display: block;
   padding: 40px;
   background: white;
+  @media (max-width: 790px) {
+    padding: 30px;
+  }
 
 }
 

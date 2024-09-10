@@ -19,7 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-dialog-edit-profil',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent,MatIconModule],
+  imports: [CommonModule, FormsModule, SidebarComponent, MatIconModule],
   templateUrl: './dialog-edit-profil.component.html',
   styleUrl: './dialog-edit-profil.component.scss'
 })
@@ -48,9 +48,10 @@ export class DialogEditProfilComponent implements OnInit {
 
   ngOnInit() {
     this.loadProfile();
-    this.subscribeToUserData()
+    // this.subscribeToUserData()
   }
 
+  /* Bug DM Header -> open profile dialog -> falsches photo wenn alles gut, kann raus*/
   async subscribeToUserData(): Promise<void> {
     if (this.authService.uid) {
       await this.UserService.subscribeUser(this.authService.uid).subscribe((data) => {
@@ -58,6 +59,7 @@ export class DialogEditProfilComponent implements OnInit {
       });
     }
   }
+  /* Bug DM Header -> open profile dialog -> falsches photo wenn alles gut, kann raus*/
 
   editProfilBtn(event: Event) {
     if (!this.editNameClicked) {
@@ -137,7 +139,7 @@ export class DialogEditProfilComponent implements OnInit {
     if (this.edit) {
       const dialogRef = this.dialog.open(AvatarProfileComponent, {
         width: '100vw', // Setze die Breite auf 80% des Viewports
-      maxWidth: '550px', // Maximalbreite von 600px
+        maxWidth: '550px', // Maximalbreite von 600px
       });
 
       dialogRef.afterClosed().subscribe(result => {
