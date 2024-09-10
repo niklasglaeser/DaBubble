@@ -84,3 +84,12 @@
     }
   
   }
+
+  @media (max-width: 500px) {
+    .dm-header-left {
+        >div {
+            font-size: 16px;
+        }
+    }
+        
+  }

@@ -483,7 +483,7 @@
 
 @media (max-width: 1350px) {
   .reaction-bar {
-    margin-top: 10px;
+    margin-top: 20px;
   }
 }
 
@@ -512,8 +512,33 @@
   }
 
   .reaction-bar {
+    bottom: 30px;
+    padding: 3px 15px;
+    >div {
+      font-size: 13px;
+      height: 25px;
+      width: 25px;
+    }
+  }
+
+  .emoji-reaction {
     scale: 80%;
   }
+
+  .option-reaction {
+    scale: 80%;
+  }
+
+  .emoji-container {
+    font-size: 10px;
+  }
+
+  .emoji {
+    height: 20px;
+    width: 20px;
+  }
+
+
 
 }
 
@@ -521,6 +546,41 @@
 @media (max-width: 1000px) {
   .message-content {
     padding-top: 30px;
+  }
+
+  .reaction-bar {
+    align-self: center !important;
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 790px) {
+  .reaction-bar {
+    bottom: 30px;
+    padding: 3px 15px;
+    >div {
+      font-size: 11px;
+      height: 24px;
+      width: 24px;
+    }
+  }
+
+  .emoji-reaction {
+    scale: 70%;
+  }
+
+  .option-reaction {
+    scale: 70%;
+  }
+
+  .emoji-container {
+    font-size: 8px;
+    padding: 2px 5px;
+  }
+
+  .emoji {
+    height: 17px;
+    width: 17px;
   }
 }
 
@@ -549,7 +609,8 @@
   }
 
   .message-date {
-    font-size: 10px;
+    font-size: 9px;
+    bottom: 15px;
   }
 
   #dm-messages-container {
@@ -558,9 +619,24 @@
   }
 
   .reaction-bar {
-    scale: 50%;
+    scale: 80%;
   }
 
+  .emoji-container {
+    scale: 90%;
+  }
+
+  .user-send-message {
+    .reaction-bar {
+      margin-left: 0;
+    }
+  }
+
+  .message {
+    .reaction-bar {
+      margin-right: 0;
+    }
+  }
 
 
 }

@@ -16,6 +16,9 @@
     padding: 16px 16px;
     border-radius: unset;
   }
+  @media (max-width: 1100px) {
+    width: 300px;
+  }
 }
 
 app-search {
@@ -255,12 +258,6 @@ app-search {
     width: 14px;
     bottom: 0;
     right: 0;
-  }
-
-  @media (max-width: 1100px) {
-    .container {
-      width: 300px;
-    }
   }
 }
 
