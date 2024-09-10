@@ -147,21 +147,16 @@
 }
 
 .emoji-reaction {
+  background-size: 50% 50%;
   background-image: url("/assets/img/main-page/chat/reaction-emojis.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-emojis-hover.svg");
   }
 }
 
-.comment-reaction {
-  background-image: url("/assets/img/main-page/chat/reaction-comment.svg");
-  &:hover {
-    background-image: url("/assets/img/main-page/chat/reaction-comment-hover.svg");
-  }
-}
-
 .option-reaction {
   display: none;
+  background-size: 40% 40%;
   background-image: url("/assets/img/main-page/chat/reaction-option.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-option-hover.svg");
@@ -515,18 +510,10 @@
     bottom: 30px;
     padding: 3px 15px;
     >div {
-      font-size: 13px;
+      font-size: 12px;
       height: 25px;
       width: 25px;
     }
-  }
-
-  .emoji-reaction {
-    scale: 80%;
-  }
-
-  .option-reaction {
-    scale: 80%;
   }
 
   .emoji-container {
@@ -538,7 +525,9 @@
     width: 20px;
   }
 
-
+  .edit {
+    font-size: 10px;
+  }
 
 }
 
@@ -548,9 +537,14 @@
     padding-top: 30px;
   }
 
-  .reaction-bar {
-    align-self: center !important;
-    margin-left: 0 !important;
+  .edit-dm-btn {
+    gap: 30px;
+    padding-right: 0;
+  }
+
+  .edit {
+    font-size: 8px;
+    padding: 3px 8px;
   }
 }
 
@@ -565,13 +559,6 @@
     }
   }
 
-  .emoji-reaction {
-    scale: 70%;
-  }
-
-  .option-reaction {
-    scale: 70%;
-  }
 
   .emoji-container {
     font-size: 8px;
@@ -582,9 +569,22 @@
     height: 17px;
     width: 17px;
   }
+
+  .edit-dm-btn {
+    gap: 25px;
+  }
+
+  .edit {
+    font-size: 8px;
+  }
 }
 
 @media (max-width: 550px) {
+
+  .reaction-bar {
+    align-self: center !important;
+    margin-left: 0 !important;
+  }
 
   .author-name {
     font-size: 10px;
@@ -635,6 +635,19 @@
   .message {
     .reaction-bar {
       margin-right: 0;
+    }
+  }
+
+  .edit-dm-btn {
+    gap: 5px;
+    padding-right: 0;
+  }
+
+  .edit {
+    font-size: 7px;
+    padding: 3px 5px;
+    &:hover {
+      scale: 110%;
     }
   }
 

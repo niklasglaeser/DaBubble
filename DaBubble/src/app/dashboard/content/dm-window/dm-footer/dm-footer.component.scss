@@ -196,12 +196,16 @@
 }
 
 
-@media (max-height: 950px) {
+@media (max-height: 1000px) {
     #dm-message-input {
         height: 50px;
     }
 
     .chat-message-toolbar {
+        height: 30px;
+    }
+
+    .send-message {
         height: 30px;
     }
 
@@ -228,4 +232,53 @@
     .seperator {
         height: 30px;
     }
+}
+
+@media (max-width: 500px) {
+
+    #dm-message-input {
+        font-size: 12px;
+        &::placeholder {
+            font-size: 12px;
+        }
+    }
+
+    .chat-message-toolbar {
+        height: 20px;
+    }
+
+    .add-file {
+        height: 20px;
+        width: 20px;
+    }
+
+    .add-emojis {
+        height: 20px;
+        width: 20px;
+    }
+
+    .tag-user {
+        height: 20px;
+        width: 20px;
+    }
+
+    .seperator {
+        height: 20px;
+        width: 5px;
+    }
+
+    .send-message {
+        height: 20px;
+    }
+
+    .chat-toolbar-left {
+        gap: 5px;
+    }
+
+    .dm-footer {
+        padding: 10px 15px 15px 15px;
+    }
+
+    
+
 }
