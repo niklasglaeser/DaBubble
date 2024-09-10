@@ -1,34 +1,38 @@
 <div class="dm-content">
-  <div id="dm-messages-container"> 
-      <div *ngFor="let message of messages" [ngClass]="message.senderId === currentUserId ? 'user-send-message' : 'message'">
-          <div class="message-date">{{ formatDate(message.created_at) }}</div>
-          <div class="message-section">
-              <div class="reaction-bar">
-                <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')">✅</div>
-                <div class="applaud-reaction" (click)="toggleReaction(message, '🙌🏻')">🙌🏻</div>
-                <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
-                <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction" (click)="editMessage(message)"></div>
-              </div>
-              <div class="message-content">
-                  <img class="author-picture" [src]="message.photoURL">
-                  <div class="details">
-                      <div class="author">
-                          <div class="author-name fs-18-700">{{message.senderName}} </div>
-                          <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
-                      </div>
-
-                      <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate" class="text fs-18" >
-
-                        <div *ngIf="message.imagePath && !checkPdf(message)" class="message-image" (click)="openImg(message)">
-                            <img [src]="message.imagePath" alt="Message Image">
+    <div id="dm-messages-container">
+        <div *ngFor="let message of messages"
+            [ngClass]="message.senderId === currentUserId ? 'user-send-message' : 'message'">
+            <div class="message-date">{{ formatDate(message.created_at) }}</div>
+            <div class="message-section">
+                <div class="reaction-bar">
+                    <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')">✅</div>
+                    <div class="applaud-reaction" (click)="toggleReaction(message, '🙌🏻')">🙌🏻</div>
+                    <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
+                    <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction"
+                        (click)="editMessage(message)"></div>
+                </div>
+                <div class="message-content">
+                    <img class="author-picture" [src]="message.photoURL">
+                    <div class="details">
+                        <div class="author">
+                            <div class="author-name fs-18-700">{{message.senderName}} </div>
+                            <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                         </div>
-                          <div *ngIf="message.imagePath && checkPdf(message)" class="message-image">
-                           <a  [href]="transform(message)" target="_blank">
-                                <mat-icon class="pdf">picture_as_pdf</mat-icon>
-                            </a>
+
+                        <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
+                            class="text fs-18">
+
+                            <div *ngIf="message.imagePath && !checkPdf(message)" class="message-image"
+                                (click)="openImg(message)">
+                                <img [src]="message.imagePath" alt="Message Image">
+                            </div>
+                            <div *ngIf="message.imagePath && checkPdf(message)" class="message-image">
+                                <a [href]="transform(message)" target="_blank">
+                                    <mat-icon class="pdf">picture_as_pdf</mat-icon>
+                                </a>
+                            </div>
+                            <div [innerHTML]="formatMessage(message.message)">{{message.message}}</div>
                         </div>
-                        <div [innerHTML]="formatMessage(message.message)">{{message.message}}</div>
-                      </div>
 
                         <ng-template #editTemplate class="edit-template">
                             <div class="edit-dm-btn">
@@ -37,50 +41,63 @@
                                 <span class="edit" (click)="deleteMessage()">Nachricht löschen</span>
                             </div>
                             <div class="edit-dm">
-                                <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText" type="text" (input)="adjustHeight($event)"></textarea>
+                                <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText"
+                                    type="text" (input)="adjustHeight($event)"></textarea>
                             </div>
                             <div *ngIf="isMessageEmpty" class="error-message">Die Nachricht darf nicht leer sein.</div>
                         </ng-template>
-                      <div class="open-thread">
-                        <div class="reactions">
-                            <div *ngFor="let reaction of message.reactions" class="emoji-container"
-                                (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"
-                                (click)="toggleReaction(message, reaction.emoji)">
+                        <div class="open-thread">
+                            <div class="reactions">
+                                <div *ngFor="let reaction of message.reactions" class="emoji-container"
+                                    (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"
+                                    (click)="toggleReaction(message, reaction.emoji)">
 
-                                <div class="emoji">{{ reaction.emoji }}</div>
-                                <div class="emoji-counter">{{ reaction.count }}</div>
+                                    <div class="emoji">{{ reaction.emoji }}</div>
+                                    <div class="emoji-counter">{{ reaction.count }}</div>
 
-                                <div class="custom-tooltip" *ngIf="showTooltip">
-                                    <div class="tooltip-content">
-                                        <span class="tooltip-emoji" [style.fontSize.px]="30">{{ reaction.emoji}}</span>
-                                        <span class="tooltip-text fs-18">
-                                            <ng-container *ngIf="reaction.usernames.length > 2">{{ reaction.usernames[0] === currentUser?.username ? 'Du' :reaction.usernames[0] }},{{ reaction.usernames[1] === currentUser?.username ? 'Du' : reaction.usernames[1] }} und {{ reaction.usernames.length - 2 }} weitere</ng-container>
-                                            <ng-container *ngIf="reaction.usernames.length <= 2">
-                                                <ng-container *ngFor="let username of reaction.usernames">{{ username === currentUser?.username ? 'Du' : username }}<span *ngIf="!isLastItem(reaction.usernames, username)"> und</span></ng-container>
-                                            </ng-container>
-                                        </span>
-                                        <span class="tooltip-text">{{ getReactionText(reaction) }}</span>
+                                    <div class="custom-tooltip" *ngIf="showTooltip">
+                                        <div class="tooltip-content">
+                                            <span class="tooltip-emoji" [style.fontSize.px]="30">{{
+                                                reaction.emoji}}</span>
+                                            <span class="tooltip-text fs-18">
+                                                <ng-container *ngIf="reaction.usernames.length > 2">{{
+                                                    reaction.usernames[0] === currentUser?.username ? 'Du'
+                                                    :reaction.usernames[0] }},{{ reaction.usernames[1] ===
+                                                    currentUser?.username ? 'Du' : reaction.usernames[1] }} und {{
+                                                    reaction.usernames.length - 2 }} weitere</ng-container>
+                                                <ng-container *ngIf="reaction.usernames.length <= 2">
+                                                    <ng-container *ngFor="let username of reaction.usernames">{{
+                                                        username === currentUser?.username ? 'Du' : username }}<span
+                                                            *ngIf="!isLastItem(reaction.usernames, username)">
+                                                            und</span></ng-container>
+                                                </ng-container>
+                                            </span>
+                                            <span class="tooltip-text">{{ getReactionText(reaction) }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                      </div>
-                  </div>
-              </div>
-              <div *ngIf="emojiPickerMessageId === message.id" class="emoji-picker-dialog">
-                <emoji-mart (emojiClick)="addEmoji($event, message)"></emoji-mart>
-              </div>
-          </div>
-      </div>
-      <div *ngIf="!(hasMessages$ | async)" class="nomsg">
-        <div class="chat-header-left" *ngIf="recipientUser$ | async as recipientUser">
-            <div class="avatarStatus">
-                <img [src]="recipientUser?.photoURL" alt="User Avatar">
-                <img [src]="recipientUser?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'" alt="User Status">
+                    </div>
+                </div>
+                <div *ngIf="emojiPickerMessageId === message.id" class="emoji-picker-dialog">
+                    <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8"
+                        searchPosition=none color="#444df2" set="twitter"
+                        (emojiClick)="addEmoji($event, message)"></emoji-mart>
+                </div>
             </div>
-            <div class="fs-24-700">{{recipientUser?.username}}</div>
         </div>
-        <div *ngIf="recipientUser$ | async as recipientUser" class="fs-20 nomsgtxt">Die Unterhaltung findet nur zwischen dir und <span>&#64;{{recipientUser?.username}}</span> statt.</div>
-      </div>
-  </div>
+        <div *ngIf="!(hasMessages$ | async)" class="nomsg">
+            <div class="chat-header-left" *ngIf="recipientUser$ | async as recipientUser">
+                <div class="avatarStatus">
+                    <img [src]="recipientUser?.photoURL" alt="User Avatar">
+                    <img [src]="recipientUser?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'"
+                        alt="User Status">
+                </div>
+                <div class="fs-24-700">{{recipientUser?.username}}</div>
+            </div>
+            <div *ngIf="recipientUser$ | async as recipientUser" class="fs-20 nomsgtxt">Die Unterhaltung findet nur
+                zwischen dir und <span>&#64;{{recipientUser?.username}}</span> statt.</div>
+        </div>
+    </div>
 </div>
