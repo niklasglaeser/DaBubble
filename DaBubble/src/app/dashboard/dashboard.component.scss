@@ -5,6 +5,30 @@ main {
     background-color: var(--bgColor);
     margin: 0 auto;
     overflow: hidden;
+    min-height: 730px;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+        width: 10px;
+      }
+    
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        background-color: white;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+    
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: #edeefe;
+      }
+    
+      scrollbar-width: thin;
+      scrollbar-color: #edeefe transparent;
 }
 
 .header {
