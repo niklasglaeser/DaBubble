@@ -1,8 +1,8 @@
 <div class="dm-footer" *ngIf="recipientUser$ | async as recipientUser">
 
-    <div *ngIf="chatImg || uploadError"  class="chatImg">
+    <div *ngIf="chatImg || uploadError" class="chatImg">
         <img *ngIf="chatImg && !isPdf" [src]="chatImg" alt="Uploaded image">
-    
+
         <a *ngIf="chatImg && isPdf" [href]="safePath" target="_blank">
             <mat-icon class="pdf">picture_as_pdf</mat-icon>
         </a>
@@ -10,15 +10,15 @@
 
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>
     </div>
-    
-   
+
+
 
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
-        <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+        <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8"
+            searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event)"></emoji-mart>
     </div>
     <textarea type="text" name="message-input" id="dm-message-input" [formControl]="symbolSearch"
         [matAutocomplete]="auto" (input)="onInput($event)"
-
         placeholder="Nachricht an #{{recipientUser?.username}}"></textarea>
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="showSelectedName" (opened)="isPanelOpen = true"
         (closed)="isPanelOpen = false">
@@ -44,7 +44,7 @@
         <div class="chat-toolbar-left">
             <div>
                 <div class="add-file" (click)="triggerFileUpload(fileInput)"></div>
-                   <!-- Hidden file input -->
+                <!-- Hidden file input -->
                 <input type="file" #fileInput style="display: none" (change)="uploadImage($event)">
             </div>
             <div class="seperator"></div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, HostListener, Output, ViewChild , inject} from '@angular/core';
+import { Component, EventEmitter, HostListener, Output, ViewChild, inject } from '@angular/core';
 import { Message } from '../../../../models/message.model';
 import { DirectMessagesService } from '../../../../services/direct-message.service';
 import { Observable, Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { UserLoggedService } from '../../../../services/lp-services/user-logged.
 import { UploadService } from '../../../../services/lp-services/upload.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { EmojiCategory, EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Channel } from '../../../../models/channel.class';
 import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
@@ -33,10 +33,10 @@ export class DmFooterComponent {
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
 
-  chatImg: string | null = null; 
+  chatImg: string | null = null;
   uploadError: string | null = null;
   isPdf: boolean = false;
-  safePath: string | null = null; 
+  safePath: string | null = null;
 
   private userSubscription: Subscription | undefined;
   private conversationIdSubscription: Subscription | undefined;
@@ -57,11 +57,11 @@ export class DmFooterComponent {
     this.currentUserId = this.authService.uid;
 
   }
-  
+
   ngOnInit() {
     // Abonniere das Observable für conversationId
     this.conversationIdSubscription = this.dmService.conversationId$.subscribe(id => {
-      if (id) {this.conversationId = id;}
+      if (id) { this.conversationId = id; }
     });
 
   }
@@ -193,32 +193,32 @@ export class DmFooterComponent {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-  
+
     this.isPdf = file.type === 'application/pdf';
     const currentUser = this.authService.currentUserSig();
     if (!currentUser) return;
-  
+
     this.imgUploadService.uploadImgChat(currentUser.userId, file, this.conversationId)
       .subscribe({
         next: (imagePath: string) => this.handleUploadSuccess(imagePath),
         error: (err: any) => this.handleUploadError(err)
       });
 
-      input.value = '';
+    input.value = '';
   }
-  
+
   handleUploadSuccess(imagePath: string) {
     this.chatImg = imagePath;
     this.safePath = this.isPdf ? this.sanitizer.bypassSecurityTrustResourceUrl(imagePath) as string : null;
   }
-  
+
   handleUploadError(err: any) {
     this.uploadError = err.message || 'Fehler beim Hochladen des Bildes.';
     this.chatImg = this.safePath = null;
     this.isPdf = false;
     setTimeout(() => this.uploadError = null, 3000);
   }
-  
+
 
   triggerFileUpload(inputElement: HTMLInputElement) {
     inputElement.click();
@@ -226,22 +226,22 @@ export class DmFooterComponent {
 
   deleteImg() {
     if (this.chatImg) {
-        this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
-            next: () => {
-                this.chatImg = null;
-                this.safePath = null;
-                this.isPdf = false;
+      this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
+        next: () => {
+          this.chatImg = null;
+          this.safePath = null;
+          this.isPdf = false;
 
-                const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
-                if (fileInput) {
-                    fileInput.value = '';
-                }
-            },
-            error: (err: any) => {
-                console.error('Fehler beim Löschen der Datei:', err);
-            }
-        });
+          const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
+          if (fileInput) {
+            fileInput.value = '';
+          }
+        },
+        error: (err: any) => {
+          console.error('Fehler beim Löschen der Datei:', err);
+        }
+      });
     }
-}
+  }
 
 }
