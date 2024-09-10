@@ -1,6 +1,7 @@
 <div class="chat-footer">
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
-        <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+        <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8"
+            searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event)"></emoji-mart>
     </div>
 
     <div *ngIf="chatImg || uploadError" class="chatImg">

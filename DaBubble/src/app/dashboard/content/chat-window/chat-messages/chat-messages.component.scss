@@ -423,6 +423,11 @@
   border-radius: 16px;
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  @media (max-width: 790px) {
+    position: fixed;
+    top: 50%; 
+    transform: translateY(-50%);
+  }
 }
 
 .tool-tip {
