@@ -1,0 +1,121 @@
+// Variables
+$main-padding: 16px;
+$logo-size-lg: 242px;
+$logo-size-sm: 204px;
+$logo-height-lg: 70px;
+$logo-height-sm: 56px;
+$accent-color: var(--purple2);
+$accent-color-light: var(--lightPurple);
+$animation-time-short: 0.4s;
+$animation-time-long: 0.5s;
+
+// Animations and keyframes
+@keyframes showLogo {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.2;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes moveLeft {
+    0% {
+      top: calc(50% - 92px);
+      left: calc(50% - 92px);
+    }
+    50% {
+      top: calc(50% - 92px);
+      left: calc(50% - 92px);
+    }
+    100% {
+      top: calc(50% - 92px);
+      left: calc(50% - 255px);
+    }
+  }
+  
+  @keyframes textAnimation {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+    }
+    65% {
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes moveTopLeft {
+    0% {
+      top: calc(50% - 92px);
+      left: calc(50% - 255px);
+    }
+    100% {
+      top: 75px;
+      left: 75px;
+      color: black;
+    }
+  }
+  
+  @keyframes changeFontColor {
+    0% {
+      color: white;
+    }
+    100% {
+      color: black;
+      font-size: 34px;
+      transform: translateX(78.5%);
+    }
+  }
+  
+  @keyframes changeLogoSize {
+    0% {
+      height: 184px;
+    }
+    100% {
+      height: $logo-height-lg;
+    }
+  }
+  
+  @keyframes rmPadding {
+    0% {
+      padding: 24px;
+    }
+    100% {
+      padding: 0px;
+    }
+  }
+  
+  @keyframes hideIntro {
+    0% {
+      opacity: 1;
+    }
+    99% {
+      opacity: 0;
+      display: flex;
+    }
+    100% {
+      display: none;
+    }
+  }
+  
+  @keyframes moveTop {
+    0% {
+      opacity: 0;
+      top: calc(50% - 50px);
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+      top: 0%;
+    }
+  }
+  

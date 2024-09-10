@@ -175,4 +175,5 @@ export class ChatWindowComponent implements OnInit {
   toggleChatMessage() {
     this.showChatMessage = !this.showChatMessage;
   }
+
 }
