@@ -1,8 +1,18 @@
-<div class="chat-window-container">
+<!-- <div class="chat-window-container">
     <app-chat-header [channel]="channel" [members]="members" [users]="users"></app-chat-header>
     <app-chat-messages [messages$]="messages$" [currentUser]="currentUser" [channelId]="channelId"
         [threadCounts]="threadCounts" [lastThreadMessageTimes]="lastThreadMessageTimes"
         class="messages"></app-chat-messages>
-    <app-chat-footer [channel]="channel" class="footer"></app-chat-footer>
+    <app-chat-footer [channel]="channel" class="footer" [messageSent]=""></app-chat-footer>
+</div> -->
+
+<div class="chat-window-container">
+    <app-chat-header [channel]="channel" [members]="members" [users]="users"></app-chat-header>
+    <div class="messages" #chatContainer>
+        <app-chat-messages [messages$]="messages$" [currentUser]="currentUser" [channelId]="channelId"
+            [threadCounts]="threadCounts" [lastThreadMessageTimes]="lastThreadMessageTimes"
+            class="messages"></app-chat-messages>
+    </div>
+    <app-chat-footer [channel]="channel" class="footer" (messageSent)="scrollToBottom()"></app-chat-footer>
 </div>
 
