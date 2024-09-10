@@ -1,7 +1,7 @@
 .chat-window {
   width: 100%;
   display: flex;
-  margin-left: 20px;
+  // margin-left: 20px;
   min-height: 600px;
   @media (max-width: 790px) {
     margin-left: unset;
@@ -11,7 +11,6 @@
 .dm-window {
   width: 100%;
   display: flex;
-  padding-left: 20px;
   min-height: 600px;
   &.no-sidebar {
     margin-left: 0;
@@ -35,16 +34,6 @@
     width: unset;
     max-width: unset;
   }
-  //   width: 0;
-  //   max-width: 0;
-  //   height: 0;
-  //   overflow: hidden;
-  //   opacity: 0;
-  //   transition: width 0.3s, max-width 0.3s, opacity 0.3s, height 0.3s;
-  //   // visibility: hidden;
-  //   @media (max-width: 790px) {
-  //     width: 100%;
-  //   }
 }
 
 .thread-window.open {
@@ -62,10 +51,14 @@
 
 .sidebar-window {
   display: flex;
-  transition: transform 125ms ease-out, opacity 125ms ease-out;
+  margin-right: 20px;
+  max-width: 366px;
+  transition: max-width 0.3s ease-in-out;
   @media (max-width: 790px) {
+    max-width: unset;
     width: 100%;
     justify-content: center;
+    margin-right: unset;
   }
   min-height: 600px;
 }
@@ -95,5 +88,7 @@
 }
 
 .sidebar-window.hidden {
-  display: none;
+  max-width: 0;
+  margin-right: 0;
+  transition: max-width 0.3s ease-in-out;
 }
