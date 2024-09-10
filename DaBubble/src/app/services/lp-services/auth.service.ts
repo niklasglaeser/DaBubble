@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Auth, AuthProvider, browserLocalPersistence, confirmPasswordReset, createUserWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail, setPersistence, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut, updateProfile, user, UserCredential, verifyPasswordResetCode } from '@angular/fire/auth';
+import { Auth, AuthProvider, browserLocalPersistence, confirmPasswordReset, createUserWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail, setPersistence, signInWithCredential, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut, updateProfile, user, UserCredential, verifyPasswordResetCode } from '@angular/fire/auth';
 import { catchError, concatMap, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { UserInterface } from '../../models/user.interface';
 import { UserLoggedService } from './user-logged.service';
@@ -179,7 +179,6 @@ export class AuthService {
       .then(async (userCredential: UserCredential) => {
         const user: UserInterface | any = userCredential.user;
         this.uid = user.uid;
-        console.log('Logged in with Google. UserID:', this.uid);
 
         return this.handleUserLogin(user);
       })
@@ -187,7 +186,7 @@ export class AuthService {
 
     return from(promise);
   }
-
+ 
   private async handleUserLogin(user: UserInterface): Promise<void> {
     const emailExists = await this.userService.isEmailTaken(user.email!);
 
