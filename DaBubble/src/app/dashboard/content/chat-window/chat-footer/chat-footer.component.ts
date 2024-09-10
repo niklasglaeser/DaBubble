@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, ViewChild } from '@angular/core';
 import { MessageService } from '../../../../services/message.service';
 import { Message } from '../../../../models/message.model';
 import { Channel } from '../../../../models/channel.class';
@@ -18,6 +18,7 @@ import { SafeCall } from '@angular/compiler';
 
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { Output } from '@angular/core';
 
 
 @Component({
@@ -28,6 +29,7 @@ import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
   styleUrls: ['./chat-footer.component.scss'],
 })
 export class ChatFooterComponent {
+  @Output() messageSent = new EventEmitter<void>();
   @Input() channel: Channel | null = null;
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
   userService = inject(UserLoggedService);
@@ -82,6 +84,7 @@ export class ChatFooterComponent {
         console.error('Channel ID is undefined.');
       }
     }
+    this.messageSent.emit();
   }
 
   onInput(event: Event): void {

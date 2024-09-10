@@ -31,7 +31,7 @@ export class ChatWindowComponent implements OnInit {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   @Output() threadOpened = new EventEmitter<void>();
   showChatMessage: boolean = true;
-
+  private previousMessageCount: number = 0;
   channelId: string = '';
   channel: Channel | null = null;
 
@@ -73,12 +73,14 @@ export class ChatWindowComponent implements OnInit {
         if (this.userId) {
           this.loadCurrentUser(this.userId);
         }
+        this.scrollToBottom()
       }
     });
 
     this.deviceService.deviceType$.subscribe((type) => {
       this.deviceType = type;
     })
+    
   }
 
   ngOnDestroy() {
@@ -104,6 +106,7 @@ export class ChatWindowComponent implements OnInit {
   loadMessages(channelId: string) {
     this.messages$ = this.messageService.getMessagesWithUsers(channelId);
     this.messages$.subscribe((messages) => {
+      this.countMessages(messages)
       messages.forEach((message) => {
         const messageId = message.id;
         this.threadService
@@ -118,6 +121,27 @@ export class ChatWindowComponent implements OnInit {
           });
       });
     });
+  }
+
+  countMessages(messages: any){
+    const newMessageCount = messages.length;
+
+      if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 500);
+      }
+      this.previousMessageCount = newMessageCount;
+    }
+  
+
+  private isUserAtBottom(): boolean {
+    const element = this.chatContainer.nativeElement;
+    const threshold = 150; // Pixels above the bottom that we still consider "at the bottom"
+    const position = element.scrollTop + element.offsetHeight;
+    const height = element.scrollHeight;
+
+    return position > height - threshold;
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {
@@ -174,6 +198,14 @@ export class ChatWindowComponent implements OnInit {
 
   toggleChatMessage() {
     this.showChatMessage = !this.showChatMessage;
+  }
+
+  scrollToBottom(): void {
+    if (this.chatContainer && this.chatContainer.nativeElement) {
+      setTimeout(() => {
+        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+      }, 100);
+    }
   }
 
 }
