@@ -13,7 +13,7 @@ export class ChannelService {
   private firestore = inject(Firestore);
   channels: Channel[] = [];
   channels$ = new BehaviorSubject<Channel[]>([]);
-  defaultChannelId: string = '2eELSnZJ5InLSZUJgmLC';
+  defaultChannelId: string = 'IiKdwSHaVmXdf2JiliaU';
   currentUserId$ = new BehaviorSubject<string | null>(null);
 
   /*onSnapshot variablen*/
