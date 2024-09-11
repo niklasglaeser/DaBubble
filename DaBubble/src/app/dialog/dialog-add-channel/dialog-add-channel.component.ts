@@ -100,7 +100,7 @@ export class DialogAddChannelComponent implements OnInit {
         userIds = this.selectedUsers.map((user) => user.uid);
       }
       try {
-        await this.channelService.addUsersToChannel(this.createdChannel, userIds);
+        await this.channelService.editUserlistInChannel(this.createdChannel, userIds);
         await this.updateUserProfilesWithChannel(userIds, this.createdChannel);
         this.dialogRef.close();
       } catch (e) {

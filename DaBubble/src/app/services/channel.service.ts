@@ -87,7 +87,7 @@ export class ChannelService {
     }
   }
 
-  async addUsersToChannel(channelId: string, userIds: string[]): Promise<void> {
+  async editUserlistInChannel(channelId: string, userIds: string[]): Promise<void> {
     try {
       const channelDocRef = this.getSingleChannel(channelId);
       const channelSnap = await getDoc(channelDocRef);
@@ -104,6 +104,28 @@ export class ChannelService {
       console.error('Error adding users to channel: ', e);
     }
   }
+
+  async addUsersToWelcomeChannel(channelId: string, userIds: string[]): Promise<void> {
+    try {
+      const channelDocRef = this.getSingleChannel(channelId);
+      const channelSnap = await getDoc(channelDocRef);
+
+      if (channelSnap.exists()) {
+        const currentMembers = channelSnap.data()['members'] || [];
+        const updatedMembers = [...new Set([...currentMembers, ...userIds])];
+        await updateDoc(channelDocRef, {
+          members: updatedMembers
+        });
+      } else {
+        console.error('Channel does not exist');
+      }
+    } catch (e) {
+      console.error('Error adding users to channel: ', e);
+    }
+  }
+
+
+
 
   async updateChannel(channelId: string, channel: Channel) {
     try {

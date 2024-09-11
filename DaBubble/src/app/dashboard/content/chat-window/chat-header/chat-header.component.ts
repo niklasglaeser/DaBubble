@@ -25,7 +25,7 @@ export class ChatHeaderComponent {
   @ViewChild('openOverviewPosition') openOverviewPosition!: ElementRef;
   @ViewChild('openAddUserPosition') openAddUserPosition!: ElementRef;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private globalService: GlobalService) {}
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private globalService: GlobalService) { }
 
   openEditChannel(event: MouseEvent): void {
     if (this.channel && this.channel.id) {
@@ -99,8 +99,8 @@ export class ChatHeaderComponent {
         this.members = updatedMembers;
         try {
           const userIds = updatedMembers.map((user) => user.uid);
-          await this.channelService.addUsersToChannel(this.channel.id, userIds);
-          // await this.updateUserProfilesWithChannel(userIds, this.channel.id);
+          await this.channelService.editUserlistInChannel(this.channel.id, userIds);
+          await this.updateUserProfilesWithChannel(userIds, this.channel.id);
         } catch (error) {
           console.error('Error updating Firebase:', error);
         }
