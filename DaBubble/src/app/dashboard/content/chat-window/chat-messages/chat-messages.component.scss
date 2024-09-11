@@ -212,6 +212,11 @@
   gap: 20px;
 }
 
+.textcontent {
+  word-wrap: break-word; 
+  word-break: break-word; 
+}
+
 .author {
   display: flex;
   gap: 10px;
@@ -222,28 +227,38 @@
   display: flex;
   justify-content: flex-start;
   gap: 20px;
-  align-items: center;
 }
 
 .open-answers {
+  display: flex;
+  align-items: center;
   color: #535af1;
   &:hover {
     cursor: pointer;
     scale: 110%;
+  }
+  >span {
+    display: flex;
+    width: max-content;
   }
 }
 
 .last-answer {
   height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
+  >span {
+    display: flex;
+    width: max-content;
+  }
 }
 
 .reactions {
   display: flex;
   align-items: center;
   gap: 7px;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .emoji-container {
@@ -305,7 +320,6 @@
   width: 28px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
   background-image: url("/assets/img/main-page/chat/reaction-emojis.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-emojis-hover.svg");
@@ -324,6 +338,10 @@
         background-color: #797ef3;
       }
     }
+  }
+
+  .reactions {
+    justify-content: flex-end;
   }
 
   .reaction-bar {

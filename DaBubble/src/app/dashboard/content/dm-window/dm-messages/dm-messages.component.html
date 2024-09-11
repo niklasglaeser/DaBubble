@@ -31,7 +31,7 @@
                                     <mat-icon class="pdf">picture_as_pdf</mat-icon>
                                 </a>
                             </div>
-                            <div [innerHTML]="formatMessage(message.message)">{{message.message}}</div>
+                            <div [innerHTML]="formatMessage(message.message)" class="textcontent">{{message.message}}</div>
                         </div>
 
                         <ng-template #editTemplate class="edit-template">

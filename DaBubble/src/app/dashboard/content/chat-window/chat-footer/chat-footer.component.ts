@@ -228,4 +228,9 @@ export class ChatFooterComponent {
       this.showEmojiPicker = false;
     }
   }
+
+  @HostListener('keyup.enter', ['$event'])
+  onEnter(event: KeyboardEvent): void {
+    this.sendMessage();
+  }
 }

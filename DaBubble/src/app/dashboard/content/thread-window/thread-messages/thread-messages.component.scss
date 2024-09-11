@@ -182,6 +182,11 @@
   gap: 20px;
 }
 
+.textcontent {
+  word-wrap: break-word; 
+  word-break: break-word; 
+}
+
 .author {
   display: flex;
   gap: 10px;
@@ -214,7 +219,9 @@
 .reactions {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .emoji-container {

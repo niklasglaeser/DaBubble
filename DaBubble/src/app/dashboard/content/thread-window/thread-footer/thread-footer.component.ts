@@ -225,6 +225,11 @@ export class ThreadFooterComponent {
       this.showEmojiPicker = false;
     }
   }
+
+  @HostListener('keyup.enter', ['$event'])
+  onEnter(event: KeyboardEvent): void {
+    this.sendMessage();
+  }
 }
 
 // sendMessage(): void {

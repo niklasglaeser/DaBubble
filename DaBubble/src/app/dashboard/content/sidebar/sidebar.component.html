@@ -103,7 +103,7 @@
           <img
             [src]="currentUser!.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
         </div>
-        <span class="directUserName fs-18">{{currentUser!.username}} (Du)</span>
+        <span class="directUserName fs-16">{{currentUser!.username}} (Du)</span>
       </div>
     </div>
     @for (user of directMessagesUsers; track $index) {
@@ -114,7 +114,7 @@
           <img
             [src]="user.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
         </div>
-        <span class="directUserName fs-18">{{user.username}}</span>
+        <span class="directUserName fs-16">{{user.username}}</span>
       </div>
     </div>
     }

@@ -207,6 +207,11 @@
   gap: 20px;
 }
 
+.textcontent {
+  word-wrap: break-word; 
+  word-break: break-word; 
+}
+
 .author {
   display: flex;
   gap: 10px;

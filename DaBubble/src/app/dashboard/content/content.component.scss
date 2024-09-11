@@ -1,8 +1,8 @@
 .chat-window {
   width: 100%;
   display: flex;
-  margin-left: 20px;
   min-height: 600px;
+  padding-left: 20px;
   @media (max-width: 790px) {
     margin-left: unset;
   }
@@ -28,37 +28,14 @@
   background-color: white;
   margin-left: 20px;
   border-radius: 30px;
-  width: 50%;
-  max-width: 50%;
+  min-width: 400px;
 
   @media (max-width: 790px) {
     width: unset;
     max-width: unset;
   }
-  //   width: 0;
-  //   max-width: 0;
-  //   height: 0;
-  //   overflow: hidden;
-  //   opacity: 0;
-  //   transition: width 0.3s, max-width 0.3s, opacity 0.3s, height 0.3s;
-  //   // visibility: hidden;
-  //   @media (max-width: 790px) {
-  //     width: 100%;
-  //   }
 }
 
-.thread-window.open {
-  width: 50%;
-  max-width: 50%;
-  height: auto;
-  opacity: 1;
-  visibility: visible;
-  display: flex;
-  @media (max-width: 790px) {
-    width: 100%;
-    max-width: 100%;
-  }
-}
 
 .sidebar-window {
   display: flex;
