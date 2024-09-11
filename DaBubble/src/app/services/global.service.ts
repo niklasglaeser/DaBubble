@@ -61,4 +61,28 @@ export class GlobalService {
   getIsMobileStatus() {
     return this.isMobileSubject.getValue();
   }
+
+  manageChatAndChannelStates() {
+    const isMobile = this.isMobileSubject.getValue();
+
+    if (isMobile) {
+      this.isSidebar(true);
+      this.isThread(false)
+      if (this.getDirectChatStatus()) {
+        this.isDirectChat(true);
+        this.isChannel(false);
+      } else {
+        this.isDirectChat(false);
+        this.isChannel(true);
+      }
+    } else {
+      if (this.getDirectChatStatus()) {
+        this.isDirectChat(true);
+        this.isChannel(false);
+      } else {
+        this.isDirectChat(false);
+        this.isChannel(true);
+      }
+    }
+  }
 }  

@@ -68,27 +68,23 @@ export class ContentComponent implements OnInit, AfterContentChecked {
       this.showSidebar = true;
       this.sidebarService.setIsMobile(this.isMobile);
       this.sidebarService.isSidebar(this.showSidebar);
-      if (this.sidebarService.getDirectChatStatus()) {
-        this.sidebarService.isChannel(false);
-        this.sidebarService.isDirectChat(true);
-      } else {
-        this.sidebarService.isChannel(true);
-        this.sidebarService.isDirectChat(false);
-      }
+      this.sidebarService.manageChatAndChannelStates();
     } else if (screenWidth <= 1200 && screenWidth > 790) {
       this.isMobile = false;
+      this.showSidebar = false;
+      this.sidebarService.isSidebar(this.showSidebar);
       this.sidebarService.setIsMobile(this.isMobile);
-      if (this.sidebarService.getDirectChatStatus()) {
-        this.sidebarService.isDirectChat(true);
-        this.sidebarService.isChannel(false);
-      } else {
-        this.sidebarService.isChannel(true);
-        this.sidebarService.isDirectChat(false);
+
+      if (this.sidebarService.getThreadStatus() && this.showSidebar) {
+        this.sidebarService.isThread(false);
       }
+
+      this.sidebarService.manageChatAndChannelStates();
     } else {
       this.isMobile = true;
       this.sidebarService.setIsMobile(this.isMobile);
       this.sidebarService.isSidebar(true);
+      this.sidebarService.manageChatAndChannelStates();
     }
   }
 
@@ -109,18 +105,26 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   }
 
   handleThreadOpen() {
-    if (this.isMobile) {
-      this.sidebarService.isChannel(false);
-    }
     this.sidebarService.isThread(true);
+    const isSidebarOpen = this.sidebarService.getSidebarStatus();
+    if (isSidebarOpen) {
+      this.sidebarService.isSidebar(false);
+    }
   }
+
 
   toggleSidebar() {
     this.sidebarService.toggleSidebar();
+    const isSidebarOpen = this.sidebarService.getSidebarStatus();
+    const isThreadOpen = this.sidebarService.getThreadStatus();
+    if (isSidebarOpen && isThreadOpen) {
+      this.sidebarService.isThread(false);
+    }
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.checkWindowSize();
   }
+
 }
