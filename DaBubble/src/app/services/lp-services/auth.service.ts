@@ -68,7 +68,7 @@ export class AuthService {
       switchMap((userCredential) => {
         const uid = userCredential.user.uid;
         const defaultChannelId = this.channelService.defaultChannelId;;
-        return from(this.channelService.addUsersToChannel(defaultChannelId, [uid])).pipe(
+        return from(this.channelService.addUsersToWelcomeChannel(defaultChannelId, [uid])).pipe(
           switchMap(() => of(userCredential))
         );
       }),
@@ -186,7 +186,7 @@ export class AuthService {
 
     return from(promise);
   }
- 
+
   private async handleUserLogin(user: UserInterface): Promise<void> {
     const emailExists = await this.userService.isEmailTaken(user.email!);
 
