@@ -11,14 +11,11 @@
   background-color: white;
   margin: 0 0px;
   transition: transform 1925ms ease-out, opacity 1925ms ease-out;
-  @media (max-width: 790px) {
+  @media (max-width: 1200px) {
     flex: 1;
-    width: 100%;
+    width: 90%;
     padding: 16px 16px;
-    border-radius: unset;
-  }
-  @media (max-width: 1100px) {
-    width: 300px;
+    // border-radius: unset;
   }
 }
 
