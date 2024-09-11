@@ -82,7 +82,9 @@ async subscribeToUserData(): Promise<void> {
     await this.userService.subscribeUser(this.authService.uid).subscribe((data) => {
       this.currentUser = data;
       this.name = this.currentUser.username;
-      this.setDefaultProfileImage();
+      if (this.profileImg === null) {
+        this.setDefaultProfileImage();
+      } 
     });
   }
 }
