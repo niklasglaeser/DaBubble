@@ -19,7 +19,7 @@ export class DialogAddUserHeaderComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: { members: UserLogged[]; channel: Channel | null; users: UserLogged[] },
     public dialogRef: MatDialogRef<DialogAddUserHeaderComponent>
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.selectedUsers = this.data.members || [];

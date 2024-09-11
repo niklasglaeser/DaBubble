@@ -4,6 +4,7 @@ import { Channel } from '../models/channel.class';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './lp-services/auth.service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { UserLogged } from '../models/user-logged.model';
 
 @Injectable({
   providedIn: 'root'
@@ -89,12 +90,10 @@ export class ChannelService {
   async addUsersToChannel(channelId: string, userIds: string[]): Promise<void> {
     try {
       const channelDocRef = this.getSingleChannel(channelId);
-      // Aktuelle Mitglieder des Channels abrufen
       const channelSnap = await getDoc(channelDocRef);
       if (channelSnap.exists()) {
         const currentMembers = channelSnap.data()['members'] || [];
-        const updatedMembers = [...new Set([...currentMembers, ...userIds])];
-
+        const updatedMembers = [...new Set([...currentMembers.filter((member: string) => userIds.includes(member)), ...userIds])];
         await updateDoc(channelDocRef, {
           members: updatedMembers
         });

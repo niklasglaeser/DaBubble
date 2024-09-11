@@ -58,7 +58,7 @@ export class SidebarComponent implements OnInit {
   threadWindow = document.querySelector('.thread-window') as HTMLElement;
   sidebar = document.querySelector('.sidebar-window') as HTMLElement;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef) { }
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef) {}
 
   get currentUserId(): string | undefined {
     return this.authService.uid;
@@ -73,12 +73,10 @@ export class SidebarComponent implements OnInit {
       this.channels = channels;
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
       if (!this.isMobile) {
-        if (this.channels.length > 0) {
+        if (this.channels.length > 0 && !this.selectedChannelId) {
           this.fixedChannelId = 'IiKdwSHaVmXdf2JiliaU';
           this.openChannel(this.fixedChannelId);
           this.isInitialized = true;
-
-
         }
       }
     });
@@ -124,7 +122,7 @@ export class SidebarComponent implements OnInit {
   addChannel() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
-    dialogRef.afterClosed().subscribe((result) => { });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   openEditDialog(channelId: string) {
