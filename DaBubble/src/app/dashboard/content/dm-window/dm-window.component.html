@@ -1,7 +1,7 @@
 <div class="dm-window-container">
     <app-dm-header class="header"></app-dm-header>
     <div class="messages" #dmMessages>
-        <app-dm-messages [messages]="messages$ | async"></app-dm-messages>
+       <app-dm-messages [messages]="messages$ | async"></app-dm-messages>
     </div>
     <app-dm-footer class="footer" (messageSent)="scrollToBottom()"></app-dm-footer>
 </div>
