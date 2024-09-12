@@ -1,214 +1,255 @@
 .chat-footer {
-    width: 100%;
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 5px 30px 15px 30px;
-    border: 1px solid rgba(173, 176, 217, 1);
-    border-radius: 20px;
-    margin-bottom: 30px;
-    position: relative;
+  width: 100%;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px 30px 15px 30px;
+  border: 1px solid rgba(173, 176, 217, 1);
+  border-radius: 20px;
+  margin-bottom: 30px;
+  position: relative;
 }
 
 .chatImg {
-    margin-top: 16px;
-    position: relative;
+  margin-top: 16px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 144px;
+  max-height: 144px;
+  padding: 24px;
+  color: red;
+  border-radius: 10px;
+  background-color: var(--bgColor);
+  img {
+    max-width: 120px;
+    width: 100%;
+    max-height: 120px;
+    height: auto;
+    object-fit: cover;
+  }
+  .delete {
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 144px;
-    max-height: 144px;
-    padding: 24px;
-    color: red;
-    border-radius: 10px;
-    background-color: var(--bgColor);
-    img {
-        max-width: 120px;
-        width: 100%;
-        max-height: 120px;
-        height: auto;
-        object-fit: cover;
+    font-size: 20px;
+    z-index: 10;
+    bottom: 4px;
+    right: 4px;
+    cursor: pointer;
+    transition: transform 0.5s ease-in-out;
+    &:hover {
+      scale: 1.2;
     }
-    .delete {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-        z-index: 10;
-        bottom: 4px;
-        right: 4px;
-        cursor: pointer;
-        transition: transform 0.5s ease-in-out;
-        &:hover {
-            scale: 1.2;
-        }
+  }
+  a {
+    cursor: pointer;
+    object {
+      cursor: pointer;
     }
-    a{
-        cursor: pointer;
-        object{
-            cursor: pointer;
-        }
-    }
+  }
 }
 
 .pdf {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 80px;
-    height: 80px;
-    border: 2px solid var(--purple1);
-    border-radius: 10px;
-    font-size: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--purple1);
+  border-radius: 10px;
+  font-size: 64px;
 }
 
 .chat-message-toolbar {
-    display: flex;
-    width: 100%;
-    height: 40px;
-    justify-content: space-between;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  justify-content: space-between;
 }
 
 #chat-message-input {
-    height: 80px;
-    border: none;
-    outline: none;
+  height: 80px;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  padding-top: 15px;
+  resize: none;
+  &::placeholder {
     font-size: 20px;
-    padding-top: 15px;
-    resize: none;
-    &::placeholder {
-        font-size: 20px;
-    }
-    &:hover {
-        cursor: pointer;
-    }
-    &:focus {
-        cursor: text;
-    }
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  &:focus {
+    cursor: text;
+  }
 }
 
 .chat-toolbar-left {
-    display: flex;
+  display: flex;
 }
 
 .add-file {
-    height: 40px;
-    width: 40px;
-    background-image: url("/assets/img/main-page/chat/add-file.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    &:hover {
-        cursor: pointer;
-        background-image: url("/assets/img/main-page/chat/add-file-hover.svg");
-        background-color: #edeefe;
-        border-radius: 20px;
-    }
+  height: 40px;
+  width: 40px;
+  background-image: url('/assets/img/main-page/chat/add-file.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  &:hover {
+    cursor: pointer;
+    background-image: url('/assets/img/main-page/chat/add-file-hover.svg');
+    background-color: #edeefe;
+    border-radius: 20px;
+  }
 }
 
 .seperator {
-    height: 40px;
-    width: 10px;
-    background-image: url("/assets/img/main-page/chat/seperator.svg");
-    background-repeat: no-repeat;
-    background-position: center;
+  height: 40px;
+  width: 10px;
+  background-image: url('/assets/img/main-page/chat/seperator.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .add-emojis {
-    height: 40px;
-    width: 40px;
-    background-image: url("/assets/img/main-page/chat/add-emoji.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    &:hover {
-        cursor: pointer;
-        background-image: url("/assets/img/main-page/chat/add-emoji-hover.svg");
-        background-color: #edeefe;
-        border-radius: 20px;
-    }
+  height: 40px;
+  width: 40px;
+  background-image: url('/assets/img/main-page/chat/add-emoji.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  &:hover {
+    cursor: pointer;
+    background-image: url('/assets/img/main-page/chat/add-emoji-hover.svg');
+    background-color: #edeefe;
+    border-radius: 20px;
+  }
 }
 
 .tag-user {
-    height: 40px;
-    width: 40px;
-    background-image: url("/assets/img/main-page/chat/tag-user.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    &:hover {
-        cursor: pointer;
-        background-image: url("/assets/img/main-page/chat/tag-user-hover.svg");
-        background-color: #edeefe;
-        border-radius: 20px;
-    }
+  height: 40px;
+  width: 40px;
+  background-image: url('/assets/img/main-page/chat/tag-user.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  &:hover {
+    cursor: pointer;
+    background-image: url('/assets/img/main-page/chat/tag-user-hover.svg');
+    background-color: #edeefe;
+    border-radius: 20px;
+  }
 }
 
 .send-message {
-    height: 40px;
-    width: 40px;
-    background-image: url("/assets/img/main-page/chat/send-message.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    &:hover {
-        cursor: pointer;
-        scale: 130%;
-    }
+  height: 40px;
+  width: 40px;
+  background-image: url('/assets/img/main-page/chat/send-message.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  &:hover {
+    cursor: pointer;
+    scale: 130%;
+  }
 }
 
 /*@ serachbar*/
 .chip-subcontainer {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
-    p {
-        margin: 0;
-        font-size: 18px;
-    }
+  p {
+    margin: 0;
+    font-size: 18px;
+  }
 }
 
 .avatarStatus {
-    position: relative;
-    > img:first-child {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 50%;
-    }
+  position: relative;
+  > img:first-child {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
 
-    > :last-child {
-        position: absolute;
-        width: 14px;
-        bottom: 6px;
-        right: 0;
-    }
+  > :last-child {
+    position: absolute;
+    width: 14px;
+    bottom: 6px;
+    right: 0;
+  }
 }
 
 mat-option {
-    margin-bottom: 8px !important;
-    padding-left: 20px !important;
-    &:hover {
-        background-color: transparent !important;
-    }
+  margin-bottom: 8px !important;
+  padding-left: 20px !important;
+  &:hover {
+    background-color: transparent !important;
+  }
 }
 
 ::ng-deep .mat-mdc-autocomplete-panel-above div.mat-mdc-autocomplete-panel {
-    border-radius: 30px 30px 0 0 !important;
+  border-radius: 30px 30px 0 0 !important;
 }
 
 .emoji-picker-dialog {
-    position: absolute;
-    bottom: 110%;
-    left: 0;
-    z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 16px;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    border: 1px solid (var(--lightPurple));
-    @media (max-width:790px) {
-        width: 100%; 
-    }
+  position: absolute;
+  bottom: 110%;
+  left: 0;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid (var(--lightPurple));
+  @media (max-width: 790px) {
+    width: 100%;
+  }
+}
+
+.autocomplete-list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 30px 30px 30px 30px;
+  max-height: 213px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  top: -213px;
+  left: 0;
+  z-index: 10;
+  padding: 8px;
+  min-height: 213px;
+}
+
+.autocomplete-list li {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.autocomplete-list li.active {
+  background-color: var(--lightPurple);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.autocomplete-list li img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
