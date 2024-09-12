@@ -128,8 +128,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleSidebar() {
     this.sidebarService.toggleSidebar();
-    //if (this.isThread) {
-    // this.sidebarService.isThread(false);
-    //}
+    this.sidebarService.isThread(false);
   }
 }
