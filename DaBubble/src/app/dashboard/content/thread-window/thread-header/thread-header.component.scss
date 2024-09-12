@@ -12,13 +12,25 @@
 
 .thread-header-left {
     display: flex;
+    align-items: center;
+    justify-content: center;
     padding-left: 50px;
     gap: 15px;
-    >div {
-        display: flex;
-        align-items: center;
 
+    @media (max-width: 1500px) {
+        padding-left: 16px;
     }
+}
+
+.channelName {
+    color: rgba(121, 126, 243, 1);
+    display: -webkit-box; 
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    white-space: normal;
 }
 
 .thread-header-right {

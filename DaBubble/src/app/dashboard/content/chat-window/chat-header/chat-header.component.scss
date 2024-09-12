@@ -10,6 +10,7 @@
 
 .chat-header-left {
   display: flex;
+  align-items: center;
   gap: 10px;
   padding: 10px;
   max-width: 400px;
@@ -22,14 +23,14 @@
     background-position: center;
   }
 
-  > div {
-    display: flex;
-    align-items: center;
+   .channelmenu{
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     flex-grow: 1;
+    max-width: 300px;
   }
+
   &:hover {
     cursor: pointer;
     background-color: #edeefe;
@@ -47,6 +48,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  flex-shrink: 0;
 }
 
 .user-pictures {
