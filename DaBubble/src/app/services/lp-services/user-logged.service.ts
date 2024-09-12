@@ -16,24 +16,6 @@ export class UserLoggedService {
 
   constructor(){}
 
-  // async subscribeUser(id: string): Promise<void> {
-  //   const docRef = doc(this.userCollection, id);  
-   
-  //   try {
-  //     const docSnap = await getDoc(docRef);
-
-  //     if (docSnap.exists()) {
-  //       this.userData = docSnap.data() as UserLogged;
-  //     } else {
-  //       console.log('No such document!');
-  //       this.userData = undefined;
-  //     }
-  //   } catch (error) {
-  //     console.error('Error getting document:', error);
-  //     this.userData = undefined;
-  //   }
-  // }
-
   subscribeUser(id: string): Observable<UserLogged | undefined> {
     return new Observable((observer) => {
       const docRef = doc(this.userCollection, id);
@@ -71,13 +53,18 @@ export class UserLoggedService {
   async updateUserStatus(id: string, status: boolean) {
     if(id){
     const docRef: DocumentReference = doc(this.userCollection, id);
+    
     try {
-      await updateDoc(docRef, { onlineStatus: status });
-      console.log('Document successfully updated.');
+      const docSnapshot = await getDoc(docRef);
+      if(docSnapshot.exists()){
+        await updateDoc(docRef, { onlineStatus: status });
+        console.log('Document successfully updated.');
+      }
     } catch (error) {
       console.error('Error updating document:', error);
     }
-  }
+  
+    }
   }
 
   async addUser(user: UserLogged) {
