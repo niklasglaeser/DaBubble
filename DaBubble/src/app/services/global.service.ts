@@ -17,7 +17,6 @@ export class GlobalService {
   isThread$ = this.isThreadSubject.asObservable();
   isMobile$ = this.isMobileSubject.asObservable();
 
-
   toggleSidebar() {
     const currentStatus = this.showSidebarSubject.getValue();
     this.showSidebarSubject.next(!currentStatus);
@@ -66,8 +65,6 @@ export class GlobalService {
     const isMobile = this.isMobileSubject.getValue();
 
     if (isMobile) {
-      // this.isSidebar(true);
-      //this.isThread(false);
       if (this.getDirectChatStatus()) {
         this.isDirectChat(true);
         this.isChannel(false);
