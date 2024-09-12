@@ -7,9 +7,9 @@
     </div>
     <div class="container-profil">
       <div class="img">
-        <img [src]="profileImg || data.user.photoURL" alt="" >
+        <img [src]="profileImg || data.user.photoURL" alt="">
         <div class="icon" *ngIf="edit" (click)="openProfilAvatar()">
-          <mat-icon >edit</mat-icon>
+          <mat-icon>edit</mat-icon>
         </div>
       </div>
     </div>
@@ -72,8 +72,9 @@
       </div>
       <div class="dialog-actions">
         <button class="exitBtn fs-18-700" (click)="close()">Abbrechen</button>
-        <button class="saveBtn fs-18-700" [disabled]="!profilName || !profilEmail"
-          (click)="updateUser()">Speichern</button>
+        <button *ngIf="hasChanges() && editNameClicked && profilName && profilEmail" class="saveBtn fs-18-700"
+          [disabled]="!profilName || !profilEmail || !hasChanges()" (click)="updateUser()">Speichern</button>
+
       </div>
     </div>
     }

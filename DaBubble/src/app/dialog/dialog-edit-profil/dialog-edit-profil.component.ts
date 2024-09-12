@@ -36,7 +36,8 @@ export class DialogEditProfilComponent implements OnInit {
   profileImg: string = ''
   edit: boolean = false
 
-
+  originalProfilName: string = '';
+  originalProfilEmail: string = '';
   editName: string = 'Bearbeiten';
   editNameClicked: boolean = false;
 
@@ -88,6 +89,8 @@ export class DialogEditProfilComponent implements OnInit {
         });
         this.profilName = this.user.username;
         this.profilEmail = this.user.email;
+        this.originalProfilName = this.user.username;
+        this.originalProfilEmail = this.user.email;
       }
     }
   }
@@ -114,6 +117,13 @@ export class DialogEditProfilComponent implements OnInit {
         console.error('Error updating user', e);
       }
     }
+  }
+
+  hasChanges(): boolean {
+    return (
+      this.profilName !== this.originalProfilName ||
+      this.profilEmail !== this.originalProfilEmail
+    );
   }
 
   openDirectMessage(userId: string) {
