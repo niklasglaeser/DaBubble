@@ -56,7 +56,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchResults: any[] = [];
   userEventService = inject(UserService);
 
-  constructor(private router: Router, private sidebarService: GlobalService) { }
+  constructor(private router: Router, private sidebarService: GlobalService) { 
+    if (window.innerWidth < 1200) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
+  }
 
   ngOnInit(): void {
     this.subscribeToUserData();
@@ -122,8 +128,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleSidebar() {
     this.sidebarService.toggleSidebar();
-    if (this.isThread) {
-      this.sidebarService.isThread(false);
-    }
+    //if (this.isThread) {
+    // this.sidebarService.isThread(false);
+    //}
   }
 }

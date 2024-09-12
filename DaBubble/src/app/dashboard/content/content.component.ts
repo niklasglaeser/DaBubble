@@ -33,12 +33,23 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   isThread: boolean = false;
 
   currentWidth: number;
-  screenWidth = window.innerWidth;
 
   chatDialogRef: MatDialogRef<ChatWindowComponent> | null = null;
 
   constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) { 
     this.currentWidth = window.innerWidth;
+
+    if (window.innerWidth < 1200) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
+    if (window.innerWidth < 1200) {
+      this.showSidebar = false;
+    } else {
+      this.showSidebar = true;
+    }
+
   }
 
   ngOnInit() {
@@ -59,7 +70,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
       this.isThread = status;
     });
 
-    this.showWorkspaceToggle = this.screenWidth > 1200 && this.screenWidth <= 1920;
+    this.showWorkspaceToggle = window.innerWidth > 1200 && window.innerWidth <= 1920;
   }
 
   ngAfterContentChecked() {
@@ -89,19 +100,21 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   */
 
   handleChannelOpen() {
-    this.sidebarService.isChannel(true);
-    this.sidebarService.isDirectChat(false);
     if (this.isMobile) {
       this.sidebarService.isSidebar(false);
+      this.sidebarService.setIsMobile(true);
     }
+    this.sidebarService.isChannel(true);
+    this.sidebarService.isDirectChat(false);
   }
 
   handleDirectMessageOpen() {
-    this.sidebarService.isChannel(false);
-    this.sidebarService.isDirectChat(true);
     if (this.isMobile) {
       this.sidebarService.isSidebar(false);
+      this.sidebarService.setIsMobile(true);
     }
+    this.sidebarService.isChannel(false);
+    this.sidebarService.isDirectChat(true);
   }
 
   handleThreadOpen() {

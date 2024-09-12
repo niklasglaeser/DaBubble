@@ -31,8 +31,8 @@ export class SidebarComponent implements OnInit {
   @Output() channelOpened = new EventEmitter<void>();
   @Output() directMessageOpened = new EventEmitter<void>();
 
-  @Input() showSidebar: boolean = true;
-  @Input() isMobile: boolean = false;
+  @Input() showSidebar: boolean | undefined ;
+  @Input() isMobile: boolean | undefined;
 
   isChannelsDropdownOpen = true;
   isMessagesDropdownOpen = true;
