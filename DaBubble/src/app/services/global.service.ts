@@ -66,8 +66,8 @@ export class GlobalService {
     const isMobile = this.isMobileSubject.getValue();
 
     if (isMobile) {
-      this.isSidebar(true);
-      this.isThread(false)
+      // this.isSidebar(true);
+      //this.isThread(false);
       if (this.getDirectChatStatus()) {
         this.isDirectChat(true);
         this.isChannel(false);

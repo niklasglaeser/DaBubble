@@ -53,11 +53,6 @@ export class SidebarComponent implements OnInit {
 
   currentUser: UserLogged | null = null;
 
-  dmWindow = document.querySelector('.dm-window') as HTMLElement;
-  chatWindow = document.querySelector('.chat-window') as HTMLElement;
-  threadWindow = document.querySelector('.thread-window') as HTMLElement;
-  sidebar = document.querySelector('.sidebar-window') as HTMLElement;
-
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef) {}
 
   get currentUserId(): string | undefined {
@@ -75,7 +70,9 @@ export class SidebarComponent implements OnInit {
       if (!this.isMobile) {
         if (this.channels.length > 0 && !this.selectedChannelId) {
           this.fixedChannelId = 'IiKdwSHaVmXdf2JiliaU';
-          this.openChannel(this.fixedChannelId);
+          if (window.innerWidth >= 1200) {
+            this.openChannel(this.fixedChannelId);
+          }
           this.isInitialized = true;
         }
       }
@@ -101,7 +98,6 @@ export class SidebarComponent implements OnInit {
 
   loadDmConvos() {
     const currentUserId = this.currentUserId;
-    console.log('loadDMConvos:', currentUserId);
 
     if (currentUserId) {
       this.dmService.setCurrentUserId(currentUserId);

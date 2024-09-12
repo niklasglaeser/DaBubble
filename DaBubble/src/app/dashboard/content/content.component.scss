@@ -47,7 +47,7 @@
   max-width: 366px;
   visibility: visible;
   transition: max-width 0.2s ease-in-out, visibility 0s linear 0.2s;
-  @media (max-width: 790px) {
+  @media (max-width: 1200px) {
     max-width: unset;
     width: 100%;
     justify-content: center;

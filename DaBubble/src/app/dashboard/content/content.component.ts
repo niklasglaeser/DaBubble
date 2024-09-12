@@ -32,12 +32,17 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   isDirectChat: boolean = false;
   isThread: boolean = false;
 
+  currentWidth: number;
+  screenWidth = window.innerWidth;
+
   chatDialogRef: MatDialogRef<ChatWindowComponent> | null = null;
 
-  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) { }
+  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) { 
+    this.currentWidth = window.innerWidth;
+  }
 
   ngOnInit() {
-    this.checkWindowSize();
+    this.checkWindowSize(window.innerWidth);
     this.sidebarService.showSidebar$.subscribe((status) => {
       this.showSidebar = status;
     });
@@ -53,12 +58,16 @@ export class ContentComponent implements OnInit, AfterContentChecked {
     this.sidebarService.isThread$.subscribe((status) => {
       this.isThread = status;
     });
+
+    this.showWorkspaceToggle = this.screenWidth > 1200 && this.screenWidth <= 1920;
   }
 
   ngAfterContentChecked() {
     this.cdref.detectChanges();
   }
 
+
+  /*
   checkWindowSize() {
     let screenWidth = window.innerWidth;
     this.showWorkspaceToggle = screenWidth > 790 && screenWidth <= 1920;
@@ -69,29 +78,20 @@ export class ContentComponent implements OnInit, AfterContentChecked {
       this.sidebarService.setIsMobile(this.isMobile);
       this.sidebarService.isSidebar(this.showSidebar);
       this.sidebarService.manageChatAndChannelStates();
-    } else if (screenWidth <= 1200 && screenWidth > 790) {
-      this.isMobile = false;
-      this.showSidebar = false;
-      this.sidebarService.isSidebar(this.showSidebar);
-      this.sidebarService.setIsMobile(this.isMobile);
-
-      if (this.sidebarService.getThreadStatus() && this.showSidebar) {
-        this.sidebarService.isThread(false);
-      }
-
-      this.sidebarService.manageChatAndChannelStates();
     } else {
       this.isMobile = true;
+      this.showSidebar = true;
       this.sidebarService.setIsMobile(this.isMobile);
       this.sidebarService.isSidebar(true);
       this.sidebarService.manageChatAndChannelStates();
     }
   }
+  */
 
   handleChannelOpen() {
     this.sidebarService.isChannel(true);
     this.sidebarService.isDirectChat(false);
-    if (this.showSidebar && this.isMobile) {
+    if (this.isMobile) {
       this.sidebarService.isSidebar(false);
     }
   }
@@ -99,7 +99,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   handleDirectMessageOpen() {
     this.sidebarService.isChannel(false);
     this.sidebarService.isDirectChat(true);
-    if (this.showSidebar && this.isMobile) {
+    if (this.isMobile) {
       this.sidebarService.isSidebar(false);
     }
   }
@@ -124,7 +124,38 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.checkWindowSize();
+    this.checkWindowSize(event.target.innerWidth);
+  }
+
+  checkWindowSize(newWidth: number) {
+    // Führe eine Aktion nur aus, wenn die Breite kleiner oder größer als ein bestimmter Schwellenwert ist
+    if (newWidth > 1200 && this.currentWidth <= 1200) {
+      console.log('Fenster ist breiter als 1200px geworden');
+      this.updateLayoutDesktop();
+    } else if (newWidth <= 1200 && this.currentWidth > 1200) {
+      console.log('Fenster ist schmaler als 1200px geworden');
+      this.updateLayoutMobile();
+    }
+    this.currentWidth = newWidth;
+  }
+
+  updateLayoutMobile() {
+    this.showWorkspaceToggle = window.innerWidth > 1210;
+    this.isMobile = true;
+    this.showSidebar = false;
+    this.sidebarService.setIsMobile(this.isMobile);
+    this.sidebarService.isSidebar(true);
+    this.sidebarService.manageChatAndChannelStates();
+
+  }
+  
+  updateLayoutDesktop() {
+    this.showWorkspaceToggle = window.innerWidth <= 1920;
+    this.isMobile = false;
+    this.showSidebar = true;
+    this.sidebarService.setIsMobile(this.isMobile);
+    this.sidebarService.isSidebar(true);
+    this.sidebarService.manageChatAndChannelStates();
   }
 
 }

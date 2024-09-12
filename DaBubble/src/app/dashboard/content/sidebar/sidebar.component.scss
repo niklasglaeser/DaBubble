@@ -168,17 +168,21 @@ app-search {
 
       svg path {
         fill: var(--purple3);
+        /*
         @media (max-width: 790px) {
           fill: black;
         }
+        */
       }
       
+      /*
       @media (max-width: 790px) {
         color: var(--lighterPurple);
         background-color: transparent;
         color: inherit;
         border-radius: 0;
       }
+      */
     }
   }
 }
