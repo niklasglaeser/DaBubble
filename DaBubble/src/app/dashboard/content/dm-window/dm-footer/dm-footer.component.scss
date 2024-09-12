@@ -200,6 +200,48 @@
     }
 }
 
+.autocomplete-list {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 30px 30px 30px 30px;
+    max-height: 213px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    top: -213px;
+    left: 0;
+    z-index: 10;
+    padding: 8px;
+    min-height: 213px;
+  }
+  
+  .autocomplete-list li {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  .autocomplete-list li.active {
+    background-color: var(--lightPurple);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .autocomplete-list li img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+
 @media (max-height: 1000px) {
     #dm-message-input {
         height: 50px;

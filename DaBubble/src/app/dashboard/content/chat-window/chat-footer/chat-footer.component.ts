@@ -59,7 +59,7 @@ export class ChatFooterComponent {
 
   sendMessage(): void {
     let textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
-    let messageText = textarea.value;
+    let messageText = this.inputText;
 
     if (messageText.trim() || this.chatImg) {
       const message: Message = {
@@ -76,8 +76,9 @@ export class ChatFooterComponent {
       if (channelId) {
         // Ensure channelId is a valid string
         this.messageService.addMessage(channelId, message).then(() => {
-          textarea.value = '';
+          this.inputText = '';
           this.chatImg = null;
+          textarea.value = '';
         });
       } else {
         console.error('Channel ID is undefined.');
@@ -87,15 +88,13 @@ export class ChatFooterComponent {
   }
 
   openAutocomplete(): void {
-    // Füge ein '@' in das Textfeld ein, um die Benutzerliste zu triggern
     let textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
     this.inputText += '@';
     textarea.focus();
 
-    // Simuliere das Verhalten von onInput
     this.messageService.searchUsers('').subscribe((users) => {
       this.filteredUsers = users;
-      this.dropdownOpen = true; // Dropdown öffnen
+      this.dropdownOpen = true;
     });
   }
 
@@ -244,16 +243,6 @@ export class ChatFooterComponent {
         container.scrollTop = container.scrollHeight - container.clientHeight;
       }
     }
-  }
-  showSelectedName(value: any): string {
-    if (value && typeof value === 'object') {
-      if (value.username) {
-        return `@${value.username}\n`;
-      } else if (value.name) {
-        return `#${value.name}\n`;
-      }
-    }
-    return '';
   }
 
   uploadImage(event: Event) {
