@@ -158,6 +158,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
     this.showSidebar = false;
     this.sidebarService.setIsMobile(this.isMobile);
     this.sidebarService.isSidebar(true);
+    this.sidebarService.isThread(false);
     this.sidebarService.manageChatAndChannelStates();
 
   }

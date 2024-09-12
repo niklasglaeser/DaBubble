@@ -38,9 +38,12 @@
   min-width: 400px;
   max-width: 400px;
 
-  @media (max-width: 790px) {
-    width: unset;
-    max-width: unset;
+  @media (max-width: 1200px) {
+    max-width: 100% !important;
+    width: 100%;
+    padding-bottom: 20px;
+    padding-right: 0;
+    margin-left: 0;
   }
 
   @media (max-width: 1500px) {
