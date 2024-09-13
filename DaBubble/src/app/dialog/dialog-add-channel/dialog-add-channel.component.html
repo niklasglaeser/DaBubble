@@ -18,6 +18,7 @@
           <div *ngIf="addChannelForm.get('name')?.errors?.['minlength']">Der Name muss mindestens 3 Zeichen lang sein.
           </div>
         </div>
+        <div class="error" *ngIf="errorMessage">Der Name existriert bereits.</div>
       </div>
       <div class="form-group">
         <label for="description" class="fs-18-700">Beschreibung (optional)</label>
