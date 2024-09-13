@@ -6,6 +6,7 @@ import { AuthService } from './lp-services/auth.service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { UserLogged } from '../models/user-logged.model';
 import { arrayRemove } from '@angular/fire/firestore';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class ChannelService {
   /*onSnapshot variablen*/
   unsubList: any;
 
-  constructor(private auth: Auth = inject(Auth)) {
+  constructor(private auth: Auth = inject(Auth), private globalService: GlobalService) {
     this.initializeService();
   }
 
@@ -169,6 +170,7 @@ export class ChannelService {
       await updateDoc(channelDoc, {
         members: arrayRemove(userId)
       });
+      this.globalService.switchChannel(this.defaultChannelId);
     } catch (e) {
       console.error('Fehler beim Entfernen des Benutzers aus dem Channel', e);
     }
