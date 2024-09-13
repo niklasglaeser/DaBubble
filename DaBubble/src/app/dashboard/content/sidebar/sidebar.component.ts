@@ -15,6 +15,7 @@ import { AuthService } from '../../../services/lp-services/auth.service';
 import { DirectMessagesService } from '../../../services/direct-message.service';
 import { User } from '@angular/fire/auth';
 import { SearchComponent } from '../../search/search.component';
+import { GlobalService } from '../../../services/global.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -44,8 +45,7 @@ export class SidebarComponent implements OnInit {
   channels: any = [];
   channelsSubscription!: Subscription;
   selectedChannelId: string | null = null;
-  fixedChannelId: string = '';
-  isInitialized: boolean = false;
+  fixedChannelId: string = 'IiKdwSHaVmXdf2JiliaU';
 
   users: UserLogged[] = [];
   directMessagesUsers: UserLogged[] = [];
@@ -53,7 +53,7 @@ export class SidebarComponent implements OnInit {
 
   currentUser: UserLogged | null = null;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef) {}
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef, private globalService: GlobalService) { }
 
   get currentUserId(): string | undefined {
     return this.authService.uid;
@@ -66,18 +66,13 @@ export class SidebarComponent implements OnInit {
 
     this.channelService.channels$.subscribe((channels) => {
       this.channels = channels;
-      if (this.channels.length > 0) {
-        const firstChannelId = this.channels[0].id;
-        // this.openChannel(firstChannelId);
-      }
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
       if (!this.isMobile) {
         if (this.channels.length > 0 && !this.selectedChannelId) {
-          this.fixedChannelId = 'IiKdwSHaVmXdf2JiliaU';
+
           if (window.innerWidth >= 1200) {
             this.openChannel(this.fixedChannelId);
           }
-          this.isInitialized = true;
         }
       }
     });
@@ -95,6 +90,12 @@ export class SidebarComponent implements OnInit {
 
     this.dmService.currentUser$.subscribe((user) => {
       this.currentUser = user;
+    });
+
+    this.globalService.getChannelSwitch().subscribe((channelId: string | null) => {
+      if (channelId) {
+        this.openChannel(channelId);  // Wechsle zu dem Channel
+      }
     });
 
     this.loadDmConvos();
@@ -122,7 +123,7 @@ export class SidebarComponent implements OnInit {
   addChannel() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
   openEditDialog(channelId: string) {

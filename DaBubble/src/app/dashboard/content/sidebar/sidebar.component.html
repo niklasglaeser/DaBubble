@@ -33,7 +33,7 @@
   </div>
   <div class="dropdown" [class.show]="isChannelsDropdownOpen">
     <ng-container *ngFor="let channel of getList()">
-      <div *ngIf="channel.id === fixedChannelId" class="channel" (click)="openChannel(channel.id)">
+      <div *ngIf="channel.id === fixedChannelId" class="channel border-red" (click)="openChannel(channel.id)">
         <div [class.active]="channel.id === selectedChannelId">
           <svg width="24" height="24" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -45,7 +45,7 @@
       </div>
     </ng-container>
     <ng-container *ngFor="let channel of getList()">
-      <div *ngIf="channel.id !== fixedChannelId" class="channel" (click)="openChannel(channel.id!)">
+      <div *ngIf="channel.id !== fixedChannelId" class="channel border-green" (click)="openChannel(channel.id!)">
         <div [class.active]="channel.id === selectedChannelId">
           <svg width="24" height="24" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path

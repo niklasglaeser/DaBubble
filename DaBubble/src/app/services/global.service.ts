@@ -10,6 +10,7 @@ export class GlobalService {
   private isDirectChatSubject = new BehaviorSubject<boolean>(false);
   private isThreadSubject = new BehaviorSubject<boolean>(false);
   private isMobileSubject = new BehaviorSubject<boolean>(false);
+  private channelSwitchSubject = new BehaviorSubject<string | null>(null);
 
   showSidebar$ = this.showSidebarSubject.asObservable();
   isChannel$ = this.isChannelSubject.asObservable();
@@ -81,5 +82,13 @@ export class GlobalService {
         this.isChannel(true);
       }
     }
+  }
+
+  switchChannel(channelId: string) {
+    this.channelSwitchSubject.next(channelId);
+  }
+
+  getChannelSwitch() {
+    return this.channelSwitchSubject.asObservable();
   }
 }  
