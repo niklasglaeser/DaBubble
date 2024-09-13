@@ -277,8 +277,10 @@ export class DmFooterComponent {
     const emoji = event.emoji.native;
     const textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
     if (textarea) {
-      textarea.value += emoji;
+      textarea.value += emoji + " ";
       textarea.focus();
+      const event = new Event('input', { bubbles: true });
+      textarea.dispatchEvent(event);
     }
     this.showEmojiPicker = false;
   }
