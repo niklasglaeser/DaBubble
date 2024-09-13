@@ -13,14 +13,16 @@
   transition: transform 1925ms ease-out, opacity 1925ms ease-out;
   @media (max-width: 1200px) {
     flex: 1;
-    padding: 16px 16px;
+    padding: 64px 64px;
     width: 100%;
+  }
+  @media (max-width: 500px) {
+    padding: 16px 16px;
   }
 }
 
 app-search {
   display: flex;
-  justify-content: center;
   flex-grow: 1;
   max-width: 900px;
   @media (min-width: 1200px) {
@@ -151,6 +153,7 @@ app-search {
 
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
     }
     &:hover {
@@ -246,6 +249,7 @@ app-search {
 
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -278,7 +282,7 @@ app-search {
   display: flex;
   flex-direction: column;
   gap: 13px;
-  // max-height: 400px;
+  min-height: 150px;
   overflow-y: scroll;
   overflow-x: hidden;
 

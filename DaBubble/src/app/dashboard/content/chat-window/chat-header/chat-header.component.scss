@@ -26,6 +26,18 @@
   @media (max-width: 1200px) {
     max-width: 700px;
   }
+  @media (max-width: 1020px) {
+    max-width: 400px;
+  }
+  @media (max-width: 800px) {
+    max-width: 300px;
+  }
+  @media (max-width: 600px) {
+    max-width: 250px;
+  }
+  @media (max-width: 400px) {
+    max-width: 150px;
+  }
   
 
   .arrow-down {
@@ -46,7 +58,7 @@
         font-size: 20px;
         max-width: 250px;
     }
-    @media (max-width: 12000px) {
+    @media (max-width: 1200px) {
       font-size: 20px;
       max-width: 600px;
   }
@@ -69,7 +81,6 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  flex-shrink: 0;
 }
 
 .user-pictures {
@@ -98,6 +109,9 @@
   }
   @media (max-width: 1200px) {
     display: flex;
+  }
+  @media (max-width: 700px) {
+    display: none;
   }
 
   

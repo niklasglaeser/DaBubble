@@ -30,6 +30,11 @@
     padding-left: 15px;
     padding-right: 15px;
   }
+  @media (max-width: 450px) {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
 }
 
 .thread-window {
@@ -58,17 +63,17 @@
 .sidebar-window {
   display: flex;
   padding-right: 20px;
-  max-width: 366px;
+  max-width: 320px;
   visibility: visible;
   transition: max-width 0.2s ease-in-out, visibility 0s linear 0.2s;
   @media (max-width: 1200px) {
     justify-content: center;
-    align-self: center;
-    max-width: unset;
-    width: 70%;
+    width: 100%;
     padding-left: 20px;
     padding-top: 10px;
     padding-right: 0px;
+    max-width: 800px;
+    max-height: 800px;
   }
   min-height: 600px;
 }
