@@ -14,11 +14,13 @@
   @media (max-width: 1200px) {
     flex: 1;
     padding: 16px 16px;
-    // border-radius: unset;
+    width: 100%;
   }
 }
 
 app-search {
+  display: flex;
+  justify-content: center;
   flex-grow: 1;
   max-width: 900px;
   @media (min-width: 1200px) {

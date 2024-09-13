@@ -68,7 +68,7 @@ export class SidebarComponent implements OnInit {
       this.channels = channels;
       if (this.channels.length > 0) {
         const firstChannelId = this.channels[0].id;
-        this.openChannel(firstChannelId);
+        // this.openChannel(firstChannelId);
       }
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
       if (!this.isMobile) {
