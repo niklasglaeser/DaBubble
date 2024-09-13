@@ -43,11 +43,25 @@
       <!-- <span class="fs-24-700" [ngStyle]="{'color': 'red','cursor': 'pointer'}" (click)="deleteChannel()">Delete
         Channel for testing</span> -->
     </div>
+    <div class="container-channel membersHideMobile">
+      <span class="fs-18-700">Mitglieder</span>
+      <div class="container-users">
+        @for (member of members; track $index) {
+        <div class="user" (click)="openProfil(member)">
+          <div>
+            <div class="avatarStatus" cl>
+              <img [src]="member.photoURL ? member.photoURL : '../../assets/img/landing-page/men1.svg'">
+              <img
+                [src]="member.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+            </div>
+            <span class=" fs-18">{{member.username}}</span>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
     <div class="dialog-actions">
       <button class="fs-20" (click)="removeUserFromChannel()">Channel verlassen</button>
     </div>
-    <!-- <div class="container-channel">
-      <span class="fs-18-700">Mitglieder</span>
-    </div> -->
   </div>
 </div>

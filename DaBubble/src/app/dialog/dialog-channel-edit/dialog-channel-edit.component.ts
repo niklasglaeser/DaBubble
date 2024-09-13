@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef, Input, Inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, Inject, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel.service';
 import { Channel } from '../../models/channel.class';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { getDoc } from '@angular/fire/firestore';
+import { UserLogged } from '../../models/user-logged.model';
+import { DialogEditProfilComponent } from '../dialog-edit-profil/dialog-edit-profil.component';
 
 @Component({
   selector: 'app-dialog-channel-edit',
@@ -15,7 +17,9 @@ import { getDoc } from '@angular/fire/firestore';
 })
 export class DialogChannelEditComponent {
   @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
+  @Output() openAddUserDialogEvent = new EventEmitter<void>();
   channel!: Channel;
+  members: UserLogged[] = [];
 
   isOpen = true;
   title: string = '';
@@ -33,7 +37,9 @@ export class DialogChannelEditComponent {
   description?: string;
   creator?: string;
 
-  constructor(private channelService: ChannelService, @Inject(MAT_DIALOG_DATA) public data: { channelId: string }, public dialogRef: MatDialogRef<DialogChannelEditComponent>) {}
+  constructor(private channelService: ChannelService, @Inject(MAT_DIALOG_DATA) public data: { channelId: string; members: UserLogged[] }, public dialogRef: MatDialogRef<DialogChannelEditComponent>, private dialog: MatDialog) {
+    this.members = data.members;
+  }
 
   ngOnInit() {
     this.loadChannel();
@@ -120,6 +126,30 @@ export class DialogChannelEditComponent {
         console.log('error');
       }
     }
+  }
+
+  openProfil(user: UserLogged) {
+    const dialogRef = this.dialog.open(DialogEditProfilComponent, {
+      data: { user: user }
+    });
+
+    dialogRef.afterClosed().subscribe((updatedUser: UserLogged) => {
+      if (updatedUser) {
+        this.updateUserList(updatedUser);
+      }
+    });
+  }
+
+  updateUserList(updatedUser: UserLogged) {
+    const index = this.members.findIndex((member) => member.uid === updatedUser.uid);
+    if (index !== -1) {
+      this.members[index] = updatedUser;
+    }
+  }
+
+  addUser() {
+    this.openAddUserDialogEvent.emit();
+    this.dialogRef.close();
   }
 
   close() {
