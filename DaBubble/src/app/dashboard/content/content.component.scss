@@ -55,7 +55,6 @@
   }
 }
 
-
 .sidebar-window {
   display: flex;
   padding-right: 20px;
@@ -88,12 +87,12 @@
 
 ::ng-deep .mobile-chat-dialog .mat-dialog-container {
   background-color: aqua !important;
-  padding: 0; /* Entfernt Standard-Padding */
-  margin: 0; /* Entfernt Standard-Margin */
-  width: 100vw; /* Stellt sicher, dass der Dialog die volle Breite des Viewports einnimmt */
-  height: 100vh; /* Stellt sicher, dass der Dialog die volle Höhe des Viewports einnimmt */
-  overflow: hidden; /* Verhindert Scrollen innerhalb des Dialogs */
-  border-radius: 40px !important; /* Entfernt abgerundete Ecken, um es wie eine native mobile Ansicht aussehen zu lassen */
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  border-radius: 40px !important;
 }
 
 .sidebar-window.hidden {

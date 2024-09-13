@@ -5,7 +5,6 @@
   @media (max-width: 790px) {
     padding: 30px;
   }
-
 }
 
 .dialog-header {
@@ -14,10 +13,10 @@
   align-items: center;
   gap: 12px;
   h2 {
-    margin: 0; 
-    overflow: hidden; 
+    margin: 0;
+    overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
     flex-grow: 1;
   }
   svg {
@@ -96,14 +95,27 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 16px;
+}
 
+.dialog-actions {
   button {
-    margin-left: 8px;
+    height: 49px;
+    padding: 12px 25px 12px 25px;
+    color: white;
+    border: unset;
+    background-color: var(--purple1);
+    border-radius: 25px;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--lightPurple);
+    }
   }
 }
 
 .close {
-  background-image: url("/assets/img/main-page/thread/cross.svg");
+  background-image: url('/assets/img/main-page/thread/cross.svg');
   background-repeat: no-repeat;
   height: 40px;
   width: 40px;
@@ -113,6 +125,6 @@
   flex-shrink: 0;
   cursor: pointer;
   &:hover {
-    background-image: url("/assets/img/main-page/thread/cross-hover.svg");
+    background-image: url('/assets/img/main-page/thread/cross-hover.svg');
   }
 }

@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit {
   @Output() channelOpened = new EventEmitter<void>();
   @Output() directMessageOpened = new EventEmitter<void>();
 
-  @Input() showSidebar: boolean | undefined ;
+  @Input() showSidebar: boolean | undefined;
   @Input() isMobile: boolean | undefined;
 
   isChannelsDropdownOpen = true;
@@ -66,6 +66,10 @@ export class SidebarComponent implements OnInit {
 
     this.channelService.channels$.subscribe((channels) => {
       this.channels = channels;
+      if (this.channels.length > 0) {
+        const firstChannelId = this.channels[0].id;
+        this.openChannel(firstChannelId);
+      }
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
       if (!this.isMobile) {
         if (this.channels.length > 0 && !this.selectedChannelId) {

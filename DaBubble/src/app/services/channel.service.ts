@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './lp-services/auth.service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { UserLogged } from '../models/user-logged.model';
+import { arrayRemove } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ChannelService {
   channels$ = new BehaviorSubject<Channel[]>([]);
   defaultChannelId: string = 'IiKdwSHaVmXdf2JiliaU';
   currentUserId$ = new BehaviorSubject<string | null>(null);
+  currentUserId: string = '';
 
   /*onSnapshot variablen*/
   unsubList: any;
@@ -28,6 +30,7 @@ export class ChannelService {
     this.currentUserId$.subscribe((userId) => {
       if (userId) {
         this.loadChannelsForCurrentUser(userId);
+        this.currentUserId = userId;
       } else {
         this.channels$.next([]);
       }
@@ -124,9 +127,6 @@ export class ChannelService {
     }
   }
 
-
-
-
   async updateChannel(channelId: string, channel: Channel) {
     try {
       const channelDocRef = this.getSingleChannel(channelId);
@@ -148,6 +148,29 @@ export class ChannelService {
       console.log('Channel deleted with ID: ', channelId);
     } catch (e) {
       console.error('Error deleting document: ', e);
+    }
+  }
+
+  async removeUserFromChannel(channelId: string) {
+    try {
+      const userId = this.currentUserId;
+      if (!userId) {
+        console.error('Kein Benutzer angemeldet');
+        return;
+      }
+      const usersRef = collection(this.firestore, 'Users');
+      const userDoc = doc(usersRef, userId);
+      await updateDoc(userDoc, {
+        joinedChannels: arrayRemove(channelId)
+      });
+
+      const channelsRef = collection(this.firestore, 'channels');
+      const channelDoc = doc(channelsRef, channelId);
+      await updateDoc(channelDoc, {
+        members: arrayRemove(userId)
+      });
+    } catch (e) {
+      console.error('Fehler beim Entfernen des Benutzers aus dem Channel', e);
     }
   }
 

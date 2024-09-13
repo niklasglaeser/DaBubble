@@ -11,7 +11,7 @@ import { getDoc } from '@angular/fire/firestore';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './dialog-channel-edit.component.html',
-  styleUrl: './dialog-channel-edit.component.scss',
+  styleUrl: './dialog-channel-edit.component.scss'
 })
 export class DialogChannelEditComponent {
   @ViewChild('descriptionTextarea') descriptionTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -33,11 +33,7 @@ export class DialogChannelEditComponent {
   description?: string;
   creator?: string;
 
-  constructor(
-    private channelService: ChannelService,
-    @Inject(MAT_DIALOG_DATA) public data: { channelId: string },
-    public dialogRef: MatDialogRef<DialogChannelEditComponent>
-  ) { }
+  constructor(private channelService: ChannelService, @Inject(MAT_DIALOG_DATA) public data: { channelId: string }, public dialogRef: MatDialogRef<DialogChannelEditComponent>) {}
 
   ngOnInit() {
     this.loadChannel();
@@ -45,9 +41,7 @@ export class DialogChannelEditComponent {
 
   async loadChannel() {
     if (this.data.channelId) {
-      const channelDoc = this.channelService.getSingleChannel(
-        this.data.channelId
-      );
+      const channelDoc = this.channelService.getSingleChannel(this.data.channelId);
       const channelData = (await getDoc(channelDoc)).data();
       if (channelData) {
         this.channel = new Channel({ id: this.data.channelId, ...channelData });
@@ -63,10 +57,7 @@ export class DialogChannelEditComponent {
       try {
         this.channel.name = this.name!;
         this.channel.description = this.description!;
-        await this.channelService.updateChannel(
-          this.data.channelId,
-          this.channel
-        );
+        await this.channelService.updateChannel(this.data.channelId, this.channel);
         console.log('Channel updated successfully');
       } catch (e) {
         console.error('Error updating channel', e);
@@ -84,6 +75,18 @@ export class DialogChannelEditComponent {
       }
     }
   }
+
+  async removeUserFromChannel() {
+    if (this.data.channelId) {
+      try {
+        await this.channelService.removeUserFromChannel(this.data.channelId);
+        this.dialogRef.close();
+      } catch (e) {
+        console.error('Error remove User from Channel', e);
+      }
+    }
+  }
+
   editChannelBtn(event: Event) {
     if (!this.editNameClicked) {
       this.editNameClicked = true;
