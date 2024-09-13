@@ -30,6 +30,7 @@ export class DialogAddChannelComponent implements OnInit {
   addChannel: boolean = true;
   currentStep: 'channel' | 'user' = 'channel';
   channelName: string = '';
+  errorMessage: boolean = false;
 
   userControl = new FormControl();
   users: UserLogged[] = [];
@@ -69,7 +70,10 @@ export class DialogAddChannelComponent implements OnInit {
         if (!this.allowDuplicateNames) {
           const nameExists = await this.channelService.checkChannelExists(newChannelName);
           if (nameExists) {
-            console.log('Channel name already exists.');
+            this.errorMessage = true;
+            setInterval(() => {
+              this.errorMessage = false;
+            }, 2000);
             return;
           }
         }
@@ -93,11 +97,16 @@ export class DialogAddChannelComponent implements OnInit {
 
   async submitUser() {
     if (this.addUserForm.valid && this.createdChannel) {
-      let userIds: string[];
+      let userIds: string[] = [];
+      let currentUserId = this.authService.uid;
+
       if (this.addUserForm.get('selection')?.value === 'all') {
         userIds = this.users.map((user) => user.uid);
       } else {
         userIds = this.selectedUsers.map((user) => user.uid);
+      }
+      if (currentUserId && !userIds.includes(currentUserId)) {
+        userIds.push(currentUserId);
       }
       try {
         await this.channelService.editUserlistInChannel(this.createdChannel, userIds);
