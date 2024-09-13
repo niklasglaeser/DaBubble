@@ -95,8 +95,7 @@
 .reaction-bar {
   display: flex;
   visibility: hidden;
-  position: absolute;
-  top: -30px;
+  position: relative;
   z-index: 500;
   margin-right: 40px;
   align-self: flex-end;
@@ -120,6 +119,7 @@
 }
 
 .emoji-reaction {
+  background-size: 50% 50%;
   background-image: url("/assets/img/main-page/chat/reaction-emojis.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-emojis-hover.svg");
@@ -135,6 +135,7 @@
 
 .option-reaction {
   display: none;
+  background-size: 40% 40%;
   background-image: url("/assets/img/main-page/chat/reaction-option.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-option-hover.svg");
@@ -161,10 +162,13 @@
 .author-picture {
   height: 70px;
   width: 70px;
-  border-radius: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .details {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -174,7 +178,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  width: 95%;
+  width: fit-content;
   padding: 20px;
   background-color: #edeefe;
   border-radius: 30px;
@@ -227,12 +231,12 @@
 .emoji-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   background-color: white;
   border: 1px solid #adb0d9;
-  padding: 5px 10px;
+  padding: 3px 7px;
   border-radius: 20px;
-  scale: 80%;
+  font-size: 13px;
   position: relative;
 }
 
@@ -268,9 +272,9 @@
 .emoji {
   height: 24px;
   width: 24px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .emoji-counter {
@@ -356,7 +360,7 @@
 }
 
 /*Marco CSS edit Message*/
-.edit-channel {
+.edit-thread {
   > input,
   textarea {
     width: 100%;
@@ -375,17 +379,19 @@
   }
 }
 
-.edit-buttons {
+.edit-btn-thread {
   display: flex;
   justify-content: center;
   width: 100%;
-  gap: 40px;
+  gap: 15px;
 }
 
 .edit {
   color: var(--purple3);
   cursor: pointer;
-  font-size: 14px;
+  border: 1px solid var(--purple2);
+  padding: 5px 15px;
+  border-radius: 30px;
 
   &:hover {
     scale: 120%;
@@ -405,4 +411,186 @@
 
 .error-message {
   color: red;
+}
+
+@media (max-width: 10000px) {
+  .reaction-bar {
+    margin-top: 20px;
+  }
+}
+
+
+@media (max-width: 10000px) {
+
+  .author-name {
+    font-size: 14px;
+  }
+
+  .message-send-time {
+    font-size: 12px;
+  }
+
+  .text {
+    font-size: 15px;
+  }
+
+  .author-picture {
+    height: 50px;
+    width: 50px;
+  }
+
+  .message-date {
+    font-size: 13px;
+  }
+
+  .reaction-bar {
+    padding: 3px 15px;
+    >div {
+      font-size: 12px;
+      height: 25px;
+      width: 25px;
+    }
+  }
+
+  .emoji-container {
+    font-size: 10px;
+  }
+
+  .emoji {
+    height: 20px;
+    width: 20px;
+  }
+
+  .edit {
+    font-size: 10px;
+  }
+
+}
+
+
+@media (max-width: 10000px) {
+  .message-content {
+    padding-top: 30px;
+  }
+
+  .edit-btn-thread {
+    gap: 30px;
+    padding-right: 0;
+  }
+
+  .edit {
+    font-size: 8px;
+    padding: 3px 8px;
+  }
+}
+
+@media (max-width: 790px) {
+  .reaction-bar {
+    padding: 3px 15px;
+    >div {
+      font-size: 11px;
+      height: 24px;
+      width: 24px;
+    }
+  }
+
+  .add-reaction {
+    height: 24px;
+    width: 24px;
+  }
+
+
+  .emoji-container {
+    font-size: 8px;
+    padding: 2px 5px;
+  }
+
+  .emoji {
+    height: 17px;
+    width: 17px;
+  }
+
+  .edit-btn-thread {
+    gap: 25px;
+  }
+
+  .edit {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 550px) {
+
+  .reaction-bar {
+    align-self: center !important;
+    margin-left: 0 !important; 
+    margin-top: 0 !important;
+  }
+
+  .author-name {
+    font-size: 10px;
+  }
+
+  .message-send-time {
+    font-size: 10px;
+  }
+
+  .text {
+    font-size: 12px;
+  }
+
+  .author-picture {
+    height: 30px;
+    width: 30px;
+  }
+
+  .emoji {
+    height: 20px;
+    width: 20px;
+  }
+
+  .message-date {
+    font-size: 9px;
+    bottom: 15px;
+  }
+
+  #thread-messages-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .reaction-bar {
+    scale: 80%;
+  }
+
+  .emoji-container {
+    scale: 90%;
+  }
+
+  .user-send-message {
+    .reaction-bar {
+      margin-left: 0;
+    }
+  }
+
+  .message {
+    .reaction-bar {
+      margin-right: 0;
+    }
+  }
+
+  .edit-btn-thread {
+    gap: 5px;
+    padding-right: 0;
+  }
+
+  .edit {
+    font-size: 7px;
+    padding: 3px 5px;
+    &:hover {
+      scale: 110%;
+    }
+  }
+
+
 }

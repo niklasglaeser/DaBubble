@@ -1,4 +1,4 @@
-.chat-footer {
+.thread-footer {
     width: 100%;
     align-self: center;
     display: flex;
@@ -71,7 +71,7 @@
     justify-content: space-between;
 }
 
-#chat-message-input-thread {
+#thread-message-input {
     height: 80px;
     border: none;
     outline: none;
@@ -212,5 +212,89 @@
     height: 30px;
     border-radius: 50%;
     margin-right: 10px;
+  }
+
+  @media (max-height: 950px) {
+    #thread-message-input {
+        height: 50px;
+    }
+  
+    .chat-message-toolbar {
+        height: 30px;
+    }
+  
+    .send-message {
+        height: 30px;
+    }
+  
+    .thread-footer {
+        margin-bottom: 15px;
+        padding: 5px 30px 15px 30px;
+    }
+  
+    .add-file {
+        height: 30px;
+        width: 30px;
+    }
+  
+    .add-emojis {
+        height: 30px;
+        width: 30px;
+    }
+  
+    .tag-user {
+        height: 30px;
+        width: 30px;
+    }
+  
+    .seperator {
+        height: 30px;
+    }
+  }
+  
+  @media (max-width: 500px) {
+  
+    #thread-message-input {
+        font-size: 12px;
+        &::placeholder {
+            font-size: 12px;
+        }
+    }
+  
+    .chat-message-toolbar {
+        height: 20px;
+    }
+  
+    .add-file {
+        height: 20px;
+        width: 20px;
+    }
+  
+    .add-emojis {
+        height: 20px;
+        width: 20px;
+    }
+  
+    .tag-user {
+        height: 20px;
+        width: 20px;
+    }
+  
+    .seperator {
+        height: 20px;
+        width: 5px;
+    }
+  
+    .send-message {
+        height: 20px;
+    }
+  
+    .chat-toolbar-left {
+        gap: 5px;
+    }
+  
+    .thread-footer {
+        padding: 10px 15px 15px 15px;
+    }
   }
   

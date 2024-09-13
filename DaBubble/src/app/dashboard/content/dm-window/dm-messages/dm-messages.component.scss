@@ -487,20 +487,14 @@
   color: red;
 }
 
-@media (pointer: coarse) {
-  .reaction-bar {
-    visibility: visible;
-  }
-}
-
-@media (max-width: 1350px) {
+@media (max-width: 1400px) {
   .reaction-bar {
     margin-top: 20px;
   }
 }
 
 
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
 
   .author-name {
     font-size: 14px;
@@ -574,6 +568,11 @@
       height: 24px;
       width: 24px;
     }
+  }
+
+  .add-reaction {
+    height: 24px;
+    width: 24px;
   }
 
 

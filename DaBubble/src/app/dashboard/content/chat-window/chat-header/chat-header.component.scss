@@ -8,7 +8,10 @@
   padding: 20px 50px 20px 50px;
   @media (max-width: 1450px) {
     padding: 20px 30px 20px 30px;
-}
+  }
+  @media (max-width: 600px) {
+    padding: 5px 30px !important;
+  }
 }
 
 .chat-header-left {
@@ -127,5 +130,15 @@
   }
 }
 
-@media (max-width: 1450px) {
+@media (max-height: 950px) {
+  .chat-header {
+      padding: 5px 50px;
+  }
+
+  .chat-header-left {
+      >div {
+          font-size: 20px;
+      }
+  }
+
 }

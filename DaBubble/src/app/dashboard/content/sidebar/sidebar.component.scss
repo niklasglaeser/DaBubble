@@ -7,7 +7,7 @@
   height: 100%;
   border-radius: 30px;
   padding: 32px 30px;
-  padding-bottom: 0px;
+  padding-bottom: 30px;
   background-color: white;
   margin: 0 0px;
   transition: transform 1925ms ease-out, opacity 1925ms ease-out;
@@ -282,7 +282,7 @@ app-search {
   display: flex;
   flex-direction: column;
   gap: 13px;
-  min-height: 150px;
+  min-height: 100px;
   overflow-y: scroll;
   overflow-x: hidden;
 

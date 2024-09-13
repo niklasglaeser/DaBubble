@@ -1,4 +1,4 @@
-<div class="chat-footer">
+<div class="thread-footer">
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
         <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8"
             searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event)"></emoji-mart>
@@ -15,7 +15,7 @@
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>
     </div>
 
-    <textarea id="chat-message-input-thread" placeholder="Antworten..." [(ngModel)]="inputText"
+    <textarea id="thread-message-input" placeholder="Antworten..." [(ngModel)]="inputText"
         (input)="onInput($event)" (keydown)="handleKeyDown($event)" rows="3"></textarea>
     <ul *ngIf="dropdownOpen && filteredUsers.length > 0" class="autocomplete-list">
         <li *ngFor="let user of filteredUsers; let i = index" [class.active]="i === activeIndex"

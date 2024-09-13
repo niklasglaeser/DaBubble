@@ -133,7 +133,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    scale: 120%;
   }
 }
 
@@ -145,11 +144,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    scale: 120%;
   }
 }
 
 .emoji-reaction {
+  background-size: 50% 50%;
   background-image: url("/assets/img/main-page/chat/reaction-emojis.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-emojis-hover.svg");
@@ -157,6 +156,7 @@
 }
 
 .comment-reaction {
+  background-size: 50% 50%;
   background-image: url("/assets/img/main-page/chat/reaction-comment.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-comment-hover.svg");
@@ -165,6 +165,7 @@
 
 .option-reaction {
   display: none;
+  background-size: 40% 40%;
   background-image: url("/assets/img/main-page/chat/reaction-option.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-option-hover.svg");
@@ -193,13 +194,14 @@
   width: 70px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .details {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 1;
 }
 
 .text {
@@ -234,6 +236,7 @@
   display: flex;
   justify-content: flex-start;
   gap: 20px;
+  padding-left: 8px;
 }
 
 .open-answers {
@@ -254,6 +257,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  font-size: 11px;
   >span {
     display: flex;
     width: max-content;
@@ -327,6 +331,7 @@
   width: 28px;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: contain;
   background-image: url("/assets/img/main-page/chat/reaction-emojis.svg");
   &:hover {
     background-image: url("/assets/img/main-page/chat/reaction-emojis-hover.svg");
@@ -432,7 +437,6 @@
   border: 1px solid var(--purple2);
   padding: 5px 15px;
   border-radius: 30px;
-  
 
   &:hover {
     scale: 120%;
@@ -464,19 +468,13 @@
   color: red;
 }
 
-@media (pointer: coarse) {
-  .reaction-bar {
-    visibility: visible;
-  }
-}
-
-@media (max-width: 1350px) {
+@media (max-width: 1650px) {
   .reaction-bar {
     margin-top: 20px;
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
 
   .author-name {
     font-size: 14px;
@@ -551,6 +549,11 @@
     }
   }
 
+  .add-reaction {
+    height: 24px;
+    width: 24px;
+  }
+
 
   .emoji-container {
     font-size: 8px;
@@ -568,6 +571,14 @@
 
   .edit {
     font-size: 8px;
+  }
+
+  .open-answers {
+    font-size: 12px;
+  }
+
+  .last-answer {
+    font-size: 9px;
   }
 }
 
@@ -630,7 +641,7 @@
     }
   }
 
-  .edit-dm-btn {
+  .edit-channel-btn {
     gap: 5px;
     padding-right: 0;
   }
@@ -642,7 +653,5 @@
       scale: 110%;
     }
   }
-
-
 }
 

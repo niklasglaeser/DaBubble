@@ -2,11 +2,6 @@
     <div id="thread-messages-container">
         <div class="origin-message" *ngIf="originMessage">
             <div class="message-section">
-                <div class="reaction-bar">
-                    <div class="emoji-reaction" (click)="toggleEmojiPicker(originMessage.id ?? undefined, $event)">
-                    </div>
-                    <div class="option-reaction"></div>
-                </div>
                 <div class="message-content">
                     <img class="author-picture" [src]="originMessage.photoURL">
                     <p *ngIf="!originMessage.photoURL">Kein Bild verfügbar</p>
@@ -64,6 +59,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="add-reaction" (click)="toggleEmojiPicker(originMessage.id, $event)"></div>
                         </div>
                     </div>
                 </div>
@@ -106,12 +102,12 @@
                                 
                             </div>
                             <ng-template #editTemplate>
-                                <div class="edit-buttons">
+                                <div class="edit-btn-thread">
                                     <span class="edit" (click)="cancelEdit()">Abbrechen</span>
                                     <span class="edit" (click)="saveEditedMessage()">Speichern</span>
                                     <span class="edit" (click)="deleteMessage()">Nachricht löschen</span>
                                 </div>
-                                <div class="edit-channel">
+                                <div class="edit-thread">
                                     <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText"
                                         type="text" (input)="adjustHeight($event)"></textarea>
                                 </div>
@@ -153,6 +149,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="add-reaction" (click)="toggleEmojiPicker(message.id, $event)"></div>
                                 </div>
                             </div>
                         </div>
