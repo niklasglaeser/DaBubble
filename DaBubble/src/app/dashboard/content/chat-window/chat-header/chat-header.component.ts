@@ -25,7 +25,7 @@ export class ChatHeaderComponent {
   @ViewChild('openOverviewPosition') openOverviewPosition!: ElementRef;
   @ViewChild('openAddUserPosition') openAddUserPosition!: ElementRef;
 
-  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private globalService: GlobalService) { }
+  constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private globalService: GlobalService) {}
 
   openEditChannel(event: MouseEvent): void {
     if (this.channel && this.channel.id) {
@@ -41,7 +41,7 @@ export class ChatHeaderComponent {
         dialogConfig.position = position;
       }
 
-      dialogConfig.data = { channelId: this.channel.id };
+      dialogConfig.data = { channelId: this.channel.id, members: this.members };
       dialogConfig.panelClass = 'dialog-panel-edit-channel';
       dialogConfig.width = '100%';
       dialogConfig.maxWidth = `${dialogWidth}px`;
