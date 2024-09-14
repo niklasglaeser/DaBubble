@@ -65,7 +65,6 @@
   button {
     width: 125px;
     height: 49px;
-    // padding: 12px 25px 12px 25px;
     color: white;
     background-color: var(--purple1);
     border: unset;
@@ -128,7 +127,6 @@
   }
 }
 
-// Das Verhalten, das du beschreibst, ist typisch für den Fokusrahmen, der durch Browser- oder Framework-Styles (wie Angular Material) auf fokussierbare Elemente wie Buttons angewendet wird.
 button:focus {
   outline: none;
 }

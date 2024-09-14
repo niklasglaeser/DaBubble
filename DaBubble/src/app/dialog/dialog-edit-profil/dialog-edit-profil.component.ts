@@ -24,7 +24,6 @@ import { MatIconModule } from '@angular/material/icon';
 export class DialogEditProfilComponent implements OnInit {
   authService = inject(AuthService)
   UserService = inject(UserLoggedService)
-  // isOpen = true;
   currentUserId$ = new BehaviorSubject<string | null>(null);
   user!: UserLogged;
 
@@ -47,39 +46,46 @@ export class DialogEditProfilComponent implements OnInit {
     this.getCurrentUserId();
   }
 
+  /**
+   * Angular lifecycle hook that runs on component initialization.
+   * Loads the user profile and checks if the current user is a guest user.
+   */
   ngOnInit() {
     this.loadProfile();
     this.checkIfGuestUser();
     // this.subscribeToUserData()
   }
 
-  /* Bug DM Header -> open profile dialog -> falsches photo wenn alles gut, kann raus*/
+  /**
+   * Subscribes to user data based on the authenticated user's ID.
+   * Updates the profile image upon receiving the user data.
+   * This function is marked to be potentially removed after a bug fix.
+   * @returns {Promise<void>} A promise that resolves when the subscription is set up.
+   */
   async subscribeToUserData(): Promise<void> {
     if (this.authService.uid) {
       await this.UserService.subscribeUser(this.authService.uid).subscribe((data) => {
-        this.profileImg = data?.photoURL!
+        this.profileImg = data?.photoURL!;
       });
     }
   }
-  /* Bug DM Header -> open profile dialog -> falsches photo wenn alles gut, kann raus*/
 
+  /**
+   * Toggles the edit mode for the profile name.
+   * If the user is in edit mode, it allows them to edit the name.
+   */
   editProfilBtn() {
     if (!this.editNameClicked) {
       this.editNameClicked = true;
-      // this.editName = 'Speichern';
-      this.edit = true
+      this.edit = true;
     }
-    //  else {
-    //   try {
-    //     this.editNameClicked = false;
-    //     this.editName = 'Bearbeiten';
-    //     this.edit = false
-    //   } catch {
-    //     console.log('error');
-    //   }
-    // }
   }
 
+  /**
+   * Loads the profile information for the current user based on their user ID.
+   * Retrieves and assigns the user's username and email to the component's properties.
+   * @returns {Promise<void>} A promise that resolves when the profile data is loaded.
+   */
   async loadProfile() {
     if (this.data.user.uid) {
       const userDoc = this.userService.getSingleUser(this.data.user.uid);
@@ -97,22 +103,25 @@ export class DialogEditProfilComponent implements OnInit {
     }
   }
 
+  /**
+   * Updates the user's profile with the modified username and email.
+   * Validates the username and email fields and submits changes to the user service.
+   * Closes the dialog after successfully updating the user.
+   * @returns {Promise<void>} A promise that resolves when the user is updated.
+   */
   async updateUser() {
     if (!this.profilName || !this.profilEmail) {
       console.error('Name und E-Mail dürfen nicht leer sein.');
       return;
     }
-
     const nameParts = this.profilName.trim().split(' ');
     if (nameParts.length < 2) {
       return;
     }
-
     if (this.user) {
       try {
         this.user.username = this.profilName;
         this.user.email = this.profilEmail;
-
         await this.userService.updateUser(this.user.uid, this.user);
         this.dialogRef.close(this.user);
       } catch (e) {
@@ -121,6 +130,10 @@ export class DialogEditProfilComponent implements OnInit {
     }
   }
 
+  /**
+   * Checks whether the profile has been modified by comparing current and original values.
+   * @returns {boolean} True if the profile name or email has changed, otherwise false.
+   */
   hasChanges(): boolean {
     return (
       this.profilName !== this.originalProfilName ||
@@ -128,22 +141,36 @@ export class DialogEditProfilComponent implements OnInit {
     );
   }
 
+  /**
+   * Opens a direct message channel for the specified user ID.
+   * Closes all open dialogs after initiating the direct message.
+   * @param {string} userId - The ID of the user to send a direct message to.
+   */
   openDirectMessage(userId: string) {
     this.channelStateService.openDirectMessage(userId);
     this.dialog.closeAll();
-
   }
 
+  /**
+   * Closes the current dialog without saving changes.
+   */
   close() {
     this.dialogRef.close();
   }
 
+  /**
+   * Retrieves the current authenticated user's ID and updates the `currentUserId$` observable.
+   */
   getCurrentUserId() {
     onAuthStateChanged(this.auth, (user) => {
       this.currentUserId$.next(user ? user.uid : null);
     });
   }
 
+  /**
+   * Checks if the current authenticated user is a guest user.
+   * Sets the `isGuestUser` flag accordingly.
+   */
   checkIfGuestUser() {
     this.currentUserId$.subscribe((currentUserId) => {
       if (currentUserId && currentUserId === this.userService.guestUser) {
@@ -154,19 +181,23 @@ export class DialogEditProfilComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens the AvatarProfileComponent dialog for avatar selection if the user is in edit mode.
+   * Reloads the user profile after avatar selection.
+   */
   openProfilAvatar() {
     if (this.edit) {
       const dialogRef = this.dialog.open(AvatarProfileComponent, {
         width: '100vw',
         maxWidth: '550px',
       });
-
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           this.loadProfile();
         }
       });
     }
-    this.close()
+    this.close();
   }
+
 }

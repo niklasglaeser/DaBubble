@@ -13,7 +13,6 @@
       <span class="fs-18"># {{name}}</span>
       }@else {
       <div class="edit-channel">
-        <!-- <span>#</span> -->
         <input class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="name" minlength="3" type="text">
       </div>
       @if(channelExist){
@@ -27,21 +26,16 @@
         <span class="edit" (click)="editDescriptionBtn($event)">{{editDescription}}</span>
       </div>
       @if (!editDescriptionClicked) {
-
       <span class="fs-18">{{description}}</span>
       } @else {
       <div class="edit-channel">
-        <!-- <span>#</span> -->
         <textarea #descriptionTextarea class="fs-18" [disabled]="inputNameDisabled" [(ngModel)]="description"
           (input)="adjustHeight($event)" type="text"></textarea>
-
       </div>
       }
       <div class="line"></div>
       <span class="fs-18-700">Erstellt von</span>
       <span class="fs-24" [ngStyle]="{'color': 'var(--purple3)'}">{{creator}}</span>
-      <!-- <span class="fs-24-700" [ngStyle]="{'color': 'red','cursor': 'pointer'}" (click)="deleteChannel()">Delete
-        Channel for testing</span> -->
     </div>
     <div class="container-channel membersHideMobile">
       <span class="fs-18-700">Mitglieder</span>

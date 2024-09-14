@@ -42,12 +42,18 @@ export class DialogChannelEditComponent {
     this.members = data.members;
   }
 
+  /**
+   * Initializes the component by loading the channel data and checking if it's the default channel.
+   */
   ngOnInit() {
     this.loadChannel();
-    this.checkIfDefaultChannel()
-
+    this.checkIfDefaultChannel();
   }
 
+  /**
+   * Loads the channel data based on the provided channel ID.
+   * Retrieves the channel information from the channel service and assigns it to the component.
+   */
   async loadChannel() {
     if (this.data.channelId) {
       const channelDoc = this.channelService.getSingleChannel(this.data.channelId);
@@ -61,19 +67,25 @@ export class DialogChannelEditComponent {
     }
   }
 
+  /**
+   * Updates the channel's name and description based on the current values.
+   * Sends the updated data to the channel service.
+   */
   async updateChannel() {
     if (this.channel) {
       try {
         this.channel.name = this.name!;
         this.channel.description = this.description!;
         await this.channelService.updateChannel(this.data.channelId, this.channel);
-        console.log('Channel updated successfully');
       } catch (e) {
         console.error('Error updating channel', e);
       }
     }
   }
 
+  /**
+   * Deletes the current channel using the channel service and closes the dialog.
+   */
   async deleteChannel() {
     if (this.data.channelId) {
       try {
@@ -85,6 +97,9 @@ export class DialogChannelEditComponent {
     }
   }
 
+  /**
+   * Removes a user from the current channel using the channel service and closes the dialog.
+   */
   async removeUserFromChannel() {
     if (this.data.channelId) {
       try {
@@ -96,6 +111,11 @@ export class DialogChannelEditComponent {
     }
   }
 
+  /**
+   * Handles the edit button click for the channel name.
+   * Toggles between edit and save modes, and updates the channel if changes are made.
+   * @param {Event} event - The click event.
+   */
   editChannelBtn(event: Event) {
     if (!this.editNameClicked) {
       this.editNameClicked = true;
@@ -111,6 +131,11 @@ export class DialogChannelEditComponent {
     }
   }
 
+  /**
+   * Handles the edit button click for the channel description.
+   * Toggles between edit and save modes, adjusts the textarea height, and updates the channel.
+   * @param {Event} event - The click event.
+   */
   editDescriptionBtn(event: Event) {
     if (!this.editDescriptionClicked) {
       this.editDescriptionClicked = true;
@@ -131,6 +156,11 @@ export class DialogChannelEditComponent {
     }
   }
 
+  /**
+   * Opens the profile editing dialog for a given user.
+   * Updates the user list with any changes made in the profile editing dialog.
+   * @param {UserLogged} user - The user whose profile will be edited.
+   */
   openProfil(user: UserLogged) {
     const dialogRef = this.dialog.open(DialogEditProfilComponent, {
       data: { user: user }
@@ -143,6 +173,10 @@ export class DialogChannelEditComponent {
     });
   }
 
+  /**
+   * Updates the list of members with the provided updated user information.
+   * @param {UserLogged} updatedUser - The user object with updated information.
+   */
   updateUserList(updatedUser: UserLogged) {
     const index = this.members.findIndex((member) => member.uid === updatedUser.uid);
     if (index !== -1) {
@@ -150,6 +184,9 @@ export class DialogChannelEditComponent {
     }
   }
 
+  /**
+   * Emits an event to open the "Add User" dialog and closes the current dialog.
+   */
   addUser() {
     this.openAddUserDialogEvent.emit();
     this.dialogRef.close();
@@ -159,21 +196,32 @@ export class DialogChannelEditComponent {
     this.dialogRef.close();
   }
 
+  /**
+   * Checks if the current channel is the default channel.
+   * Sets the `isDefaultChannel` flag accordingly.
+   */
   checkIfDefaultChannel() {
     if (this.data.channelId === this.channelService.defaultChannelId) {
       console.log(this.channelService.defaultChannelId);
-
       this.isDefaultChannel = true;
     } else {
       this.isDefaultChannel = false;
     }
   }
 
+  /**
+   * Adjusts the height of a textarea dynamically based on its content.
+   * @param {any} event - The input event from the textarea.
+   */
   adjustHeight(event: any) {
     event.target.style.height = 'auto';
     event.target.style.height = event.target.scrollHeight + 'px';
   }
 
+  /**
+   * Adjusts the height of a provided textarea element dynamically based on its content.
+   * @param {HTMLTextAreaElement} textarea - The textarea element whose height needs adjustment.
+   */
   adjustHeightDirectly(textarea: HTMLTextAreaElement) {
     if (textarea) {
       textarea.style.height = 'auto';

@@ -19,13 +19,20 @@ export class DialogAddUserHeaderComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: { members: UserLogged[]; channel: Channel | null; users: UserLogged[] },
     public dialogRef: MatDialogRef<DialogAddUserHeaderComponent>
-  ) {}
+  ) { }
 
+  /**
+   * Initializes the component by setting the selected users and all users from the provided data.
+   */
   ngOnInit(): void {
     this.selectedUsers = this.data.members || [];
     this.allUsers = this.data.users || [];
   }
 
+  /**
+   * Closes the dialog, optionally saving the selected users.
+   * @param {boolean} save - Determines whether to save the selected users before closing.
+   */
   close(save: boolean): void {
     if (save) {
       this.dialogRef.close(this.selectedUsers);
@@ -34,7 +41,12 @@ export class DialogAddUserHeaderComponent implements OnInit {
     }
   }
 
-  onUsersUpdated(updatedUsers: UserLogged[]) {
+  /**
+   * Updates the list of selected users when they are changed.
+   * @param {UserLogged[]} updatedUsers - The updated array of selected users.
+   */
+  onUsersUpdated(updatedUsers: UserLogged[]): void {
     this.selectedUsers = updatedUsers;
   }
+
 }

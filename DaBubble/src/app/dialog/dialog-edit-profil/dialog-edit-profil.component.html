@@ -32,7 +32,6 @@
         </div>
         }
       </div>
-
     </div>
     }
     @if (!editNameClicked) {
@@ -76,7 +75,6 @@
         <button class="exitBtn fs-18-700" (click)="close()">Abbrechen</button>
         <button *ngIf="hasChanges() && editNameClicked && profilName && profilEmail" class="saveBtn fs-18-700"
           [disabled]="!profilName || !profilEmail || !hasChanges()" (click)="updateUser()">Speichern</button>
-
       </div>
     </div>
     }
