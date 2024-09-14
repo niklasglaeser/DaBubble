@@ -64,6 +64,13 @@ export class DirectMessagesService implements OnDestroy {
     this.setupConversationsListener(id);
   }
 
+  /**
+  * Listens to changes in the recipient's Firestore document and updates the recipient user observable.
+  * Unsubscribes from previous listeners if needed.
+  *
+  * @private
+  * @param {string} recipientId - ID of the recipient user.
+  */
   private setupRecipientUserListener(recipientId: string) {
     this.unsubscribeListener(this.unsubscribeRecipientSnapshot);
 
@@ -76,6 +83,14 @@ export class DirectMessagesService implements OnDestroy {
     });
   }
 
+  
+  /**
+  * Listens to changes in the current user's Firestore document and updates the current user observable.
+  * Unsubscribes from previous listeners if needed.
+  *
+  * @private
+  * @param {string} currentUserId - ID of the current user.
+  */
   private setupCurrentUserListener(currentUserId: string) {
     this.unsubscribeListener(this.unsubscribeCurrentUserSnapshot);
 
@@ -92,6 +107,10 @@ export class DirectMessagesService implements OnDestroy {
     if (unsubscribe) {unsubscribe();}
   }
 
+  /**
+  * Creates a conversation if it doesn't exist, using user IDs to generate a unique ID.
+  * Adds members and a timestamp, and updates the conversation ID observable.
+  */
   async createConversation() {
     this.conversationId = this.currentUserId < this.recipientId ? `${this.currentUserId}_${this.recipientId}` : `${this.recipientId}_${this.currentUserId}`;
     let conversationRef = doc(this.firestore, 'directChats', this.conversationId);
@@ -137,15 +156,20 @@ export class DirectMessagesService implements OnDestroy {
     try {
       const messageDocRef = this.getSingleMessage(conversationId, messageId);
       await deleteDoc(messageDocRef);
-    } catch (e) {
-      console.error('Error deleting message:', e);
-    }
+    } catch (e) {console.error('Error deleting message:', e);}
   }
 
   getSingleMessage(conversationId: string, messageId: string) {
     return doc(this.firestore, `directChats/${conversationId}/messages/${messageId}`)
   }
 
+  /**
+  * Listens to conversations involving the current user and gets the other user IDs.
+  * Updates listeners for these users and unsubscribes from previous listeners if necessary.
+  *
+  * @private
+  * @param {string} currentUserId - ID of the current user.
+  */
   private setupConversationsListener(currentUserId: string) {
     this.unsubscribeListener(this.unsubscribeConversationsSnapshot);
     let conversationsRef = collection(this.firestore, 'directChats');
@@ -162,18 +186,22 @@ export class DirectMessagesService implements OnDestroy {
     });
   }
 
-  private setupUsersListeners(userIds: string[]) {
+  /**
+  * Sets up Firestore listeners for the given user IDs and updates the user list.
+  * Unsubscribes from previous listeners before subscribing to new ones.
+  * 
+  * @private
+  * @param {string[]} userIds - Array of user IDs to listen for changes.
+  * @returns {void}
+  */
+  private setupUsersListeners(userIds: string[]): void {
     this.unsubscribeUserListeners();
     let users: UserLogged[] = [];
     let unsubscribes: (() => void)[] = [];
 
-    userIds.forEach(userId => {
-      let userDocRef = doc(this.firestore, `Users/${userId}`);
-      let unsubscribe = onSnapshot(userDocRef, (userDoc) => {
-        if (userDoc.exists()) {
-          let user = { uid: userDoc.id, ...userDoc.data() } as UserLogged;
-          let existingIndex = users.findIndex(u => u.uid === user.uid);
-          if (existingIndex >= 0) { users[existingIndex] = user; } else { users.push(user); }
+    userIds.forEach(userId => {let userDocRef = doc(this.firestore, `Users/${userId}`); let unsubscribe = onSnapshot(userDocRef, (userDoc) => {
+        if (userDoc.exists()) {let user = { uid: userDoc.id, ...userDoc.data() } as UserLogged; let existingIndex = users.findIndex(u => u.uid === user.uid);
+          if (existingIndex >= 0) { users[existingIndex] = user; } else { users.push(user);}
           this.conversationsSource.next([...users]);
         }
       });

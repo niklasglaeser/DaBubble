@@ -61,8 +61,8 @@ export class ThreadMessagesComponent {
 
   checkPdf(message: Message): boolean {
     if (message.imagePath) {
-        const cleanUrl = message.imagePath.split('?')[0];
-        const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
+        let cleanUrl = message.imagePath.split('?')[0];
+        let fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
         this.isPdf = fileExtension === 'pdf';
     } else {
         this.isPdf = false;
@@ -96,13 +96,19 @@ export class ThreadMessagesComponent {
       this.editMessageClicked = true;
       this.editMessageText = message.message;
       this.selectedMessage = message;
-      setTimeout(() => {
-        if (this.editMessageText) {this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);}
-      }, 0);
+      setTimeout(() => {if (this.editMessageText) {this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);}}, 0);
     }
   }
 
-  async saveEditedMessage() {
+  /**
+  * Saves the edited message if valid and updates it in the channel.
+  * Resets edit state and clears input on success.
+  * 
+  * @private
+  * @async
+  * @returns {Promise<void>}
+  */
+  async saveEditedMessage(): Promise<void> {
     if (this.selectedMessage) {
       if (!this.editMessageText.trim()) {this.isMessageEmpty = true; return;}
       try {
@@ -147,7 +153,16 @@ export class ThreadMessagesComponent {
     else {return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';}
   }
 
-  async toggleReactionOriginalMessage(message: Message, emoji: string) {
+  /**
+  * Toggles the reaction on the original message using the specified emoji.
+  * 
+  * @private
+  * @async
+  * @param {Message} message - The message to toggle the reaction on.
+  * @param {string} emoji - The emoji used for the reaction.
+  * @returns {Promise<void>} - Resolves when the reaction is toggled.
+  */
+  async toggleReactionOriginalMessage(message: Message, emoji: string): Promise<void> {
     let currentUser = this.authService.currentUserSig();
     let userId = this.currentUserId!;
     let username = currentUser?.username || '';
@@ -155,7 +170,16 @@ export class ThreadMessagesComponent {
     catch (error) {console.error('Fehler beim Aktualisieren der Reaktion:', error);}
   }
 
-  async toggleReaction(message: Message, emoji: string) {
+  /**
+  * Toggles the reaction on a thread message using the specified emoji.
+  * 
+  * @private
+  * @async
+  * @param {Message} message - The thread message to toggle the reaction on.
+  * @param {string} emoji - The emoji used for the reaction.
+  * @returns {Promise<void>} - Resolves when the reaction is toggled.
+  */
+  async toggleReaction(message: Message, emoji: string): Promise<void> {
     let currentUser = this.authService.currentUserSig();
     let userId = this.currentUserId!;
     let username = currentUser?.username || '';

@@ -65,11 +65,8 @@ export class ThreadWindowComponent implements OnInit {
     if (this.channelId && this.messageId) {
       this.threadMessages$ = this.messageService
         .getThreadMessagesWithUsers(this.channelId, this.messageId)
-        .pipe(
-          map((threadMessages) => {
-            return threadMessages.filter(
-              (message) => message.id !== this.originMessage?.id
-            );
+        .pipe(map((threadMessages) => {
+            return threadMessages.filter((message) => message.id !== this.originMessage?.id);
           })
         );
     }

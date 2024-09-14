@@ -1,7 +1,7 @@
 .chat-window {
   width: 100%;
   display: flex;
-  min-height: 600px;
+  min-height: 900px;
   @media (max-width: 790px) {
     margin-left: unset;
   }
@@ -12,19 +12,19 @@
     justify-content: center;
     padding-right: 0;
     padding-bottom: 20px;
-    padding-top: 20px;
+    padding-top: 10px;
   }
 }
 
 .dm-window {
   width: 100%;
   display: flex;
-  min-height: 600px;
+  min-height: 900px;
   &.no-sidebar {
     margin-left: 0;
   }
   @media (max-width: 1200px) {
-    padding-top: 20px;
+    padding-top: 10px;
   }
   @media (max-width: 790px) {
     padding-left: 15px;
@@ -45,6 +45,7 @@
   border-radius: 30px;
   min-width: 400px;
   max-width: 400px;
+  min-height: 900px;
 
   @media (max-width: 1200px) {
     max-width: 100% !important;
@@ -52,6 +53,7 @@
     padding-bottom: 20px;
     padding-right: 0;
     margin-left: 0;
+    margin-top: 10px;
   }
 
   @media (max-width: 1500px) {
@@ -75,7 +77,7 @@
     max-width: 800px;
     max-height: 800px;
   }
-  min-height: 800px;
+  min-height: 880px;
 }
 
 // Einblenden
