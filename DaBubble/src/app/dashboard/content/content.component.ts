@@ -6,13 +6,12 @@ import { DmWindowComponent } from './dm-window/dm-window.component';
 import { WorkspaceToggleComponent } from '../../dialog/workspace-toggle/workspace-toggle.component';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { CustomDialogComponent } from '../../dialog/custom-dialog/custom-dialog.component';
 import { GlobalService } from '../../services/global.service';
 
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [CommonModule, ChatWindowComponent, ThreadWindowComponent, SidebarComponent, DmWindowComponent, WorkspaceToggleComponent, CustomDialogComponent],
+  imports: [CommonModule, ChatWindowComponent, ThreadWindowComponent, SidebarComponent, DmWindowComponent, WorkspaceToggleComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
@@ -36,7 +35,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   chatDialogRef: MatDialogRef<ChatWindowComponent> | null = null;
 
-  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) { 
+  constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) {
     this.currentWidth = window.innerWidth;
 
     if (window.innerWidth < 1200) {
@@ -162,7 +161,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
     this.sidebarService.manageChatAndChannelStates();
 
   }
-  
+
   updateLayoutDesktop() {
     this.showWorkspaceToggle = window.innerWidth <= 1920;
     this.isMobile = false;

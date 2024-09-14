@@ -14,7 +14,8 @@ export class UserService {
   channelSearchSelect: EventEmitter<string> = new EventEmitter<string>();
 
   users$ = this.usersSubject.asObservable();
-  unsubList: () => void;
+  guestUser: string = 'ErI3ozOnpNOKM6dvrKqlXbORQm12'
+  unsubList: () => void;;
 
   constructor() {
     this.unsubList = this.getUsersList();
