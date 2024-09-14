@@ -315,8 +315,10 @@ export class ThreadFooterComponent {
     const emoji = event.emoji.native;
     const textarea = document.getElementById('chat-message-input-thread') as HTMLTextAreaElement;
     if (textarea) {
-      textarea.value += emoji;
+      textarea.value += emoji + " ";
       textarea.focus();
+      const event = new Event('input', { bubbles: true });
+      textarea.dispatchEvent(event);
     }
     this.showEmojiPicker = false;
   }

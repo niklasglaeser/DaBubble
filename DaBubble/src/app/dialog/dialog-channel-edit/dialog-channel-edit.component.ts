@@ -20,6 +20,7 @@ export class DialogChannelEditComponent {
   @Output() openAddUserDialogEvent = new EventEmitter<void>();
   channel!: Channel;
   members: UserLogged[] = [];
+  isDefaultChannel: boolean = false;
 
   isOpen = true;
   title: string = '';
@@ -37,12 +38,14 @@ export class DialogChannelEditComponent {
   description?: string;
   creator?: string;
 
-  constructor(private channelService: ChannelService, @Inject(MAT_DIALOG_DATA) public data: { channelId: string; members: UserLogged[] }, public dialogRef: MatDialogRef<DialogChannelEditComponent>, private dialog: MatDialog) {
+  constructor(public channelService: ChannelService, @Inject(MAT_DIALOG_DATA) public data: { channelId: string; members: UserLogged[] }, public dialogRef: MatDialogRef<DialogChannelEditComponent>, private dialog: MatDialog) {
     this.members = data.members;
   }
 
   ngOnInit() {
     this.loadChannel();
+    this.checkIfDefaultChannel()
+
   }
 
   async loadChannel() {
@@ -154,6 +157,16 @@ export class DialogChannelEditComponent {
 
   close() {
     this.dialogRef.close();
+  }
+
+  checkIfDefaultChannel() {
+    if (this.data.channelId === this.channelService.defaultChannelId) {
+      console.log(this.channelService.defaultChannelId);
+
+      this.isDefaultChannel = true;
+    } else {
+      this.isDefaultChannel = false;
+    }
   }
 
   adjustHeight(event: any) {

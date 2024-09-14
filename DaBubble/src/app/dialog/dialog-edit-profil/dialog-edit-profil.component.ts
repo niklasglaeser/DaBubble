@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserLogged } from '../../models/user-logged.model';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -7,10 +7,8 @@ import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { getDoc } from '@angular/fire/firestore';
-import { DialogAddChannelComponent } from '../dialog-add-channel/dialog-add-channel.component';
 import { SidebarComponent } from '../../dashboard/content/sidebar/sidebar.component';
 import { ChannelStateService } from '../../services/channel-state.service';
-import { AvatarComponent } from '../../landing-page/avatar/avatar.component';
 import { AvatarProfileComponent } from './avatar/avatar.component';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { UserLoggedService } from '../../services/lp-services/user-logged.service';
@@ -41,6 +39,8 @@ export class DialogEditProfilComponent implements OnInit {
   editName: string = 'Bearbeiten';
   editNameClicked: boolean = false;
 
+  isGuestUser: boolean = false;
+
   inputNameDisabled: boolean = false;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: UserLogged }, private auth: Auth = inject(Auth), public dialogRef: MatDialogRef<DialogEditProfilComponent>, private userService: UserService, private channelStateService: ChannelStateService, private dialog: MatDialog) {
@@ -49,6 +49,7 @@ export class DialogEditProfilComponent implements OnInit {
 
   ngOnInit() {
     this.loadProfile();
+    this.checkIfGuestUser();
     // this.subscribeToUserData()
   }
 
@@ -62,20 +63,21 @@ export class DialogEditProfilComponent implements OnInit {
   }
   /* Bug DM Header -> open profile dialog -> falsches photo wenn alles gut, kann raus*/
 
-  editProfilBtn(event: Event) {
+  editProfilBtn() {
     if (!this.editNameClicked) {
       this.editNameClicked = true;
-      this.editName = 'Speichern';
+      // this.editName = 'Speichern';
       this.edit = true
-    } else {
-      try {
-        this.editNameClicked = false;
-        this.editName = 'Bearbeiten';
-        this.edit = false
-      } catch {
-        console.log('error');
-      }
     }
+    //  else {
+    //   try {
+    //     this.editNameClicked = false;
+    //     this.editName = 'Bearbeiten';
+    //     this.edit = false
+    //   } catch {
+    //     console.log('error');
+    //   }
+    // }
   }
 
   async loadProfile() {
@@ -131,9 +133,6 @@ export class DialogEditProfilComponent implements OnInit {
     this.dialog.closeAll();
 
   }
-  // toggleDialog() {
-  //   this.isOpen = !this.isOpen;
-  // }
 
   close() {
     this.dialogRef.close();
@@ -145,16 +144,25 @@ export class DialogEditProfilComponent implements OnInit {
     });
   }
 
+  checkIfGuestUser() {
+    this.currentUserId$.subscribe((currentUserId) => {
+      if (currentUserId && currentUserId === this.userService.guestUser) {
+        this.isGuestUser = true;
+      } else {
+        this.isGuestUser = false;
+      }
+    });
+  }
+
   openProfilAvatar() {
     if (this.edit) {
       const dialogRef = this.dialog.open(AvatarProfileComponent, {
-        width: '100vw', // Setze die Breite auf 80% des Viewports
-        maxWidth: '550px', // Maximalbreite von 600px
+        width: '100vw',
+        maxWidth: '550px',
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          // Aktualisieren Sie die Benutzerdaten, nachdem das Bild hochgeladen wurde
           this.loadProfile();
         }
       });
