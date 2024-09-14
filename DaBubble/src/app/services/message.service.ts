@@ -1,19 +1,5 @@
 import { Injectable } from '@angular/core'
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  collectionData,
-  deleteDoc,
-  doc,
-  Firestore,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  Timestamp,
-  updateDoc,
-} from '@angular/fire/firestore'
+import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDoc, onSnapshot, orderBy, query, Timestamp, updateDoc,} from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
 import { Message } from '../models/message.model'
 import { Reaction } from '../models/reaction.model'
@@ -28,126 +14,69 @@ export class MessageService {
   constructor(private firestore: Firestore, private authService: AuthService) { }
 
   async addMessage(channelId: string, message: Message) {
-    const messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
-    const currentUser = this.authService.currentUserSig()
-
-    await addDoc(messagesRef, {
-      ...message,
-      created_at: Date.now(),
-      updated_at: Date.now(),
-      senderId: currentUser?.userId || 'Unknown User',
-    })
+    let messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
+    let currentUser = this.authService.currentUserSig()
+    await addDoc(messagesRef, {...message, created_at: Date.now(), updated_at: Date.now(), senderId: currentUser?.userId || 'Unknown User',})
   }
 
-  async updateMessage(
-    channelId: string,
-    messageId: string,
-    newMessageText: string
-  ) {
+  async updateMessage(channelId: string, messageId: string, newMessageText: string) {
     try {
-      const messageDocRef = this.getSingleMessage(channelId, messageId)
-      await updateDoc(messageDocRef, {
-        message: newMessageText,
-        updated_at: Date.now(),
-      })
-    } catch (e) {
-      console.error('Error updating document:', e)
-    }
+      let messageDocRef = this.getSingleMessage(channelId, messageId)
+      await updateDoc(messageDocRef, {message: newMessageText, updated_at: Date.now(),})
+    } catch (e) {console.error('Error updating document:', e)}
   }
 
   async deleteMessage(channelId: string, messageId: string): Promise<void> {
     try {
-      const messageDocRef = this.getSingleMessage(channelId, messageId);
+      let messageDocRef = this.getSingleMessage(channelId, messageId);
       await deleteDoc(messageDocRef);
-    } catch (e) {
-      console.error('Error deleting message:', e);
-    }
+    } catch (e) {console.error('Error deleting message:', e);}
   }
 
-  async addMessageThread(
-    channelId: string,
-    message: Message,
-    messageId: string
-  ) {
-    const messagesRef = collection(this.firestore, 'channels', channelId, 'messages', messageId, 'thread')
-    const currentUser = this.authService.currentUserSig()
+  async addMessageThread(channelId: string, message: Message, messageId: string) {
+    let messagesRef = collection(this.firestore, 'channels', channelId, 'messages', messageId, 'thread')
+    let currentUser = this.authService.currentUserSig()
 
-    await addDoc(messagesRef, {
-      ...message,
-      created_at: Date.now(),
-      updated_at: Date.now(),
-      senderId: currentUser?.userId || 'Unknown User',
-    })
+    await addDoc(messagesRef, {...message, created_at: Date.now(), updated_at: Date.now(), senderId: currentUser?.userId || 'Unknown User',})
   }
 
-  async updateThreadMessage(
-    channelId: string,
-    messageId: string,
-    threadId: string,
-    newMessageText: string
-  ) {
+  async updateThreadMessage(channelId: string, messageId: string, threadId: string, newMessageText: string) {
     try {
-      const messageDocRef = this.getSingleThreadMessage(
-        channelId,
-        messageId,
-        threadId
-      )
-      await updateDoc(messageDocRef, {
-        message: newMessageText,
-        updated_at: Date.now(),
-      })
-      console.log('Thread Message updated with ID:', threadId)
-    } catch (e) {
-      console.error('Error updating document:', e)
-    }
+      let messageDocRef = this.getSingleThreadMessage(channelId, messageId, threadId)
+      await updateDoc(messageDocRef, {message: newMessageText,updated_at: Date.now(),})
+    } catch (e) {console.error('Error updating document:', e)}
   }
 
   async deleteMessageThread(channelId: string, messageId: string, threadId: string): Promise<void> {
     try {
-      const messageDocRef = this.getSingleThreadMessage(channelId, messageId, threadId);
+      let messageDocRef = this.getSingleThreadMessage(channelId, messageId, threadId);
       await deleteDoc(messageDocRef);
-    } catch (e) {
-      console.error('Error deleting message:', e);
-    }
+    } catch (e) {console.error('Error deleting message:', e);}
   }
 
 
   searchUsers(searchText: string): Observable<UserLogged[]> {
     return new Observable(observer => {
-      const userCollection = collection(this.firestore, 'Users');
-      const q = query(userCollection, orderBy('username'));
+      let userCollection = collection(this.firestore, 'Users');
+      let q = query(userCollection, orderBy('username'));
 
-      const unsubscribe = onSnapshot(q, snapshot => {
-        const users = snapshot.docs
-          .map(doc => {
-            const data = doc.data() as UserLogged;
-            return data;
-          })
-          .filter(user => user.username.toLowerCase().includes(searchText.toLowerCase()));
-
+      let unsubscribe = onSnapshot(q, snapshot => {
+        let users = snapshot.docs.map(doc => {let data = doc.data() as UserLogged; return data;}).filter(user => user.username.toLowerCase().includes(searchText.toLowerCase()));
         observer.next(users);
       }, error => observer.error(error));
-
       return () => unsubscribe();
     });
   }
 
   searchUserChannels(userId: string, searchText: string): Observable<Channel[]> {
     return new Observable(observer => {
-      const channelCollection = collection(this.firestore, 'channels');
-      const q = query(channelCollection, orderBy('name'));
+      let channelCollection = collection(this.firestore, 'channels');
+      let q = query(channelCollection, orderBy('name'));
 
       const unsubscribe = onSnapshot(q, snapshot => {
         const channels = snapshot.docs
-          .map(doc => {
-            const data = doc.data() as Channel;
-            return data;
-          })
-          .filter(channel =>
-            channel.name.toLowerCase().includes(searchText.toLowerCase()) &&
-            channel.members?.includes(userId)
-          );
-
+          .map(doc => {let data = doc.data() as Channel; return data;})
+          .filter(channel => channel.name.toLowerCase().includes(searchText.toLowerCase()) && channel.members?.includes(userId));
         observer.next(channels);
       }, error => observer.error(error));
 
@@ -156,92 +85,46 @@ export class MessageService {
   }
 
 
-
   getMessagesWithUsers(channelId: string): Observable<Message[]> {
     return new Observable((observer) => {
-      let messagesRef = collection(
-        this.firestore,
-        `channels/${channelId}/messages`
-      )
-      let messagesQuery = query(messagesRef, orderBy('created_at', 'asc'))
+      let messagesRef = collection(this.firestore, `channels/${channelId}/messages`);
+      let messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
 
       onSnapshot(messagesQuery, async (message) => {
-        let messages = message.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Message[]
+        let messages = message.docs.map((doc) => ({id: doc.id, ...doc.data(),})) as Message[]
 
         let addUser = messages.map(async (message) => {
-          let userDocRef = doc(this.firestore, `Users/${message.senderId}`)
-          let userDoc = await getDoc(userDocRef)
-
-          let userData: UserLogged | null = null
-          if (userDoc.exists()) {
-            let userObj = userDoc.data()
-            userData = new UserLogged(userObj as UserLogged)
-          }
-
-          return {
-            ...message,
-            senderName: userData!.username,
-            photoURL: userData!.photoURL,
-          }
+          let userDocRef = doc(this.firestore, `Users/${message.senderId}`);
+          let userDoc = await getDoc(userDocRef);
+          let userData: UserLogged | null = null;
+          if (userDoc.exists()) {let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged);}
+          return {...message, senderName: userData!.username, photoURL: userData!.photoURL,};
         })
-
         let messagesWithUserData = await Promise.all(addUser)
-
         observer.next(messagesWithUserData)
       })
     })
   }
 
-  getThreadMessagesWithUsers(
-    channelId: string,
-    messageId: string
-  ): Observable<Message[]> {
+  getThreadMessagesWithUsers(channelId: string, messageId: string): Observable<Message[]> {
     return new Observable((observer) => {
-      let threadRef = collection(
-        this.firestore,
-        `channels/${channelId}/messages/${messageId}/thread`
-      )
+      let threadRef = collection(this.firestore,`channels/${channelId}/messages/${messageId}/thread`)
       let threadQuery = query(threadRef, orderBy('created_at', 'asc'))
 
       onSnapshot(threadQuery, async (snapshot) => {
-        let messages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Message[]
+        let messages = snapshot.docs.map((doc) => ({id: doc.id, ...doc.data(),})) as Message[];
         let addUser = messages.map(async (message) => {
           let userDocRef = doc(this.firestore, `Users/${message.senderId}`)
           let userDoc = await getDoc(userDocRef)
           let userData: UserLogged | null = null
-          if (userDoc.exists()) {
-            let userObj = userDoc.data()
-            userData = new UserLogged(userObj as UserLogged)
-          }
-          return {
-            ...message,
-            senderName: userData!.username,
-            photoURL: userData!.photoURL,
-          }
+          if (userDoc.exists()) {let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged)}
+          return {...message, senderName: userData!.username, photoURL: userData!.photoURL,}
         })
-
         let messagesWithUserData = await Promise.all(addUser)
-
         observer.next(messagesWithUserData)
       })
     })
   }
-
-  // async addReaction(channelId: string, messageId: string, reaction: Reaction) {
-  //   const messageDocRef = doc(
-  //     this.firestore,
-  //     `channels/${channelId}/messages/${messageId}`
-  //   )
-  //   await updateDoc(messageDocRef, {
-  //     reactions: arrayUnion(reaction),
-  //   })
-  // }
 
   getSingleMessage(channelId: string, messageId: string) {
     return doc(this.firestore, `channels/${channelId}/messages/${messageId}`)
@@ -250,37 +133,24 @@ export class MessageService {
     return doc(this.firestore, `channels/${channelId}/messages/${messageId}/thread/${threadId}`)
   }
 
-
   getSingleMessageWithReactions(channelId: string, messageId: string): Observable<Message | null> {
     return new Observable<Message | null>((observer) => {
-      const messageDocRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
+      let messageDocRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
       onSnapshot(messageDocRef, async (docSnapshot) => {
         if (docSnapshot.exists()) {
-          const data = docSnapshot.data() as Message;
-          const userDocRef = doc(this.firestore, `Users/${data.senderId}`);
-          const userDoc = await getDoc(userDocRef);
+          let data = docSnapshot.data() as Message;
+          let userDocRef = doc(this.firestore, `Users/${data.senderId}`);
+          let userDoc = await getDoc(userDocRef);
           let userData: UserLogged | null = null;
 
-          if (userDoc.exists()) {
-            let userObj = userDoc.data();
-            userData = new UserLogged(userObj as UserLogged);
-          }
-
-          const messageWithUserData = {
-            id: docSnapshot.id,
-            ...data,
-            senderName: userData?.username || 'Unknown User',
-            photoURL: userData?.photoURL || '',
-          };
+          if (userDoc.exists()) {let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged);}
+          let messageWithUserData = {id: docSnapshot.id, ...data, senderName: userData?.username || 'Unknown User', photoURL: userData?.photoURL || '',};
           observer.next(messageWithUserData);
         } else {
           observer.next(null);
         }
-      }, (error) => {
-        observer.error(error);
-      });
+      }, (error) => {observer.error(error);});
     });
   }
-
 
 }

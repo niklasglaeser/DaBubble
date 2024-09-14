@@ -1,19 +1,14 @@
 <div class="header-container">
-    <img *ngIf="!showSidebar && isMobile" src="/assets/img/general/goback-mobile.svg" class="header-left-mobile"
-        (click)="toggleSidebar()">
-    <img *ngIf="showSidebar && isMobile" class="header-left" src="/assets/img/general/dabubble-logo.svg"
-        (click)="reloadPage()">
-    <img *ngIf="showSidebar && !isMobile" class="header-left" src="/assets/img/general/dabubble-logo.svg"
-        (click)="reloadPage()">
-    <img *ngIf="!showSidebar && !isMobile" class="header-left" src="/assets/img/general/dabubble-logo.svg"
-        (click)="reloadPage()">
+    <img *ngIf="!showSidebar && isMobile" src="/assets/img/general/goback-mobile.svg" class="header-left-mobile"(click)="toggleSidebar()">
+    <img *ngIf="showSidebar && isMobile" class="header-left" src="/assets/img/general/dabubble-logo.svg" (click)="reloadPage()">
+    <img *ngIf="showSidebar && !isMobile" class="header-left" src="/assets/img/general/dabubble-logo.svg" (click)="reloadPage()">
+    <img *ngIf="!showSidebar && !isMobile" class="header-left" src="/assets/img/general/dabubble-logo.svg" (click)="reloadPage()">
     <app-search></app-search>
     <div class="header-right" (click)="openDialog()">
         <div class="fs-32-700 user-name">{{ user?.username }}</div>
         <div class="avatarStatus">
             <img src="{{ user?.photoURL }}">
-            <img
-                [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
+            <img [src]="user?.onlineStatus ? '../../assets/img/main-page/head/Online.svg' : '../../assets/img/main-page/head/Offline.svg'">
         </div>
         <div class="arrow-down" #arrowButton>
         </div>

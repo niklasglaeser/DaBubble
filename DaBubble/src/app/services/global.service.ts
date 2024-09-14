@@ -19,7 +19,7 @@ export class GlobalService {
   isMobile$ = this.isMobileSubject.asObservable();
 
   toggleSidebar() {
-    const currentStatus = this.showSidebarSubject.getValue();
+    let currentStatus = this.showSidebarSubject.getValue();
     this.showSidebarSubject.next(!currentStatus);
   }
 
@@ -63,24 +63,14 @@ export class GlobalService {
   }
 
   manageChatAndChannelStates() {
-    const isMobile = this.isMobileSubject.getValue();
+    let isMobile = this.isMobileSubject.getValue();
 
     if (isMobile) {
-      if (this.getDirectChatStatus()) {
-        this.isDirectChat(true);
-        this.isChannel(false);
-      } else {
-        this.isDirectChat(false);
-        this.isChannel(true);
-      }
+      if (this.getDirectChatStatus()) {this.isDirectChat(true); this.isChannel(false);} 
+      else {this.isDirectChat(false); this.isChannel(true);}
     } else {
-      if (this.getDirectChatStatus()) {
-        this.isDirectChat(true);
-        this.isChannel(false);
-      } else {
-        this.isDirectChat(false);
-        this.isChannel(true);
-      }
+      if (this.getDirectChatStatus()) {this.isDirectChat(true); this.isChannel(false);}
+      else {this.isDirectChat(false); this.isChannel(true);}
     }
   }
 

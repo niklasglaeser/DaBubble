@@ -33,6 +33,7 @@ import { ChannelStateService } from '../../services/channel-state.service';
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss'
 })
+
 export class SearchComponent implements OnInit {
 
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
@@ -51,72 +52,47 @@ export class SearchComponent implements OnInit {
   }
   ngOnInit(): void {
     this.subscription.add(
-      this.channelStateService.emitOpenSearchBar.subscribe(() => {
-        this.openSearchPanel();
-      })
+      this.channelStateService.emitOpenSearchBar.subscribe(() => {this.openSearchPanel();})
     );
   }
   handleContentSearch(event: Event): void {
-
-    const inputElement = event.target as HTMLInputElement;
-    const query = inputElement.value.toLowerCase();
+    let inputElement = event.target as HTMLInputElement;
+    let query = inputElement.value.toLowerCase();
     this.updateFilteredContent(query);
   }
 
   updateFilteredContent(query: string): void {
-    if (query) {
-      this.searchCollections(query);
-    } else {
-      this.searchResults = [];
-    }
+    if (query) {this.searchCollections(query);} 
+    else {this.searchResults = [];}
   }
 
   async searchCollections(searchTerm: string): Promise<void> {
     try {
-      const channelsSnapshot = await getDocs(collection(this.firestore, 'channels'));
-      const usersSnapshot = await getDocs(collection(this.firestore, 'Users'));
+      let channelsSnapshot = await getDocs(collection(this.firestore, 'channels'));
+      let usersSnapshot = await getDocs(collection(this.firestore, 'Users'));
       this.searchResults = [];
-      const currentUserId = this.authService.uid;
+      let currentUserId = this.authService.uid;
 
-      channelsSnapshot.forEach(doc => {
-        const channelData = doc.data();
-        const channelName = (channelData["name"] || '').toLowerCase();
-        const members = channelData["members"] || [];
-
-        if (channelName.includes(searchTerm.toLowerCase()) && members.includes(currentUserId)) {
-          this.searchResults.push({ id: doc.id, ...channelData, type: 'channel' });
-        }
+      channelsSnapshot.forEach(doc => {let channelData = doc.data(); let channelName = (channelData["name"] || '').toLowerCase(); let members = channelData["members"] || [];
+        if (channelName.includes(searchTerm.toLowerCase()) && members.includes(currentUserId)) {this.searchResults.push({ id: doc.id, ...channelData, type: 'channel' });}
         // this.searchChannelMessages(doc.id, searchTerm);
       });
       usersSnapshot.forEach(doc => {
-        const userName = (doc.data()["username"] || '').toLowerCase();
-        if (userName.includes(searchTerm.toLowerCase())) {
-          this.searchResults.push({ id: doc.id, ...doc.data(), type: 'user' });
-        }
+        let userName = (doc.data()["username"] || '').toLowerCase();
+        if (userName.includes(searchTerm.toLowerCase())) {this.searchResults.push({ id: doc.id, ...doc.data(), type: 'user' });}
       });
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    }
+    } catch (error) {console.error('Error fetching search results:', error);}
   }
 
   async searchChannelMessages(channelId: string, searchTerm: string): Promise<void> {
     try {
       const messagesSnapshot = await getDocs(collection(this.firestore, `channels/${channelId}/messages`));
       messagesSnapshot.forEach(doc => {
-        const messageData = doc.data();
-        const messageContent = (messageData["message"] || '').toLowerCase();
-        if (messageContent.includes(searchTerm.toLowerCase())) {
-          this.searchResults.push({
-            id: doc.id,
-            ...messageData,
-            type: 'message',
-            channelId: channelId
-          });
-        }
+        let messageData = doc.data();
+        let messageContent = (messageData["message"] || '').toLowerCase();
+        if (messageContent.includes(searchTerm.toLowerCase())) {this.searchResults.push({id: doc.id, ...messageData, type: 'message', channelId: channelId});}
       });
-    } catch (error) {
-      console.error('Error searching messages in channel:', error);
-    }
+    } catch (error) {console.error('Error searching messages in channel:', error);}
   }
 
   async openSearchPanel(): Promise<void> {
@@ -130,39 +106,24 @@ export class SearchComponent implements OnInit {
 
   async loadAllData(): Promise<void> {
     try {
-      const channelsSnapshot = await getDocs(collection(this.firestore, 'channels'));
-      const usersSnapshot = await getDocs(collection(this.firestore, 'Users'));
+      let channelsSnapshot = await getDocs(collection(this.firestore, 'channels'));
+      let usersSnapshot = await getDocs(collection(this.firestore, 'Users'));
       this.searchResults = [];
-      const currentUserId = this.authService.uid;
+      let currentUserId = this.authService.uid;
 
-      channelsSnapshot.forEach(doc => {
-        const channelData = doc.data();
-        const members = channelData["members"] || [];
-
-        if (members.includes(currentUserId)) {
-          this.searchResults.push({ id: doc.id, ...channelData, type: 'channel' });
-        }
+      channelsSnapshot.forEach(doc => { let channelData = doc.data(); let members = channelData["members"] || [];
+        if (members.includes(currentUserId)) {this.searchResults.push({ id: doc.id, ...channelData, type: 'channel' });}
       });
 
-      usersSnapshot.forEach(doc => {
-        const userData = doc.data();
-        this.searchResults.push({ id: doc.id, ...userData, type: 'user' });
-      });
+      usersSnapshot.forEach(doc => { const userData = doc.data(); this.searchResults.push({ id: doc.id, ...userData, type: 'user' });});
 
-    } catch (error) {
-      console.error('Error fetching all data:', error);
-    }
+    } catch (error) {console.error('Error fetching all data:', error);}
   }
 
   onOptionSelected(selectedItem: any): void {
-    if (selectedItem.type === 'user') {
-      this.userEventService.emitUserId(selectedItem.id);
-    } else if (selectedItem.type === 'channel') {
-      this.userEventService.emitChannelId(selectedItem.id);
-    } else if (selectedItem.type === 'message') {
-      this.navigateToMessage(selectedItem.channelId, selectedItem.id);
-    }
-
+    if (selectedItem.type === 'user') {this.userEventService.emitUserId(selectedItem.id);} 
+    else if (selectedItem.type === 'channel') {this.userEventService.emitChannelId(selectedItem.id);}
+    else if (selectedItem.type === 'message') {this.navigateToMessage(selectedItem.channelId, selectedItem.id);}
     this.searchControl.setValue('');
     this.searchResults = [];
   }

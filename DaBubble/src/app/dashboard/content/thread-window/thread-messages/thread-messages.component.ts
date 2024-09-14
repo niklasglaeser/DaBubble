@@ -88,9 +88,7 @@ export class ThreadMessagesComponent {
   }
 
   openImg(message: Message) {
-    this.dialog.open(DialogChatImgComponent, {
-      data: { imagePath: message.imagePath }
-    });
+    this.dialog.open(DialogChatImgComponent, {data: { imagePath: message.imagePath }});
   }
 
   editMessage(message: Message) {
@@ -114,9 +112,7 @@ export class ThreadMessagesComponent {
         this.isMessageEmpty = false;
         this.selectedMessage = null;
         this.editMessageText = '';
-      } catch (e) {
-        console.error('Error saving message:', e);
-      }
+      } catch (e) {console.error('Error saving message:', e);}
     }
   }
 
@@ -124,7 +120,6 @@ export class ThreadMessagesComponent {
     let selectedMessageId = this.selectedMessage?.id
     this.messageService.deleteMessageThread(this.channelId!, selectedMessageId!, this.threadId!)
   }
-
 
   cancelEdit() {
     this.closeEditMode();
@@ -138,58 +133,46 @@ export class ThreadMessagesComponent {
   }
 
   formatTime(timestamp: Date): string {
-    const date = new Date(timestamp);
+    let date = new Date(timestamp);
     return this.datePipe.transform(date, 'HH:mm') || '';
   }
 
   formatDate(timestamp: Date): string {
-    const date = new Date(timestamp);
-    const today = new Date();
+    let date = new Date(timestamp);
+    let today = new Date();
 
-    const isToday =
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear();
+    let isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
 
-    if (isToday) {
-      return 'Heute';
-    } else {
-      return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';
-    }
+    if (isToday) {return 'Heute';}
+    else {return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';}
   }
 
   async toggleReactionOriginalMessage(message: Message, emoji: string) {
-    const currentUser = this.authService.currentUserSig();
-    const userId = this.currentUserId!;
-    const username = currentUser?.username || '';
-    try {
-      await this.emojiService.toggleReaction(this.channelId, message.id!, emoji, userId, username);
-    } catch (error) {
-      console.error('Fehler beim Aktualisieren der Reaktion:', error);
-    }
+    let currentUser = this.authService.currentUserSig();
+    let userId = this.currentUserId!;
+    let username = currentUser?.username || '';
+    try {await this.emojiService.toggleReaction(this.channelId, message.id!, emoji, userId, username);} 
+    catch (error) {console.error('Fehler beim Aktualisieren der Reaktion:', error);}
   }
 
   async toggleReaction(message: Message, emoji: string) {
-    const currentUser = this.authService.currentUserSig();
-    const userId = this.currentUserId!;
-    const username = currentUser?.username || '';
-    const threadId = message.id
-    const messageId = this.originMessage?.id!;
-    try {
-      await this.emojiService.toggleReactionThread(this.channelId, messageId, emoji, userId, username, threadId!);
-    } catch (error) {
-      console.error('Fehler beim Aktualisieren der Reaktion:', error);
-    }
+    let currentUser = this.authService.currentUserSig();
+    let userId = this.currentUserId!;
+    let username = currentUser?.username || '';
+    let threadId = message.id
+    let messageId = this.originMessage?.id!;
+    try {await this.emojiService.toggleReactionThread(this.channelId, messageId, emoji, userId, username, threadId!);}
+    catch (error) {console.error('Fehler beim Aktualisieren der Reaktion:', error);}
   }
 
   addEmojiOriginMessage(event: any, message: Message) {
-    const emoji = event.emoji.native;
+    let emoji = event.emoji.native;
     this.toggleReactionOriginalMessage(message, emoji);
     this.emojiPickerMessageId = undefined;
   }
 
   addEmoji(event: any, message: Message) {
-    const emoji = event.emoji.native;
+    let emoji = event.emoji.native;
     this.toggleReaction(message, emoji);
     this.emojiPickerMessageId = undefined;
   }
@@ -227,11 +210,8 @@ export class ThreadMessagesComponent {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    const isClickInside = target.closest('.emoji-picker-dialog');
-
-    if (!isClickInside && this.emojiPickerMessageId) {
-      this.emojiPickerMessageId = undefined;
-    }
+    let target = event.target as HTMLElement;
+    let isClickInside = target.closest('.emoji-picker-dialog');
+    if (!isClickInside && this.emojiPickerMessageId) {this.emojiPickerMessageId = undefined;}
   }
 }

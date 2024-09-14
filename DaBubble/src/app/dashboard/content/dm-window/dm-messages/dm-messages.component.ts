@@ -15,6 +15,7 @@ import { DialogChatImgComponent } from '../../../../dialog/dialog-chat-img/dialo
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Lexer } from '@angular/compiler';
 
 
 @Component({
@@ -60,16 +61,8 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Abonniere das Observable für conversationId
-    this.conversationIdSubscription = this.dmService.conversationId$.subscribe(id => {
-      if (id) {this.conversationId = id;}
-    });
-
-    this.userSubscription = this.dmService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
-
-    // Abonniere das Observable, um den Nachrichtenstatus zu überwachen
+    this.conversationIdSubscription = this.dmService.conversationId$.subscribe(id => {if (id) {this.conversationId = id;}});
+    this.userSubscription = this.dmService.currentUser$.subscribe(user => {this.currentUser = user;});
     this.hasMessages$ = this.dmService.hasMessages$;
   }
 
@@ -86,8 +79,8 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   checkPdf(message: Message): boolean {
     
     if (message.imagePath) {
-        const cleanUrl = message.imagePath.split('?')[0];
-        const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
+        let cleanUrl = message.imagePath.split('?')[0];
+        let fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
         this.isPdf = fileExtension === 'pdf';
     } else {
         this.isPdf = false;
@@ -104,29 +97,22 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
   }
 
   formatTime(timestamp: Date): string {
-    const date = new Date(timestamp);
+    let date = new Date(timestamp);
     return this.datePipe.transform(date, 'HH:mm') || '';
   }
 
   formatDate(timestamp: Date): string {
-    const date = new Date(timestamp);
-    const today = new Date();
-    const isToday =
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear();
+    let date = new Date(timestamp);
+    let today = new Date();
+    let isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
 
-    if (isToday) {
-      return 'Heute';
-    } else {
-      return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';
-    }
+    if (isToday) {return 'Heute';}
+    else {return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';}
   }
 
   formatMessage(message: string): string {
     return message.replace(/\n/g, '<br>');
   }
-
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['conversationId'] && !changes['conversationId'].isFirstChange()) {
@@ -134,31 +120,27 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-
   editMessage(message: Message) {
     if (this.currentUser && message.senderId === this.currentUser.uid) {
       this.editMessageClicked = true;
       this.editMessageText = message.message;
       this.selectedMessage = message;
       setTimeout(() => {
-        if (this.editMessageText) {
-          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
-        }
+        if (this.editMessageText) {this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);}
       }, 0);
     }
   }
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
+      if (!this.editMessageText.trim()) {this.isMessageEmpty = true; return;}
       try {
         this.selectedMessage.message = this.editMessageText;
         await this.dmService.updateMessage(this.conversationId!, this.selectedMessage.id!, this.editMessageText);
         this.editMessageClicked = false;
         this.selectedMessage = null;
         this.editMessageText = '';
-      } catch (e) {
-        console.error('Error saving message:', e);
-      }
+      } catch (e) {console.error('Error saving message:', e);}
     }
   }
 
@@ -178,28 +160,22 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
     this.editMessageText = '';
   }
 
-
   openImg(message: Message) {
     this.dialog.open(DialogChatImgComponent, {
       data: { imagePath: message.imagePath }
     });
   }
 
-
-
   async toggleReaction(message: Message, emoji: string) {
-    const userId = this.currentUser?.uid!;
-    const username = this.currentUser?.username!;
-
+    let userId = this.currentUser?.uid!;
+    let username = this.currentUser?.username!;
     try {
       await this.emojiService.toggleReactionDM(this.conversationId!, message.id!, emoji, userId, username);
-    } catch (error) {
-      console.error('Fehler beim Aktualisieren der Reaktion:', error);
-    }
+    } catch (error) {console.error('Fehler beim Aktualisieren der Reaktion:', error);}
   }
 
   addEmoji(event: any, message: Message) {
-    const emoji = event.emoji.native;
+    let emoji = event.emoji.native;
     this.toggleReaction(message, emoji);
     this.emojiPickerMessageId = undefined;
   }
@@ -235,17 +211,11 @@ export class DmMessagesComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    const isClickInside = target.closest('.emoji-picker-dialog');
+    let target = event.target as HTMLElement;
+    let isClickInside = target.closest('.emoji-picker-dialog');
 
     if (!isClickInside && this.emojiPickerMessageId) {
       this.emojiPickerMessageId = undefined;
     }
   }
-  
-
-
-
-
-
 }

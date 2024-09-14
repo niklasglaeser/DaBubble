@@ -1,12 +1,9 @@
-<app-sidebar [class.hidden]="!showSidebar" class="sidebar-window" [isMobile]="isMobile" [showSidebar]="showSidebar"
-    (channelOpened)="handleChannelOpen()" (directMessageOpened)="handleDirectMessageOpen()"
-    (conversationSet)="dmWindow.loadMessagesAfterSidebarClick()"></app-sidebar>
-<app-chat-window
-    *ngIf="(isChannel && !isDirectChat && !isThread && (!showSidebar || !isMobile)) || (!isMobile && isThread) &&!isDirectChat"
-    (threadOpened)="handleThreadOpen()" class="chat-window"></app-chat-window>
-<app-dm-window
-    *ngIf="(isDirectChat && !isChannel && (!showSidebar || !isMobile)) || (!isMobile && isThread && !isChannel)"
-    class="dm-window" #dmWindow>
-</app-dm-window>
+<app-sidebar [class.hidden]="!showSidebar" class="sidebar-window" [isMobile]="isMobile" [showSidebar]="showSidebar" (channelOpened)="handleChannelOpen()" (directMessageOpened)="handleDirectMessageOpen()" (conversationSet)="dmWindow.loadMessagesAfterSidebarClick()"></app-sidebar>
+
+<app-chat-window *ngIf="(isChannel && !isDirectChat && !isThread && (!showSidebar || !isMobile)) || (!isMobile && isThread) &&!isDirectChat" (threadOpened)="handleThreadOpen()" class="chat-window"></app-chat-window>
+
+<app-dm-window *ngIf="(isDirectChat && !isChannel && (!showSidebar || !isMobile)) || (!isMobile && isThread && !isChannel)" class="dm-window" #dmWindow></app-dm-window>
+
 <app-thread-window [class.hidden]="!isThread" class="thread-window"></app-thread-window>
+
 <app-workspace-toggle *ngIf="showWorkspaceToggle" (toggleSidebar)="toggleSidebar()"></app-workspace-toggle>

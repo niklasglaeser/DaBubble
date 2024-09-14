@@ -57,31 +57,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userEventService = inject(UserService);
 
   constructor(private router: Router, private sidebarService: GlobalService) { 
-    if (window.innerWidth < 1200) {
-      this.isMobile = true;
-    } else {
-      this.isMobile = false;
-    }
+    if (window.innerWidth < 1200) {this.isMobile = true;}
+    else {this.isMobile = false;}
   }
 
   ngOnInit(): void {
     this.subscribeToUserData();
-    this.sidebarService.showSidebar$.subscribe((status) => {
-      this.showSidebar = status;
-    });
-    this.sidebarService.isChannel$.subscribe((status) => {
-      this.isChannel = status;
-    });
-
-    this.sidebarService.isDirectChat$.subscribe((status) => {
-      this.isDirectChat = status;
-    });
-    this.sidebarService.isThread$.subscribe((status) => {
-      this.isThread = status;
-    });
-    this.sidebarService.isMobile$.subscribe((status) => {
-      this.isMobile = status;
-    });
+    this.sidebarService.showSidebar$.subscribe((status) => {this.showSidebar = status;});
+    this.sidebarService.isChannel$.subscribe((status) => {this.isChannel = status;});
+    this.sidebarService.isDirectChat$.subscribe((status) => {this.isDirectChat = status;});
+    this.sidebarService.isThread$.subscribe((status) => {this.isThread = status;});
+    this.sidebarService.isMobile$.subscribe((status) => {this.isMobile = status;});
   }
 
   ngOnDestroy(): void {
@@ -94,7 +80,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   async getUsername(senderId: string): Promise<string> {
     try {
-      const user = await this.userEventService.getSingleUserObj(senderId);
+      let user = await this.userEventService.getSingleUserObj(senderId);
       return user ? user.username : 'Unbekannt';
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -104,14 +90,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   async subscribeToUserData(): Promise<void> {
     if (this.authService.uid) {
-      await this.userLogged.subscribeUser(this.authService.uid).subscribe((data) => {
-        this.user = data;
-      });
+      this.userLogged.subscribeUser(this.authService.uid).subscribe((data) => {this.user = data;});
     }
   }
 
   openDialog(): void {
-    const arrowButton = this.arrowButton.nativeElement;
+    let arrowButton = this.arrowButton.nativeElement;
 
     this.dialog.open(DialogMenuComponent, {
       position: {

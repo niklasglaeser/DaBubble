@@ -16,54 +16,30 @@ export class ThreadService {
 
   getThreadMessages(channelId: string, messageId: string): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
-      const threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
-      const threadQuery = query(threadRef);
+      let threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
+      let threadQuery = query(threadRef);
+      let originMessageRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
 
-      // Hole die ursprüngliche Nachricht aus der Haupt-Collection
-      const originMessageRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
-
-      // Verwende onSnapshot, um Echtzeit-Updates zu erhalten
       onSnapshot(threadQuery, async (snapshot) => {
-        const threadMessages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Message[];
-
+        let threadMessages = snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})) as Message[];
         try {
-          // Hole die Originalnachricht
-          const originMessageSnapshot = await getDoc(originMessageRef);
+          let originMessageSnapshot = await getDoc(originMessageRef);
           if (originMessageSnapshot.exists()) {
-            const originMessage = originMessageSnapshot.data() as Message;
-            // Setze die Originalnachricht an die erste Stelle
+            let originMessage = originMessageSnapshot.data() as Message;
             observer.next([originMessage, ...threadMessages]);
-          } else {
-            observer.next(threadMessages);
-          }
-        } catch (error) {
-          console.error('Fehler beim Abrufen der Originalnachricht:', error);
-          observer.next(threadMessages);
-        }
+          } else {observer.next(threadMessages);}
+        } catch (error) {console.error('Fehler beim Abrufen der Originalnachricht:', error); observer.next(threadMessages);}
       });
     });
   }
 
-
   async checkAndCreateThread(channelId: string, messageId: string, originMessage: Message) {
     try {
-      // Überprüfe, ob bereits Thread-Nachrichten existieren
-      const threadMessages$ = this.getThreadMessages(channelId, messageId);
-      const threadMessages = await firstValueFrom(threadMessages$);
-
-      if (threadMessages.length === 0) {
-        console.log('Kein Thread vorhanden. Bereit für neue Antworten.');
-        // Keine Aktion erforderlich, da die ursprüngliche Nachricht nicht in den Thread kopiert wird
-      }
-
-      // Setze die ausgewählte Nachricht als aktuell ausgewählte Nachricht
+      let threadMessages$ = this.getThreadMessages(channelId, messageId);
+      let threadMessages = await firstValueFrom(threadMessages$);
+      if (threadMessages.length === 0) {console.log('Kein Thread vorhanden. Bereit für neue Antworten.');}
       this.setSelectedMessage(channelId, messageId, originMessage);
-    } catch (error) {
-      console.error('Fehler beim Überprüfen oder Erstellen des Threads:', error);
-    }
+    } catch (error) {console.error('Fehler beim Überprüfen oder Erstellen des Threads:', error);}
   }
 
   setSelectedMessage(channelId: string, messageId: string, originMessage: Message) {
@@ -72,37 +48,27 @@ export class ThreadService {
 
   getThreadMessageCount(channelId: string, messageId: string): Observable<number> {
     return new Observable<number>((observer) => {
-      const threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
-      const threadQuery = query(threadRef);
-
+      let threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
+      let threadQuery = query(threadRef);
       onSnapshot(threadQuery, (snapshot) => {
-        const countWithoutOrigin = Math.max(snapshot.size, 0);
+        let countWithoutOrigin = Math.max(snapshot.size, 0);
         observer.next(countWithoutOrigin);
       });
     });
   }
+
   getLastThreadMessageTime(channelId: string, messageId: string): Observable<Date | null> {
     return new Observable<Date | null>((observer) => {
-      const threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
-      const lastMessageQuery = query(threadRef, orderBy('created_at', 'desc'), limit(1));
+      let threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
+      let lastMessageQuery = query(threadRef, orderBy('created_at', 'desc'), limit(1));
 
       onSnapshot(lastMessageQuery, (snapshot) => {
-        if (snapshot.empty) {
-          observer.next(null);
-        } else {
-          const lastMessage = snapshot.docs[0].data();
+        if (snapshot.empty) {observer.next(null);}
+        else {
+          let lastMessage = snapshot.docs[0].data();
           let lastMessageTime: Date | null = null;
-
-          if (lastMessage['created_at']) {
-            const timestamp = lastMessage['created_at'];
-
-            if (typeof timestamp === 'number') {
-              lastMessageTime = new Date(timestamp);
-            } else {
-              console.error('Unexpected type for created_at:', typeof timestamp);
-            }
-          }
-
+          if (lastMessage['created_at']) {let timestamp = lastMessage['created_at'];
+          if (typeof timestamp === 'number') {lastMessageTime = new Date(timestamp);} else {console.error('Unexpected type for created_at:', typeof timestamp);}}
           observer.next(lastMessageTime);
         }
       });

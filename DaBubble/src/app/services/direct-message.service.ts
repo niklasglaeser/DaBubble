@@ -67,49 +67,36 @@ export class DirectMessagesService implements OnDestroy {
   private setupRecipientUserListener(recipientId: string) {
     this.unsubscribeListener(this.unsubscribeRecipientSnapshot);
 
-    const userDocRef = doc(this.firestore, `Users/${recipientId}`);
+    let userDocRef = doc(this.firestore, `Users/${recipientId}`);
     this.unsubscribeRecipientSnapshot = onSnapshot(userDocRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const user = { uid: docSnapshot.id, ...docSnapshot.data() } as UserLogged;
         this.recipientUserSource.next(user);
-      } else {
-        this.recipientUserSource.next(null);
-      }
+      } else {this.recipientUserSource.next(null);}
     });
   }
 
   private setupCurrentUserListener(currentUserId: string) {
     this.unsubscribeListener(this.unsubscribeCurrentUserSnapshot);
 
-    const userDocRef = doc(this.firestore, `Users/${currentUserId}`);
+    let userDocRef = doc(this.firestore, `Users/${currentUserId}`);
     this.unsubscribeCurrentUserSnapshot = onSnapshot(userDocRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
-        const user = { uid: docSnapshot.id, ...docSnapshot.data() } as UserLogged;
+        let user = { uid: docSnapshot.id, ...docSnapshot.data() } as UserLogged;
         this.currentUserSource.next(user);
-      } else {
-        this.currentUserSource.next(null);
-      }
+      } else {this.currentUserSource.next(null);}
     });
   }
 
   private unsubscribeListener(unsubscribe: (() => void) | null) {
-    if (unsubscribe) {
-      unsubscribe();
-    }
+    if (unsubscribe) {unsubscribe();}
   }
 
   async createConversation() {
     this.conversationId = this.currentUserId < this.recipientId ? `${this.currentUserId}_${this.recipientId}` : `${this.recipientId}_${this.currentUserId}`;
-
-    const conversationRef = doc(this.firestore, 'directChats', this.conversationId);
-    const conversationDoc = await getDoc(conversationRef);
-
-    if (!conversationDoc.exists()) {
-      await setDoc(conversationRef, {
-        members: [this.currentUserId, this.recipientId],
-        created_at: Date.now(),
-      });
-    }
+    let conversationRef = doc(this.firestore, 'directChats', this.conversationId);
+    let conversationDoc = await getDoc(conversationRef);
+    if (!conversationDoc.exists()) {await setDoc(conversationRef, {members: [this.currentUserId, this.recipientId], created_at: Date.now(),});}
     this.conversationIdSource.next(this.conversationId);
   }
 
@@ -119,52 +106,31 @@ export class DirectMessagesService implements OnDestroy {
   * @returns {Observable<Message[]>} An Observable that emits an array of updated messages.
   */
   loadConversation(): Observable<Message[]> {
-    const messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
-    const messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
-
-    return combineLatest([
-      collectionData(messagesQuery, { idField: 'id' }) as Observable<Message[]>,
-      this.currentUser$,
-      this.recipientUser$
-    ]).pipe(
-      map(([messages, currentUser, recipientUser]) => {
-        // Check if messages exist
-        const hasMessages = messages.length > 0;
+    let messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
+    let messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
+    return combineLatest([ collectionData(messagesQuery, { idField: 'id' }) as Observable<Message[]>, this.currentUser$, this.recipientUser$])
+    .pipe(map(([messages, currentUser, recipientUser]) => {
+        let hasMessages = messages.length > 0;
         this.hasMessagesSource.next(hasMessages);
 
-        // Map the messages to include user data
         return messages.map(message => {
-          if (message.senderId === this.currentUserId) {
-            message.senderName = currentUser?.username || message.senderName;
-            message.photoURL = currentUser?.photoURL || message.photoURL;
-          } else if (message.senderId === this.recipientId) {
-            message.senderName = recipientUser?.username || message.senderName;
-            message.photoURL = recipientUser?.photoURL || message.photoURL;
-          }
-          return message;
+          if (message.senderId === this.currentUserId) {message.senderName = currentUser?.username || message.senderName; message.photoURL = currentUser?.photoURL || message.photoURL;}
+          else if (message.senderId === this.recipientId) { message.senderName = recipientUser?.username || message.senderName; message.photoURL = recipientUser?.photoURL || message.photoURL;} return message;
         });
       })
     );
   }
 
   async addMessage(message: Message) {
-    const messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
-
-    await addDoc(messagesRef, {
-      ...message,
-      created_at: Date.now(),
-      senderId: this.currentUserId,
-      recipientId: this.recipientId
-    });
+    let messagesRef = collection(this.firestore, 'directChats', this.conversationId, 'messages');
+    await addDoc(messagesRef, {...message, created_at: Date.now(), senderId: this.currentUserId, recipientId: this.recipientId});
   }
 
   async updateMessage(conversationId: string, messageId: string, newMessageText: string) {
     try {
-      const messageDocRef = this.getSingleMessage(conversationId, messageId)
+      let messageDocRef = this.getSingleMessage(conversationId, messageId)
       await updateDoc(messageDocRef, { message: newMessageText, updated_at: Date.now(), })
-    } catch (e) {
-      console.error('Error updating document:', e)
-    }
+    } catch (e) {console.error('Error updating document:', e)}
   }
 
   async deleteMessage(conversationId: string, messageId: string): Promise<void> {
@@ -176,20 +142,17 @@ export class DirectMessagesService implements OnDestroy {
     }
   }
 
-
   getSingleMessage(conversationId: string, messageId: string) {
     return doc(this.firestore, `directChats/${conversationId}/messages/${messageId}`)
   }
 
   private setupConversationsListener(currentUserId: string) {
     this.unsubscribeListener(this.unsubscribeConversationsSnapshot);
-    const conversationsRef = collection(this.firestore, 'directChats');
-    const conversationsQuery = query(conversationsRef, orderBy('created_at', 'desc'));
+    let conversationsRef = collection(this.firestore, 'directChats');
+    let conversationsQuery = query(conversationsRef, orderBy('created_at', 'desc'));
 
-    this.unsubscribeConversationsSnapshot = onSnapshot(conversationsQuery, (querySnapshot) => {
-      const userIds: string[] = [];
-      querySnapshot.forEach(docSnapshot => {
-        const members = docSnapshot.data()['members'] as string[];
+    this.unsubscribeConversationsSnapshot = onSnapshot(conversationsQuery, (querySnapshot) => { let userIds: string[] = [];
+      querySnapshot.forEach(docSnapshot => { let members = docSnapshot.data()['members'] as string[];
         if (members.includes(currentUserId)) {
           const otherUserId = members.find(id => id !== currentUserId);
           if (otherUserId) { userIds.push(otherUserId); }
@@ -201,16 +164,15 @@ export class DirectMessagesService implements OnDestroy {
 
   private setupUsersListeners(userIds: string[]) {
     this.unsubscribeUserListeners();
-
-    const users: UserLogged[] = [];
-    const unsubscribes: (() => void)[] = [];
+    let users: UserLogged[] = [];
+    let unsubscribes: (() => void)[] = [];
 
     userIds.forEach(userId => {
-      const userDocRef = doc(this.firestore, `Users/${userId}`);
-      const unsubscribe = onSnapshot(userDocRef, (userDoc) => {
+      let userDocRef = doc(this.firestore, `Users/${userId}`);
+      let unsubscribe = onSnapshot(userDocRef, (userDoc) => {
         if (userDoc.exists()) {
-          const user = { uid: userDoc.id, ...userDoc.data() } as UserLogged;
-          const existingIndex = users.findIndex(u => u.uid === user.uid);
+          let user = { uid: userDoc.id, ...userDoc.data() } as UserLogged;
+          let existingIndex = users.findIndex(u => u.uid === user.uid);
           if (existingIndex >= 0) { users[existingIndex] = user; } else { users.push(user); }
           this.conversationsSource.next([...users]);
         }

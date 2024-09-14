@@ -40,10 +40,7 @@ export class ChatWindowComponent implements OnInit {
 
   messages$: Observable<Message[]> | undefined;
   threadCounts: Map<string, number> = new Map<string, number>();
-  lastThreadMessageTimes: Map<string, Date | null> = new Map<
-    string,
-    Date | null
-  >();
+  lastThreadMessageTimes: Map<string, Date | null> = new Map<string, Date | null>();
 
   currentUser: UserLogged | null = null;
   userId: string | null = null;
@@ -52,15 +49,7 @@ export class ChatWindowComponent implements OnInit {
 
   unsubscribe: (() => void) | undefined;
 
-  constructor(
-    private channelService: ChannelService,
-    private userService: UserService,
-    private messageService: MessageService,
-    private channelStateService: ChannelStateService,
-    private authService: AuthService,
-    private threadService: ThreadService,
-    private deviceService: DeviceService
-  ) { }
+  constructor(private channelService: ChannelService, private userService: UserService, private messageService: MessageService, private channelStateService: ChannelStateService, private authService: AuthService, private threadService: ThreadService, private deviceService: DeviceService) { }
 
   ngOnInit() {
     this.loadAllUsers();
@@ -70,23 +59,15 @@ export class ChatWindowComponent implements OnInit {
         this.subscribeToChannelData();
         this.loadMessages(channelId);
         await this.getCurrentUserId();
-        if (this.userId) {
-          this.loadCurrentUser(this.userId);
-        }
+        if (this.userId) {this.loadCurrentUser(this.userId);}
         this.scrollToBottom()
       }
     });
-
-    this.deviceService.deviceType$.subscribe((type) => {
-      this.deviceType = type;
-    })
-    
+    // this.deviceService.deviceType$.subscribe((type) => {this.deviceType = type;})
   }
 
   ngOnDestroy() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    if (this.unsubscribe) {this.unsubscribe();}
   }
 
   subscribeToChannelData() {
@@ -95,9 +76,7 @@ export class ChatWindowComponent implements OnInit {
         this.channelId,
         (channel) => {
           this.channel = channel;
-          if (this.channel && this.channel.members) {
-            this.loadChannelMembers(this.channel.members);
-          }
+          if (this.channel && this.channel.members) {this.loadChannelMembers(this.channel.members);}
         }
       );
     }
@@ -108,80 +87,60 @@ export class ChatWindowComponent implements OnInit {
     this.messages$.subscribe((messages) => {
       this.countMessages(messages)
       messages.forEach((message) => {
-        const messageId = message.id;
-        this.threadService
-          .getThreadMessageCount(this.channelId, messageId!)
-          .subscribe((count) => {
-            this.threadCounts.set(messageId!, count);
-          });
-        this.threadService
-          .getLastThreadMessageTime(this.channelId, messageId!)
-          .subscribe((lastMessageTime) => {
-            this.lastThreadMessageTimes.set(messageId!, lastMessageTime);
-          });
+        let messageId = message.id;
+        this.threadService.getThreadMessageCount(this.channelId, messageId!)
+          .subscribe((count) => {this.threadCounts.set(messageId!, count);});
+        this.threadService.getLastThreadMessageTime(this.channelId, messageId!)
+          .subscribe((lastMessageTime) => {this.lastThreadMessageTimes.set(messageId!, lastMessageTime);});
       });
     });
   }
 
   countMessages(messages: any){
-    const newMessageCount = messages.length;
-
-      if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 500);
-      }
+    let newMessageCount = messages.length;
+      if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {setTimeout(() => { this.scrollToBottom(); }, 500);}
       this.previousMessageCount = newMessageCount;
     }
   
 
   private isUserAtBottom(): boolean {
-    const element = this.chatContainer.nativeElement;
-    const threshold = 150; // Pixels above the bottom that we still consider "at the bottom"
-    const position = element.scrollTop + element.offsetHeight;
-    const height = element.scrollHeight;
+    let element = this.chatContainer.nativeElement;
+    let threshold = 150;
+    let position = element.scrollTop + element.offsetHeight;
+    let height = element.scrollHeight;
 
     return position > height - threshold;
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {
-    const members: UserLogged[] = [];
-    for (const userId of memberIds) {
-      const user = await this.userService.getSingleUserObj(userId);
-      if (user) {
-        members.push(user);
-      } else {
-        console.error(`User with ID ${userId} could not be found.`);
-      }
+    let members: UserLogged[] = [];
+    for (let userId of memberIds) {
+      let user = await this.userService.getSingleUserObj(userId);
+      if (user) {members.push(user);} 
+      else {console.error(`User with ID ${userId} could not be found.`);}
     }
     this.members = members;
   }
 
   async loadAllUsers() {
-    this.userService.users$.subscribe((users) => {
-      this.users = users;
-    });
+    this.userService.users$.subscribe((users) => {this.users = users;});
   }
 
   async loadCurrentUser(userId: string) {
     let user = await this.userService.getSingleUserObj(userId);
-    if (user) {
-      this.currentUser = user;
-    }
+    if (user) {this.currentUser = user;}
   }
 
   async getCurrentUserId() {
     const currentUser = this.authService.currentUserSig();
-    if (currentUser) {
-      this.userId = currentUser.userId;
-    }
+    if (currentUser) {this.userId = currentUser.userId;}
   }
 
+  /*
   scrollToMessage(messageId: string): void {
-    const messageElement = document.getElementById(messageId);
+    let messageElement = document.getElementById(messageId);
     if (messageElement) {
       messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Optional: Nachricht hervorheben
       messageElement.classList.add('highlight');
       setTimeout(() => {
         messageElement.classList.remove('highlight');
@@ -190,6 +149,7 @@ export class ChatWindowComponent implements OnInit {
       console.warn('Nachricht nicht gefunden: ', messageId);
     }
   }
+  */
 
   openThread() {
     this.threadOpened.emit();
@@ -204,7 +164,7 @@ export class ChatWindowComponent implements OnInit {
     if (this.chatContainer && this.chatContainer.nativeElement) {
       setTimeout(() => {
         this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-      }, 100);
+      }, 500);
     }
   }
 

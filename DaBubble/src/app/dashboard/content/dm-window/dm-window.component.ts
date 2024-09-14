@@ -23,24 +23,19 @@ export class DmWindowComponent implements OnInit {
   constructor(private dmService: DirectMessagesService) { }
 
   ngOnInit(): void {
-    this.dmService.loadMessages$.subscribe(() => {
-      this.loadMessagesAfterSidebarClick();
-    });
+    this.dmService.loadMessages$.subscribe(() => {this.loadMessagesAfterSidebarClick();});
   }
 
   loadMessagesAfterSidebarClick(): void {
     this.messages$ = this.dmService.loadConversation();
-
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 500);
+    setTimeout(() => {this.scrollToBottom();}, 500);
   }
 
   private isUserAtBottom(): boolean {
-    const element = this.dmMessages.nativeElement;
-    const threshold = 150; // Pixels above the bottom that we still consider "at the bottom"
-    const position = element.scrollTop + element.offsetHeight;
-    const height = element.scrollHeight;
+    let element = this.dmMessages.nativeElement;
+    let threshold = 150;
+    let position = element.scrollTop + element.offsetHeight;
+    let height = element.scrollHeight;
 
     return position > height - threshold;
   }
@@ -48,12 +43,9 @@ export class DmWindowComponent implements OnInit {
   loadMessages(): void {
     this.messages$ = this.dmService.loadConversation();
     this.messages$.subscribe((messages) => {
-      const newMessageCount = messages.length;
-
+      let newMessageCount = messages.length;
       if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 500);
+        setTimeout(() => {this.scrollToBottom();}, 500);
       }
       this.previousMessageCount = newMessageCount;
     });

@@ -1,14 +1,4 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  OnDestroy,
-  SimpleChanges,
-  inject,
-  HostListener,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, SimpleChanges, inject, HostListener, ViewChild, ElementRef,} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Message } from '../../../../models/message.model';
 import { Observable, Subscription } from 'rxjs';
@@ -32,9 +22,7 @@ import { GlobalService } from '../../../../services/global.service';
 @Component({
   selector: 'app-chat-messages',
   standalone: true,
-
   imports: [CommonModule, DatePipe, FormsModule, MatTooltipModule, MatDialogModule, PickerComponent, EmojiComponent, MatIconModule],
-
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.scss'],
   providers: [DatePipe],
@@ -77,8 +65,8 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
 
   checkPdf(message: Message): boolean {
     if (message.imagePath) {
-      const cleanUrl = message.imagePath.split('?')[0];
-      const fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
+      let cleanUrl = message.imagePath.split('?')[0];
+      let fileExtension = cleanUrl.split('.').pop()?.toLowerCase();
       this.isPdf = fileExtension === 'pdf';
     } else {
       this.isPdf = false;
@@ -99,15 +87,11 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
+    if (this.userSubscription) {this.userSubscription.unsubscribe();}
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['channelId'] && !changes['channelId'].isFirstChange()) {
-      this.closeEditMode();
-    }
+    if (changes['channelId'] && !changes['channelId'].isFirstChange()) {this.closeEditMode();}
   }
 
   editMessage(message: Message) {
@@ -116,33 +100,22 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       this.editMessageText = message.message;
       this.selectedMessage = message;
       setTimeout(() => {
-        if (this.editMessageText) {
-          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
-        }
+        if (this.editMessageText) {this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);}
       }, 0);
     }
   }
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
-      if (!this.editMessageText.trim()) {
-        this.isMessageEmpty = true;
-        return;
-      }
+      if (!this.editMessageText.trim()) {this.isMessageEmpty = true; return;}
       try {
         this.selectedMessage.message = this.editMessageText;
-        await this.messageService.updateMessage(
-          this.channelId,
-          this.selectedMessage.id!,
-          this.editMessageText
-        );
+        await this.messageService.updateMessage(this.channelId, this.selectedMessage.id!, this.editMessageText);
         this.editMessageClicked = false;
         this.isMessageEmpty = false;
         this.selectedMessage = null;
         this.editMessageText = '';
-      } catch (e) {
-        console.error('Error saving message:', e);
-      }
+      } catch (e) {console.error('Error saving message:', e);}
     }
   }
 
@@ -150,7 +123,6 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     let selectedMessageId = this.selectedMessage?.id
     this.messageService.deleteMessage(this.channelId!, selectedMessageId!)
   }
-
 
   cancelEdit() {
     this.closeEditMode();
@@ -164,23 +136,17 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   }
 
   formatTime(timestamp: Date): string {
-    const date = new Date(timestamp);
+    let date = new Date(timestamp);
     return this.datePipe.transform(date, 'HH:mm') || '';
   }
 
   formatDate(timestamp: Date): string {
-    const date = new Date(timestamp);
-    const today = new Date();
-    const isToday =
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear();
+    let date = new Date(timestamp);
+    let today = new Date();
+    let isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
 
-    if (isToday) {
-      return 'Heute';
-    } else {
-      return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';
-    }
+    if (isToday) {return 'Heute';}
+    else {return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';}
   }
 
   getReplayCount(messageId: string): boolean {
@@ -195,24 +161,19 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   openThread(channelId: string, messageId: string, originMessage: Message) {
     this.threadService.checkAndCreateThread(channelId, messageId, originMessage);
     this.globalService.isThread(true);
-    const currentThreadStatus = this.globalService.getThreadStatus();
+    let currentThreadStatus = this.globalService.getThreadStatus();
   }
 
   openImg(message: Message) {
-    this.dialog.open(DialogChatImgComponent, {
-      data: { imagePath: message.imagePath }
-    });
+    this.dialog.open(DialogChatImgComponent, {data: { imagePath: message.imagePath }});
   }
 
   async toggleReaction(message: Message, emoji: string) {
     const userId = this.currentUser?.uid!;
     const username = this.currentUser?.username!;
 
-    try {
-      await this.emojiService.toggleReaction(this.channelId, message.id!, emoji, userId, username);
-    } catch (error) {
-      console.error('Fehler beim Aktualisieren der Reaktion:', error);
-    }
+    try {await this.emojiService.toggleReaction(this.channelId, message.id!, emoji, userId, username);}
+    catch (error) {console.error('Fehler beim Aktualisieren der Reaktion:', error);}
   }
 
   addEmoji(event: any, message: Message) {
@@ -238,7 +199,6 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     return this.emojiService.getReactionText(reaction, this.currentUser);
   }
 
-
   adjustHeight(event: any) {
     event.target.style.height = 'auto';
     event.target.style.height = event.target.scrollHeight + 'px';
@@ -251,16 +211,11 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    const isClickInside = target.closest('.emoji-picker-dialog');
-
-    if (!isClickInside && this.emojiPickerMessageId) {
-      this.emojiPickerMessageId = undefined;
-    }
+    let target = event.target as HTMLElement;
+    let isClickInside = target.closest('.emoji-picker-dialog');
+    if (!isClickInside && this.emojiPickerMessageId) {this.emojiPickerMessageId = undefined;}
   }
 }
 

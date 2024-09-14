@@ -1,7 +1,6 @@
 <div class="thread-footer">
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
-        <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8"
-            searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event)"></emoji-mart>
+        <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8" searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event)"></emoji-mart>
     </div>
 
     <div *ngIf="chatImg || uploadError" class="chatImg">
@@ -15,20 +14,14 @@
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>
     </div>
 
-    <textarea id="thread-message-input" placeholder="Antworten..." [(ngModel)]="inputText"
-        (input)="onInput($event)" (keydown)="handleKeyDown($event)" rows="3"></textarea>
+    <textarea id="thread-message-input" placeholder="Antworten..." [(ngModel)]="inputText" (input)="onInput($event)" (keydown)="handleKeyDown($event)" rows="3"></textarea>
     <ul *ngIf="dropdownOpen && filteredUsers.length > 0" class="autocomplete-list">
-        <li *ngFor="let user of filteredUsers; let i = index" [class.active]="i === activeIndex"
-            (click)="selectUser(user)">
-            <img [src]="user.photoURL ? user.photoURL : 'default-image-url'" alt="{{user.username}}-avatar">
-            {{ user.username }}
+        <li *ngFor="let user of filteredUsers; let i = index" [class.active]="i === activeIndex" (click)="selectUser(user)">
+            <img [src]="user.photoURL ? user.photoURL : 'default-image-url'" alt="{{user.username}}-avatar">{{ user.username }}
         </li>
     </ul>
     <ul *ngIf="dropdownOpen && filteredChannels.length > 0" class="autocomplete-list">
-        <li *ngFor="let channel of filteredChannels; let i = index" [class.active]="i === activeIndex"
-            (click)="selectChannel(channel)">
-            {{ channel.name }}
-        </li>
+        <li *ngFor="let channel of filteredChannels; let i = index" [class.active]="i === activeIndex" (click)="selectChannel(channel)"> {{ channel.name }} </li>
     </ul>
     <div class="chat-message-toolbar">
         <div class="chat-toolbar-left">

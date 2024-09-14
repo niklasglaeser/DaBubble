@@ -37,66 +37,22 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   constructor(private cdref: ChangeDetectorRef, private dialog: MatDialog, private sidebarService: GlobalService) {
     this.currentWidth = window.innerWidth;
-
-    if (window.innerWidth < 1200) {
-      this.isMobile = true;
-    } else {
-      this.isMobile = false;
-    }
-    if (window.innerWidth < 1200) {
-      this.showSidebar = false;
-    } else {
-      this.showSidebar = true;
-    }
-
+    if (window.innerWidth < 1200) {this.isMobile = true;} else {this.isMobile = false;}
+    if (window.innerWidth < 1200) {this.showSidebar = false;} else {this.showSidebar = true;}
   }
 
   ngOnInit() {
     this.checkWindowSize(window.innerWidth);
-    this.sidebarService.showSidebar$.subscribe((status) => {
-      this.showSidebar = status;
-    });
-
-    this.sidebarService.isChannel$.subscribe((status) => {
-      this.isChannel = status;
-    });
-
-    this.sidebarService.isDirectChat$.subscribe((status) => {
-      this.isDirectChat = status;
-    });
-
-    this.sidebarService.isThread$.subscribe((status) => {
-      this.isThread = status;
-    });
-
+    this.sidebarService.showSidebar$.subscribe((status) => { this.showSidebar = status;});
+    this.sidebarService.isChannel$.subscribe((status) => {this.isChannel = status;});
+    this.sidebarService.isDirectChat$.subscribe((status) => {this.isDirectChat = status;});
+    this.sidebarService.isThread$.subscribe((status) => {this.isThread = status;});
     this.showWorkspaceToggle = window.innerWidth > 1200 && window.innerWidth <= 1920;
   }
 
   ngAfterContentChecked() {
     this.cdref.detectChanges();
   }
-
-
-  /*
-  checkWindowSize() {
-    let screenWidth = window.innerWidth;
-    this.showWorkspaceToggle = screenWidth > 790 && screenWidth <= 1920;
-
-    if (screenWidth > 1200) {
-      this.isMobile = false;
-      this.showSidebar = true;
-      this.sidebarService.setIsMobile(this.isMobile);
-      this.sidebarService.isSidebar(this.showSidebar);
-      this.sidebarService.manageChatAndChannelStates();
-    } else {
-      this.isMobile = true;
-      this.showSidebar = true;
-      this.sidebarService.setIsMobile(this.isMobile);
-      this.sidebarService.isSidebar(true);
-      this.sidebarService.manageChatAndChannelStates();
-    }
-  }
-  */
 
   handleChannelOpen() {
     if (this.isMobile) {
@@ -118,20 +74,17 @@ export class ContentComponent implements OnInit, AfterContentChecked {
 
   handleThreadOpen() {
     this.sidebarService.isThread(true);
-    const isSidebarOpen = this.sidebarService.getSidebarStatus();
+    let isSidebarOpen = this.sidebarService.getSidebarStatus();
     if (isSidebarOpen) {
       this.sidebarService.isSidebar(false);
     }
   }
 
-
   toggleSidebar() {
     this.sidebarService.toggleSidebar();
-    const isSidebarOpen = this.sidebarService.getSidebarStatus();
-    const isThreadOpen = this.sidebarService.getThreadStatus();
-    if (isSidebarOpen && isThreadOpen) {
-      this.sidebarService.isThread(false);
-    }
+    let isSidebarOpen = this.sidebarService.getSidebarStatus();
+    let isThreadOpen = this.sidebarService.getThreadStatus();
+    if (isSidebarOpen && isThreadOpen) { this.sidebarService.isThread(false);}
   }
 
   @HostListener('window:resize', ['$event'])
@@ -140,14 +93,8 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   }
 
   checkWindowSize(newWidth: number) {
-    // Führe eine Aktion nur aus, wenn die Breite kleiner oder größer als ein bestimmter Schwellenwert ist
-    if (newWidth > 1200 && this.currentWidth <= 1200) {
-      console.log('Fenster ist breiter als 1200px geworden');
-      this.updateLayoutDesktop();
-    } else if (newWidth <= 1200 && this.currentWidth > 1200) {
-      console.log('Fenster ist schmaler als 1200px geworden');
-      this.updateLayoutMobile();
-    }
+    if (newWidth > 1200 && this.currentWidth <= 1200) {this.updateLayoutDesktop();}
+    else if (newWidth <= 1200 && this.currentWidth > 1200) {this.updateLayoutMobile();}
     this.currentWidth = newWidth;
   }
 

@@ -11,25 +11,18 @@
         <p *ngIf="uploadError" class="error-message">{{ uploadError }}</p>
     </div>
 
-
-
     <div class="emoji-picker-dialog" *ngIf="showEmojiPicker">
-        <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8"
-            searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event)"></emoji-mart>
+        <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8" searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event)"></emoji-mart>
     </div>
-    <textarea type="text" name="message-input" id="dm-message-input" (input)="onInput($event)"
-        placeholder="Nachricht an #{{recipientUser?.username}}" [(ngModel)]="inputText"
-        (keydown)="handleKeyDown($event)" rows="3"></textarea>
+    <textarea type="text" name="message-input" id="dm-message-input" (input)="onInput($event)" placeholder="Nachricht an #{{recipientUser?.username}}" [(ngModel)]="inputText" (keydown)="handleKeyDown($event)" rows="3"></textarea>
     <ul *ngIf="dropdownOpen && filteredUsers.length > 0" class="autocomplete-list">
-        <li *ngFor="let user of filteredUsers; let i = index" [class.active]="i === activeIndex"
-            (click)="selectUser(user)">
+        <li *ngFor="let user of filteredUsers; let i = index" [class.active]="i === activeIndex" (click)="selectUser(user)">
             <img [src]="user.photoURL ? user.photoURL : 'default-image-url'" alt="{{user.username}}-avatar">
             {{ user.username }}
         </li>
     </ul>
     <ul *ngIf="dropdownOpen && filteredChannels.length > 0" class="autocomplete-list">
-        <li *ngFor="let channel of filteredChannels; let i = index" [class.active]="i === activeIndex"
-            (click)="selectChannel(channel)">
+        <li *ngFor="let channel of filteredChannels; let i = index" [class.active]="i === activeIndex" (click)="selectChannel(channel)">
             {{ channel.name }}
         </li>
     </ul>
@@ -37,7 +30,6 @@
         <div class="chat-toolbar-left">
             <div>
                 <div class="add-file" (click)="triggerFileUpload(fileInput)"></div>
-                <!-- Hidden file input -->
                 <input type="file" #fileInput style="display: none" (change)="uploadImage($event)">
             </div>
             <div class="seperator"></div>

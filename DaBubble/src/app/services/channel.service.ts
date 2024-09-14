@@ -18,8 +18,6 @@ export class ChannelService {
   defaultChannelId: string = 'IiKdwSHaVmXdf2JiliaU';
   currentUserId$ = new BehaviorSubject<string | null>(null);
   currentUserId: string = '';
-
-  /*onSnapshot variablen*/
   unsubList: any;
 
   constructor(private auth: Auth = inject(Auth), private globalService: GlobalService) {
@@ -29,167 +27,114 @@ export class ChannelService {
   initializeService() {
     this.getCurrentUserId();
     this.currentUserId$.subscribe((userId) => {
-      if (userId) {
-        this.loadChannelsForCurrentUser(userId);
-        this.currentUserId = userId;
-      } else {
-        this.channels$.next([]);
-      }
+      if (userId) {this.loadChannelsForCurrentUser(userId); this.currentUserId = userId;}
+      else {this.channels$.next([]);}
     });
   }
 
   ngOnDestroy(): void {
-    if (this.unsubList) {
-      this.unsubList();
-    }
+    if (this.unsubList) {this.unsubList();}
   }
 
   loadChannelsForCurrentUser(userId: string) {
-    if (this.unsubList) {
-      this.unsubList();
-    }
+    if (this.unsubList) {this.unsubList();}
     let filter = query(this.getChannelsRef(), where('members', 'array-contains', userId));
     this.unsubList = onSnapshot(
       filter,
       (snapshot) => {
         this.channels = [];
-        snapshot.forEach((doc) => {
-          this.channels.push(this.setChannelObject(doc.data(), doc.id));
-        });
+        snapshot.forEach((doc) => {this.channels.push(this.setChannelObject(doc.data(), doc.id));});
         this.channels$.next(this.channels);
       },
-      (error) => {
-        console.error('Fehler bei der Abfrage:', error);
-      }
+      (error) => {console.error('Fehler bei der Abfrage:', error);}
     );
   }
 
-  /*TESTING*/
+
   loadChannelData(channelId: string, callback: (channel: Channel | null) => void): () => void {
-    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    let channelDocRef = doc(this.firestore, 'channels', channelId);
     return onSnapshot(channelDocRef, (doc) => {
       if (doc.exists()) {
-        const channelData = doc.data() as Channel;
+        let channelData = doc.data() as Channel;
         channelData.id = doc.id;
         callback(channelData);
-      } else {
-        callback(null);
-      }
+      } else {callback(null);}
     });
   }
-  /*TESTING*/
 
   async createChannel(channel: Channel) {
     try {
-      const channelDocRef = doc(this.getChannelsRef());
+      let channelDocRef = doc(this.getChannelsRef());
       channel.id = channelDocRef.id;
       await setDoc(channelDocRef, { ...channel });
       return channel.id;
-    } catch (error) {
-      console.error('error adding channel' + error);
-      return null;
-    }
+    } catch (error) {console.error('error adding channel' + error); return null;}
   }
 
   async editUserlistInChannel(channelId: string, userIds: string[]): Promise<void> {
     try {
-      const channelDocRef = this.getSingleChannel(channelId);
-      const channelSnap = await getDoc(channelDocRef);
+      let channelDocRef = this.getSingleChannel(channelId);
+      let channelSnap = await getDoc(channelDocRef);
       if (channelSnap.exists()) {
-        const currentMembers = channelSnap.data()['members'] || [];
-        const updatedMembers = [...new Set([...currentMembers.filter((member: string) => userIds.includes(member)), ...userIds])];
-        await updateDoc(channelDocRef, {
-          members: updatedMembers
-        });
-      } else {
-        console.error('Channel does not exist');
-      }
-    } catch (e) {
-      console.error('Error adding users to channel: ', e);
-    }
+        let currentMembers = channelSnap.data()['members'] || [];
+        let updatedMembers = [...new Set([...currentMembers.filter((member: string) => userIds.includes(member)), ...userIds])];
+        await updateDoc(channelDocRef, {members: updatedMembers});
+      } else {console.error('Channel does not exist');}
+    } catch (e) {console.error('Error adding users to channel: ', e);}
   }
 
   async addUsersToWelcomeChannel(channelId: string, userIds: string[]): Promise<void> {
     try {
-      const channelDocRef = this.getSingleChannel(channelId);
-      const channelSnap = await getDoc(channelDocRef);
+      let channelDocRef = this.getSingleChannel(channelId);
+      let channelSnap = await getDoc(channelDocRef);
 
       if (channelSnap.exists()) {
-        const currentMembers = channelSnap.data()['members'] || [];
-        const updatedMembers = [...new Set([...currentMembers, ...userIds])];
-        await updateDoc(channelDocRef, {
-          members: updatedMembers
-        });
-      } else {
-        console.error('Channel does not exist');
-      }
-    } catch (e) {
-      console.error('Error adding users to channel: ', e);
-    }
+        let currentMembers = channelSnap.data()['members'] || [];
+        let updatedMembers = [...new Set([...currentMembers, ...userIds])];
+        await updateDoc(channelDocRef, {members: updatedMembers});
+      } else {console.error('Channel does not exist');}
+    } catch (e) {console.error('Error adding users to channel: ', e);}
   }
 
   async updateChannel(channelId: string, channel: Channel) {
     try {
-      const channelDocRef = this.getSingleChannel(channelId);
-      await updateDoc(channelDocRef, {
-        name: channel.name,
-        description: channel.description,
-        creator: channel.creator
-      });
-      console.log('Channel updated with ID: ', channelId);
-    } catch (e) {
-      console.error('Error updating document: ', e);
-    }
+      let channelDocRef = this.getSingleChannel(channelId);
+      await updateDoc(channelDocRef, {name: channel.name, description: channel.description, creator: channel.creator});
+    } catch (e) {console.error('Error updating document: ', e);}
   }
 
   async deleteChannel(channelId: string) {
     try {
-      const channelDocRef = this.getSingleChannel(channelId);
+      let channelDocRef = this.getSingleChannel(channelId);
       await deleteDoc(channelDocRef);
       console.log('Channel deleted with ID: ', channelId);
-    } catch (e) {
-      console.error('Error deleting document: ', e);
-    }
+    } catch (e) {console.error('Error deleting document: ', e);}
   }
 
   async removeUserFromChannel(channelId: string) {
     try {
-      const userId = this.currentUserId;
-      if (!userId) {
-        console.error('Kein Benutzer angemeldet');
-        return;
-      }
-      const usersRef = collection(this.firestore, 'Users');
-      const userDoc = doc(usersRef, userId);
-      await updateDoc(userDoc, {
-        joinedChannels: arrayRemove(channelId)
-      });
+      let userId = this.currentUserId;
+      if (!userId) {console.error('Kein Benutzer angemeldet'); return;}
+      let usersRef = collection(this.firestore, 'Users');
+      let userDoc = doc(usersRef, userId);
+      await updateDoc(userDoc, {joinedChannels: arrayRemove(channelId)});
 
-      const channelsRef = collection(this.firestore, 'channels');
-      const channelDoc = doc(channelsRef, channelId);
-      await updateDoc(channelDoc, {
-        members: arrayRemove(userId)
-      });
+      let channelsRef = collection(this.firestore, 'channels');
+      let channelDoc = doc(channelsRef, channelId);
+      await updateDoc(channelDoc, {members: arrayRemove(userId)});
       this.globalService.switchChannel(this.defaultChannelId);
-    } catch (e) {
-      console.error('Fehler beim Entfernen des Benutzers aus dem Channel', e);
-    }
+    } catch (e) {console.error('Fehler beim Entfernen des Benutzers aus dem Channel', e);}
   }
 
   async checkChannelExists(name: string): Promise<boolean> {
     const q = query(this.getChannelsRef(), where('name', '==', name));
     const querySnapshot: QuerySnapshot = await getDocs(q);
 
-    return !querySnapshot.empty; // Gibt true zurück, wenn der Name bereits existiert
+    return !querySnapshot.empty;
   }
 
   setChannelObject(obj: any, id: string): Channel {
-    return {
-      id: id,
-      name: obj.name,
-      description: obj.description || '',
-      creator: obj.creator
-    };
+    return {id: id, name: obj.name, description: obj.description || '', creator: obj.creator};
   }
 
   getSingleChannel(docId: string) {
@@ -201,8 +146,6 @@ export class ChannelService {
   }
 
   getCurrentUserId() {
-    onAuthStateChanged(this.auth, (user) => {
-      this.currentUserId$.next(user ? user.uid : null);
-    });
+    onAuthStateChanged(this.auth, (user) => {this.currentUserId$.next(user ? user.uid : null);});
   }
 }

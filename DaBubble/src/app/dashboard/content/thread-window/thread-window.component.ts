@@ -34,13 +34,7 @@ export class ThreadWindowComponent implements OnInit {
 
   private subscriptions = new Subscription();
 
-  constructor(
-    private threadService: ThreadService,
-    private authService: AuthService,
-    private userService: UserService,
-    private messageService: MessageService,
-    private channelService: ChannelService
-  ) { }
+  constructor(private threadService: ThreadService, private authService: AuthService, private userService: UserService, private messageService: MessageService, private channelService: ChannelService) { }
 
   ngOnInit(): void {
     this.threadService.selectedMessage$.subscribe((data) => {
@@ -61,9 +55,7 @@ export class ThreadWindowComponent implements OnInit {
     if (this.channelId && this.messageId) {
       this.subscriptions.add(
         this.messageService.getSingleMessageWithReactions(this.channelId, this.messageId).subscribe((updatedMessage) => {
-          if (updatedMessage) {
-            this.originMessage = updatedMessage;
-          }
+          if (updatedMessage) {this.originMessage = updatedMessage;}
         })
       );
     }
@@ -85,40 +77,27 @@ export class ThreadWindowComponent implements OnInit {
 
   loadThreadMessageCount() {
     if (this.channelId && this.messageId) {
-      this.threadMessageCount$ = this.threadService.getThreadMessageCount(
-        this.channelId,
-        this.messageId
-      );
+      this.threadMessageCount$ = this.threadService.getThreadMessageCount(this.channelId, this.messageId);
     }
   }
 
   loadChannelName() {
     if (this.channelId) {
       this.channelService.loadChannelData(this.channelId, (channel) => {
-        if (channel) {
-          this.channelName = channel.name;
-        } else {
-          this.channelName = 'Unbekannter Kanal';
-        }
+        if (channel) {this.channelName = channel.name;}
+        else {this.channelName = 'Unbekannter Kanal';}
       });
     }
   }
-  onCloseThread() {
-    // Bearbeitungsmodus in ThreadMessagesComponent deaktivieren
-    if (this.threadMessagesComponent) {
-      this.threadMessagesComponent.closeEditMode();
-    }
 
-    // Thread-Fenster schließen
-    const threadWindow = document.querySelector(
-      '.thread-window'
-    ) as HTMLElement;
-    if (threadWindow) {
-      threadWindow.classList.remove('open');
-    }
+  onCloseThread() {
+    if (this.threadMessagesComponent) {this.threadMessagesComponent.closeEditMode();}
+    let threadWindow = document.querySelector('.thread-window') as HTMLElement;
+    if (threadWindow) {threadWindow.classList.remove('open');}
   }
+
   getCurrentUserId() {
-    const currentUser = this.authService.currentUserSig();
+    let currentUser = this.authService.currentUserSig();
     this.currentUserId = currentUser?.userId ?? null;
   }
 }

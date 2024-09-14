@@ -29,15 +29,12 @@ export class ChatHeaderComponent {
 
   openEditChannel(event: MouseEvent): void {
     if (this.channel && this.channel.id) {
-      const dialogConfig = new MatDialogConfig();
-      const dialogWidth = 872;
+      let dialogConfig = new MatDialogConfig();
+      let dialogWidth = 872;
 
       if (window.innerWidth >= 1200) {
-        const openEditChannelPosition = this.openEditChannelPosition.nativeElement;
-        const position = {
-          top: `${openEditChannelPosition.offsetTop + openEditChannelPosition.offsetHeight}px`,
-          left: `${openEditChannelPosition.offsetLeft}px`
-        };
+        let openEditChannelPosition = this.openEditChannelPosition.nativeElement;
+        let position = { top: `${openEditChannelPosition.offsetTop + openEditChannelPosition.offsetHeight}px`, left: `${openEditChannelPosition.offsetLeft}px`};
         dialogConfig.position = position;
       }
 
@@ -46,14 +43,14 @@ export class ChatHeaderComponent {
       dialogConfig.width = '100%';
       dialogConfig.maxWidth = `${dialogWidth}px`;
 
-      const dialogRef = this.dialog.open(DialogChannelEditComponent, dialogConfig);
+      let dialogRef = this.dialog.open(DialogChannelEditComponent, dialogConfig);
     }
   }
 
   openOverviewChannel(event: MouseEvent): void {
     if (!this.members) return;
 
-    const dialogConfig = new MatDialogConfig();
+    let dialogConfig = new MatDialogConfig();
     dialogConfig.data = { members: this.members, channel: this.channel, users: this.users };
     dialogConfig.panelClass = 'dialog-panel-channel-overview';
     dialogConfig.width = '100%';
@@ -62,11 +59,8 @@ export class ChatHeaderComponent {
     dialogConfig.hasBackdrop = true;
 
     if (window.innerWidth >= 1200) {
-      const { offsetTop, offsetHeight, offsetLeft } = this.openOverviewPosition.nativeElement;
-      dialogConfig.position = {
-        top: `${offsetTop + offsetHeight}px`,
-        left: `${offsetLeft - 350}px`
-      };
+      let { offsetTop, offsetHeight, offsetLeft } = this.openOverviewPosition.nativeElement;
+      dialogConfig.position = { top: `${offsetTop + offsetHeight}px`, left: `${offsetLeft - 350}px`};
     }
 
     this.dialog.open(DialogOverviewUsersComponent, dialogConfig).componentInstance.openAddUserDialogEvent.subscribe(() => this.openAddUser(event));
@@ -75,7 +69,7 @@ export class ChatHeaderComponent {
   openAddUser(event: MouseEvent): void {
     if (!this.members) return console.error('No channel ID');
 
-    const dialogConfig = new MatDialogConfig();
+    let dialogConfig = new MatDialogConfig();
     dialogConfig.data = { members: this.members, channel: this.channel, users: this.users };
     dialogConfig.panelClass = 'dialog-panel-channel-overview';
     dialogConfig.width = '100%';
@@ -85,25 +79,18 @@ export class ChatHeaderComponent {
 
     if (window.innerWidth >= 1200) {
       const { offsetTop, offsetHeight, offsetLeft } = this.openAddUserPosition.nativeElement;
-      dialogConfig.position = {
-        top: `${offsetTop + offsetHeight}px`,
-        left: `${offsetLeft - 380}px`
-      };
+      dialogConfig.position = { top: `${offsetTop + offsetHeight}px`, left: `${offsetLeft - 380}px`};
     }
 
     this.dialog
-      .open(DialogAddUserHeaderComponent, dialogConfig)
-      .afterClosed()
-      .subscribe(async (updatedMembers: UserLogged[]) => {
+      .open(DialogAddUserHeaderComponent, dialogConfig).afterClosed().subscribe(async (updatedMembers: UserLogged[]) => {
         if (!updatedMembers || !this.channel?.id) return;
         this.members = updatedMembers;
         try {
-          const userIds = updatedMembers.map((user) => user.uid);
+          let userIds = updatedMembers.map((user) => user.uid);
           await this.channelService.editUserlistInChannel(this.channel.id, userIds);
           await this.updateUserProfilesWithChannel(userIds, this.channel.id);
-        } catch (error) {
-          console.error('Error updating Firebase:', error);
-        }
+        } catch (error) {console.error('Error updating Firebase:', error);}
       });
   }
 
