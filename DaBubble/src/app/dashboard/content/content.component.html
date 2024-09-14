@@ -8,6 +8,5 @@
     *ngIf="(isDirectChat && !isChannel && (!showSidebar || !isMobile)) || (!isMobile && isThread && !isChannel)"
     class="dm-window" #dmWindow>
 </app-dm-window>
-<!-- <app-thread-window *ngIf="isThread" class="thread-window"></app-thread-window> -->
 <app-thread-window [class.hidden]="!isThread" class="thread-window"></app-thread-window>
 <app-workspace-toggle *ngIf="showWorkspaceToggle" (toggleSidebar)="toggleSidebar()"></app-workspace-toggle>

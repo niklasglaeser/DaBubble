@@ -60,7 +60,7 @@
         }
       </div>
     </div>
-    <div class="dialog-actions">
+    <div class="dialog-actions" *ngIf="(!isDefaultChannel)">
       <button class="fs-20" (click)="removeUserFromChannel()">Channel verlassen</button>
     </div>
   </div>

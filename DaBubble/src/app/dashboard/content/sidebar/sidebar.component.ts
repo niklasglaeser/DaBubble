@@ -69,7 +69,6 @@ export class SidebarComponent implements OnInit {
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
       if (!this.isMobile) {
         if (this.channels.length > 0 && !this.selectedChannelId) {
-
           if (window.innerWidth >= 1200) {
             this.openChannel(this.fixedChannelId);
           }
@@ -94,7 +93,7 @@ export class SidebarComponent implements OnInit {
 
     this.globalService.getChannelSwitch().subscribe((channelId: string | null) => {
       if (channelId) {
-        this.openChannel(channelId);  // Wechsle zu dem Channel
+        this.openChannel(channelId);
       }
     });
 
@@ -122,7 +121,6 @@ export class SidebarComponent implements OnInit {
 
   addChannel() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
-
     dialogRef.afterClosed().subscribe((result) => { });
   }
 
@@ -130,8 +128,6 @@ export class SidebarComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogChannelEditComponent, {
       data: { channelId: channelId }
     });
-    console.log(this.selectedChannelId);
-
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.selectedChannelId = channelId;
@@ -152,7 +148,6 @@ export class SidebarComponent implements OnInit {
     let recipientId = userId;
     let currentUser = this.authService.currentUserSig();
     let currentUserId = currentUser!.userId;
-
     this.directMessageOpened.emit();
 
     this.dmService
