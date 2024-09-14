@@ -53,18 +53,10 @@ export class ThreadMessagesComponent {
   showTooltip: boolean = false;
   threadId: string = '';
 
-  constructor(
-    private datePipe: DatePipe,
-    private messageService: MessageService,
-    private emojiService: EmojiService,
-    private authService: AuthService,
-    private sanitizer: DomSanitizer,
-  ) { }
+  constructor(private datePipe: DatePipe, private messageService: MessageService, private emojiService: EmojiService, private authService: AuthService, private sanitizer: DomSanitizer,) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['channelId'] && !changes['channelId'].isFirstChange()) {
-      this.closeEditMode();
-    }
+    if (changes['channelId'] && !changes['channelId'].isFirstChange()) {this.closeEditMode();}
   }
 
   checkPdf(message: Message): boolean {
@@ -79,11 +71,8 @@ export class ThreadMessagesComponent {
   }
 
   checkOrginMessage(message: string):boolean{
-    if(message === ''){
-      return false
-    } else{
-      return true
-    }
+    if(message === ''){return false}
+    else{return true}
   }
 
   formatMessage(message: string): string {
@@ -110,26 +99,17 @@ export class ThreadMessagesComponent {
       this.editMessageText = message.message;
       this.selectedMessage = message;
       setTimeout(() => {
-        if (this.editMessageText) {
-          this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);
-        }
+        if (this.editMessageText) {this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);}
       }, 0);
     }
   }
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
-      if (!this.editMessageText.trim()) {
-        this.isMessageEmpty = true;
-        return;
-      }
+      if (!this.editMessageText.trim()) {this.isMessageEmpty = true; return;}
       try {
         this.selectedMessage.message = this.editMessageText;
-        await this.messageService.updateMessage(
-          this.channelId,
-          this.selectedMessage.id!,
-          this.editMessageText
-        );
+        await this.messageService.updateMessage(this.channelId, this.selectedMessage.id!, this.editMessageText);
         this.editMessageClicked = false;
         this.isMessageEmpty = false;
         this.selectedMessage = null;

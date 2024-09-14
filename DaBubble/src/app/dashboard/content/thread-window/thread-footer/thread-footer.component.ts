@@ -53,43 +53,19 @@ export class ThreadFooterComponent {
   isPdf: boolean = false;
   safePath: string | null = null;
 
-  constructor(
-    private threadService: ThreadService,
-    private authService: AuthService,
-    private messageService: MessageService,
-    private sanitizer: DomSanitizer,
-  ) { this.currentUserId = this.authService.uid; }
+  constructor(private threadService: ThreadService, private authService: AuthService, private messageService: MessageService, private sanitizer: DomSanitizer,) {this.currentUserId = this.authService.uid;}
 
   sendMessage(): void {
-    const textarea = document.getElementById(
-      'chat-message-input-thread'
-    ) as HTMLTextAreaElement;
+    const textarea = document.getElementById('chat-message-input-thread') as HTMLTextAreaElement;
     const messageText = this.inputText;
 
     if (messageText.trim() || this.chatImg) {
-      const message: Message = {
-        message: messageText,
-        senderId: '',
-        // senderName: '',
-        imagePath: this.chatImg!,
-        created_at: new Date(),
-        updated_at: new Date(),
-      };
-
-      // const channelId = this.channel?.id;
+      const message: Message = {message: messageText, senderId: '', imagePath: this.chatImg!, created_at: new Date(), updated_at: new Date(),};
 
       if (this.channelId) {
-        // Ensure channelId is a valid string
-        this.messageService
-          .addMessageThread(this.channelId, message, this.messageId)
-          .then(() => {
-            this.inputText = '';
-            this.chatImg = null
-            textarea.value = '';
-          });
-      } else {
-        console.error('Channel ID is undefined.');
-      }
+        this.messageService.addMessageThread(this.channelId, message, this.messageId)
+        .then(() => {this.inputText = '';this.chatImg = null; textarea.value = '';});
+      } else {console.error('Channel ID is undefined.');}
     }
   }
 
@@ -97,11 +73,7 @@ export class ThreadFooterComponent {
     let textarea = document.getElementById('chat-message-input-thread') as HTMLTextAreaElement;
     this.inputText += '@';
     textarea.focus();
-
-    this.messageService.searchUsers('').subscribe((users) => {
-      this.filteredUsers = users;
-      this.dropdownOpen = true;
-    });
+    this.messageService.searchUsers('').subscribe((users) => {this.filteredUsers = users; this.dropdownOpen = true;});
   }
 
   onInput(event: any): void {
@@ -140,9 +112,7 @@ export class ThreadFooterComponent {
 
   selectUser(user: UserLogged): void {
     const atPosition = this.inputText.lastIndexOf('@');
-    if (atPosition !== -1) {
-      this.inputText = this.inputText.substring(0, atPosition) + `@${user.username}\n `;
-    }
+    if (atPosition !== -1) {this.inputText = this.inputText.substring(0, atPosition) + `@${user.username}\n `;}
     this.filteredUsers = [];
     this.dropdownOpen = false;
     this.activeIndex = -1;
@@ -151,9 +121,7 @@ export class ThreadFooterComponent {
 
   selectChannel(channel: Channel): void {
     const hashPosition = this.inputText.lastIndexOf('#');
-    if (hashPosition !== -1) {
-      this.inputText = this.inputText.substring(0, hashPosition) + `#${channel.name}\n `;
-    }
+    if (hashPosition !== -1) {this.inputText = this.inputText.substring(0, hashPosition) + `#${channel.name}\n `;}
     this.filteredChannels = [];
     this.dropdownOpen = false;
     this.activeIndex = -1;
@@ -162,11 +130,8 @@ export class ThreadFooterComponent {
 
   moveDown(event: KeyboardEvent): void {
     if (this.dropdownOpen) {
-      if (this.filteredUsers.length > 0 && this.activeIndex < this.filteredUsers.length - 1) {
-        this.activeIndex++;
-      } else if (this.filteredChannels.length > 0 && this.activeIndex < this.filteredChannels.length - 1) {
-        this.activeIndex++;
-      }
+      if (this.filteredUsers.length > 0 && this.activeIndex < this.filteredUsers.length - 1) {this.activeIndex++;}
+      else if (this.filteredChannels.length > 0 && this.activeIndex < this.filteredChannels.length - 1) {this.activeIndex++;}
       event.preventDefault();
       this.scrollToActiveItem();
     }
@@ -174,49 +139,30 @@ export class ThreadFooterComponent {
 
   moveUp(event: KeyboardEvent): void {
     if (this.dropdownOpen) {
-      if (this.filteredUsers.length > 0 && this.activeIndex > 0) {
-        this.activeIndex--;
-      } else if (this.filteredChannels.length > 0 && this.activeIndex > 0) {
-        this.activeIndex--;
-      }
+      if (this.filteredUsers.length > 0 && this.activeIndex > 0) {this.activeIndex--;} 
+      else if (this.filteredChannels.length > 0 && this.activeIndex > 0) {this.activeIndex--;}
       event.preventDefault();
       this.scrollToActiveItem();
     }
   }
 
   selectSuggestion(): void {
-    if (this.filteredUsers.length > 0 && this.activeIndex >= 0) {
-      this.selectUser(this.filteredUsers[this.activeIndex]);
-    } else if (this.filteredChannels.length > 0 && this.activeIndex >= 0) {
-      this.selectChannel(this.filteredChannels[this.activeIndex]);
-    }
+    if (this.filteredUsers.length > 0 && this.activeIndex >= 0) {this.selectUser(this.filteredUsers[this.activeIndex]);}
+    else if (this.filteredChannels.length > 0 && this.activeIndex >= 0) {this.selectChannel(this.filteredChannels[this.activeIndex]);}
     this.dropdownOpen = false;
   }
 
   handleKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
-      if (this.dropdownOpen) {
-        this.selectSuggestion();
-        event.preventDefault();
-      } else {
-        this.sendMessage();
-      }
+      if (this.dropdownOpen) {this.selectSuggestion(); event.preventDefault();} 
+      else {this.sendMessage();}
     }
-
-    if (event.key === 'ArrowDown') {
-      this.moveDown(event);
-    }
-
-    if (event.key === 'ArrowUp') {
-      this.moveUp(event);
-    }
+    if (event.key === 'ArrowDown') {this.moveDown(event);}
+    if (event.key === 'ArrowUp') {this.moveUp(event);}
   }
 
   handleEnter(event: KeyboardEvent): void {
-    if (event.key === 'Enter' && this.dropdownOpen) {
-      this.selectSuggestion();
-      event.preventDefault();
-    }
+    if (event.key === 'Enter' && this.dropdownOpen) {this.selectSuggestion(); event.preventDefault();}
   }
 
   scrollToActiveItem(): void {
@@ -260,8 +206,7 @@ export class ThreadFooterComponent {
     const currentUser = this.authService.currentUserSig();
     if (!currentUser) return;
 
-    this.imgUploadService.uploadImgChat(currentUser.userId, file, this.channel?.id)
-      .subscribe({
+    this.imgUploadService.uploadImgChat(currentUser.userId, file, this.channel?.id).subscribe({
         next: (imagePath: string) => this.handleUploadSuccess(imagePath),
         error: (err: any) => this.handleUploadError(err)
       });
@@ -282,26 +227,14 @@ export class ThreadFooterComponent {
   }
 
 
-  triggerFileUpload(inputElement: HTMLInputElement) {
-    inputElement.click();
-  }
+  triggerFileUpload(inputElement: HTMLInputElement) {inputElement.click();}
 
   deleteImg() {
     if (this.chatImg) {
-      this.imgUploadService.deleteImgChat(this.chatImg).subscribe({
-        next: () => {
-          this.chatImg = null;
-          this.safePath = null;
-          this.isPdf = false;
-
-          const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
-          if (fileInput) {
-            fileInput.value = '';
-          }
-        },
-        error: (err: any) => {
-          console.error('Fehler beim Löschen der Datei:', err);
-        }
+      this.imgUploadService.deleteImgChat(this.chatImg).subscribe({next: () => {this.chatImg = null; this.safePath = null; this.isPdf = false;
+        const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
+        if (fileInput) {fileInput.value = '';}},
+        error: (err: any) => {console.error('Fehler beim Löschen der Datei:', err);}
       });
     }
   }
@@ -314,10 +247,7 @@ export class ThreadFooterComponent {
   addEmoji(event: any) {
     const emoji = event.emoji.native;
     const textarea = document.getElementById('chat-message-input-thread') as HTMLTextAreaElement;
-    if (textarea) {
-      textarea.value += emoji;
-      textarea.focus();
-    }
+    if (textarea) {textarea.value += emoji;textarea.focus();}
     this.showEmojiPicker = false;
   }
 
@@ -331,13 +261,8 @@ export class ThreadFooterComponent {
     const isClickInsideAutocomplete = targetElement.closest('.autocomplete-list');
     const isClickInsideTextarea = targetElement.closest('#chat-message-input');
 
-    if (!isClickInsideEmojiPicker && !isClickInsideEmojiButton) {
-      this.showEmojiPicker = false;
-    }
-
-    if (!isClickInsideAutocomplete && !isClickInsideTextarea) {
-      this.dropdownOpen = false;
-    }
+    if (!isClickInsideEmojiPicker && !isClickInsideEmojiButton) {this.showEmojiPicker = false;}
+    if (!isClickInsideAutocomplete && !isClickInsideTextarea) {this.dropdownOpen = false;}
   }
 }
 
