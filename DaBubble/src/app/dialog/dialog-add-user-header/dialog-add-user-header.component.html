@@ -8,7 +8,10 @@
     <app-dialog-add-user class="custom-width-100" [allUsers]="allUsers" [selectedUsers]="selectedUsers"
       (updatedUsers)="onUsersUpdated($event)"></app-dialog-add-user>
   </div>
-  <div class="dialog-actions">
+  <div class="dialog-actions" *ngIf="(!isGuestUser)">
     <button (click)="close(true)">Speichern</button>
+  </div>
+  <div class="row" *ngIf="isGuestUser">
+    <span class="fs-18 error-message">Gastbenutzer - nicht bearbeitbar</span>
   </div>
 </div>

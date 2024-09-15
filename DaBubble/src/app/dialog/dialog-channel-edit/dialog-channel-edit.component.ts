@@ -202,7 +202,6 @@ export class DialogChannelEditComponent {
    */
   checkIfDefaultChannel() {
     if (this.data.channelId === this.channelService.defaultChannelId) {
-      console.log(this.channelService.defaultChannelId);
       this.isDefaultChannel = true;
     } else {
       this.isDefaultChannel = false;
