@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, Firestore, updateDoc, doc, DocumentReference, setDoc, query, where, getDocs, getDoc, onSnapshot, DocumentData, DocumentSnapshot } from '@angular/fire/firestore';
+import { addDoc, collection, Firestore, updateDoc, doc, DocumentReference, setDoc, query, where, getDocs, getDoc, onSnapshot, DocumentData, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { UserLogged } from '../../models/user-logged.model';
 
@@ -34,10 +34,14 @@ export class UserLoggedService {
     });
   }
 
-  async isEmailTaken(email: string): Promise<boolean> {
-    const q = query(this.userCollection, where('email', '==', email));
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty; 
+  async isUserInFirestore(uid: string): Promise<boolean> {
+    const docRef = doc(this.userCollection, uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists() && docSnap.id === uid) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async updateUserImg(id: string, photoURL: string) {

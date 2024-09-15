@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Auth, AuthProvider, browserLocalPersistence, confirmPasswordReset, createUserWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail, setPersistence, signInWithCredential, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut, updateProfile, user, UserCredential, verifyPasswordResetCode } from '@angular/fire/auth';
-import { catchError, concatMap, from, Observable, of, switchMap, throwError } from 'rxjs';
+import { Auth, AuthProvider, browserLocalPersistence, confirmPasswordReset, createUserWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail, setPersistence, signInWithCredential, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut, updateProfile, user, UserCredential, verifyPasswordResetCode, User } from '@angular/fire/auth';
+import { BehaviorSubject, catchError, concatMap, filter, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { UserInterface } from '../../models/user.interface';
 import { UserLoggedService } from './user-logged.service';
 import { doc, getDoc } from '@angular/fire/firestore';
@@ -8,6 +8,7 @@ import { UserLogged } from '../../models/user-logged.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LandingPageComponent } from '../../landing-page/landing-page.component';
 import { ChannelService } from '../channel.service';
+import { CheckboxControlValueAccessor } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,10 @@ export class AuthService {
   channelService = inject(ChannelService);
   currentUserSig = signal<UserInterface | null | undefined>(undefined);
   uid: string = '';
+  user: UserInterface | any ;
+  avatar: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  provider = new GoogleAuthProvider();
+  userCredential? : UserCredential 
 
   constructor() {
     this.restoreUid()
@@ -122,7 +127,6 @@ export class AuthService {
     const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
       .then(async (userCredential) => {
         this.uid = userCredential.user.uid;
-        console.log('Logged UserID:', this.uid);
         await this.updateUserStatus(this.uid, true);
         return userCredential;
       })
@@ -173,43 +177,54 @@ export class AuthService {
     return from(promise);
   }
 
-  googleLogin(): Observable<void> {
-    const provider = new GoogleAuthProvider();
-    const promise = signInWithPopup(this.firebaseAuth, provider)
-      .then(async (userCredential: UserCredential) => {
-        const user: UserInterface | any = userCredential.user;
-        this.uid = user.uid;
-
-        return this.handleUserLogin(user);
+  googleLogin(): Observable<UserCredential> {
+    const promise = signInWithPopup(this.firebaseAuth, this.provider)
+      .then(async (result) => {
+        this.userCredential = result;
+        this.uid = this.userCredential.user.uid;
+        this.avatar.next(false);
+        const exists = await this.userService.isUserInFirestore(result.user.uid);
+        this.createUser(exists)
+        return result;
       })
-      .catch(this.handleLoginError);
-
-    return from(promise);
+      .catch((error) => {
+        throw error;
+      });
+    return from(promise); 
   }
 
-  private async handleUserLogin(user: UserInterface): Promise<void> {
-    const emailExists = await this.userService.isEmailTaken(user.email!);
-
-    if (emailExists) {
-      await this.updateExistingUser(user.uid!);
-      this.navigateToDashboard();
+  createUser(exists: boolean){
+    if (exists === false) {
+      this.avatar.next(true); // Neuer Benutzer
+      this.newGoogleUser();   // Führe Registrierung für neuen Benutzer aus
     } else {
-      await this.createNewUser(user);
+      this.avatar.next(false); // Benutzer existiert bereits
     }
   }
+  
+  newGoogleUser(): Observable<UserCredential> {
+    const defaultChannelId = this.channelService.defaultChannelId;
+    const displayName = this.userCredential!.user.displayName!;
+    const email = this.userCredential!.user.email!;
+    const uid = this.userCredential!.user.uid!;
+    const profileUpdate$ = from(this.updateUserProfile(this.userCredential!, displayName));
+    const saveUserToDatabase$ = from(this.saveUserToDatabase(this.userCredential!, displayName, email));
+    const addToWelcomeChannel$ = from(this.channelService.addUsersToWelcomeChannel(defaultChannelId!, [uid]));
+    return profileUpdate$.pipe(
+      switchMap(() => saveUserToDatabase$),
+      switchMap(() => addToWelcomeChannel$),
+      switchMap(() => of(this.userCredential!))
+    );
+  }
+  
+  private loginWithGoogle(): Promise<UserCredential> {
+    return signInWithPopup(this.firebaseAuth, this.provider)
+  }
 
-  private async createNewUser(user: UserInterface): Promise<void> {
-    const newUser = new UserLogged({
-      username: user.displayName!,
-      email: user.email!,
-      uid: user.uid,
-      photoURL: user.photoURL || '',
-      joinedChannels: [],
-      directMessage: [],
-      onlineStatus: true
-    });
-
-    await this.userService.addUser(newUser);
+  saveUserToFirestore(user: UserInterface): Observable<void> {
+    const currentUser = this.createUserObject(user.uid!, user.displayName!, user.email)
+  
+    return from(this.userService.addUser(currentUser));
   }
 
   private async updateExistingUser(userId: string): Promise<void> {
@@ -233,10 +248,8 @@ export class AuthService {
     }
   }
 
-
   ngOnDestroy() {
     window.removeEventListener('storage', this.handleStorageChange.bind(this));
   }
-
 
 }

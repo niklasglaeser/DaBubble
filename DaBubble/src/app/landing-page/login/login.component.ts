@@ -6,6 +6,9 @@ import { LandingPageComponent } from '../landing-page.component';
 import { AuthService } from '../../services/lp-services/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { UserInterface } from '../../models/user.interface';
+import { UserLoggedService } from '../../services/lp-services/user-logged.service';
+import { UserLogged } from '../../models/user-logged.model';
 
 @Component({
   selector: 'app-login',
@@ -28,12 +31,14 @@ import { HttpClient } from '@angular/common/http';
  * is viewed on a mobile device.
  */
  export class LoginComponent {
-  authService = inject(AuthService);  // Injects the authentication service for managing user authentication.
-  router = inject(Router);  // Injects the Angular Router for navigation.
-  http = inject(HttpClient);  // Injects the HttpClient for making HTTP requests.
-  isSubmited: boolean = false;  // Tracks if the form has been submitted.
-  errorM: string | null = null;  // Stores error messages for the login process.
-  mobileVersion?: boolean;  // Indicates whether the app is being viewed on a mobile device.
+  authService = inject(AuthService); 
+  userService = inject(UserLoggedService) 
+  router = inject(Router);  
+  http = inject(HttpClient);  
+  isSubmited: boolean = false;  
+  errorM: string | null = null; 
+  mobileVersion?: boolean; 
+  toAvatar?: boolean; 
 
   // Reactive form for login, including validation for email and password fields.
   registerForm = this.fb.group({
@@ -58,6 +63,10 @@ import { HttpClient } from '@angular/common/http';
     this.lp.$mobileVersion.subscribe(isMobile => {
       this.mobileVersion = isMobile;
     });
+    this.authService.avatar.subscribe(avatar => {
+      this.toAvatar = avatar;
+    });
+
   }
 
   /**
@@ -139,17 +148,31 @@ import { HttpClient } from '@angular/common/http';
    * 
    * @returns {void} - Does not return anything.
    */
-  googleLogin(): void {
+  googleLogin() {
     this.authService.googleLogin().subscribe({
-      next: () => {
-        this.lp.resetAllStates();
-        this.lp.$avatar = true;
+      next: (userCredential) => {
+        this.toSelectAvatarOrDasboard()
       },
       error: (err) => {
         this.errorM = 'Google Anmeldung fehlgeschlagen. Bitte versuchen Sie es noch einmal.';
-        console.error('Error during Google login:', err);
-      },
+        console.error(err);
+      }
     });
   }
-}
+
+  reloadPage() {
+    this.errorM = null;
+    window.location.reload(); 
+  }
+
+  toSelectAvatarOrDasboard(){
+    if(this.toAvatar === true){
+    this.errorM = null;
+    this.lp.resetAllStates();
+    this.lp.$avatar = true; 
+    } else{
+      this.reloadPage()
+    }
+  }
+ } 
 

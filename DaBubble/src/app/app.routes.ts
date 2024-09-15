@@ -9,6 +9,6 @@ export const routes: Routes = [
   { path: '', component: LandingPageComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]  },
   { path: ':action', component: LandingPageComponent},
- 
+
 ];
 

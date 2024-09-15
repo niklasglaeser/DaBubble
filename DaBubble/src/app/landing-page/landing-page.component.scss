@@ -36,7 +36,6 @@ $animation-time-long: 0.5s;
   position: relative;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
 }
 
 .content {
@@ -243,8 +242,16 @@ app-privacy-policy {
 }
 
 app-pop-up {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin-inline: auto;
+  z-index: 100;
   max-width: 1920px;
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  overflow: hidden;
 }
 

@@ -81,10 +81,13 @@ async subscribeToUserData(): Promise<void> {
   if (this.authService.uid) {
     await this.userService.subscribeUser(this.authService.uid).subscribe((data) => {
       this.currentUser = data;
-      this.name = this.currentUser.username;
+      this.name = this.authService.userCredential?.user.displayName!
+      if(data){
+        this.name = this.currentUser.username ;
       if (this.profileImg === null) {
         this.setDefaultProfileImage();
       } 
+    }
     });
   }
 }
@@ -130,6 +133,7 @@ choseAvatar(index: number): void {
 backToSignUp(): void {
   this.lp.resetAllStates();
   this.lp.$signUp = true;
+  this.authService.avatar.next(false)
 }
 
 
@@ -264,6 +268,7 @@ backToSignUp(): void {
  */
  backToLogin(): void {
   this.authService.uid = '';
+  this.authService.avatar.next(false)
   this.lp.resetAllStates();
   this.lp.$login = true;
 }
