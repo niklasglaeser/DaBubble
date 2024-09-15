@@ -28,11 +28,15 @@ export class DialogOverviewUsersComponent {
     this.users = data.users;
   }
 
+  /**
+   * Opens the DialogEditProfilComponent to allow editing of the user's profile.
+   * After the dialog is closed, if the user has been updated, updates the user list.
+   * @param {UserLogged} user - The user whose profile is to be edited.
+   */
   openProfil(user: UserLogged) {
     const dialogRef = this.dialog.open(DialogEditProfilComponent, {
       data: { user: user }
     });
-
     dialogRef.afterClosed().subscribe((updatedUser: UserLogged) => {
       if (updatedUser) {
         this.updateUserList(updatedUser);
@@ -40,6 +44,11 @@ export class DialogOverviewUsersComponent {
     });
   }
 
+  /**
+   * Updates the member list with the updated user data.
+   * Finds the user in the list and updates the entry if the user exists.
+   * @param {UserLogged} updatedUser - The user object with updated information.
+   */
   updateUserList(updatedUser: UserLogged) {
     const index = this.members.findIndex((member) => member.uid === updatedUser.uid);
     if (index !== -1) {
@@ -55,4 +64,5 @@ export class DialogOverviewUsersComponent {
   close() {
     this.dialogRef.close();
   }
+
 }

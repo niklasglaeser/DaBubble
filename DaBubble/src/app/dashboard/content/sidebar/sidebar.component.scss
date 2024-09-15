@@ -133,7 +133,6 @@ app-search {
 
 .channel {
   display: flex;
-  // justify-content: center;
   align-items: center;
   gap: 10px;
   cursor: pointer;
@@ -144,7 +143,6 @@ app-search {
     gap: 14px;
     padding: 4px 26px;
     > span {
-      // max-width: 250px;
       display: inline-block;
       max-width: 190px;
       overflow: hidden;
@@ -172,28 +170,13 @@ app-search {
 
       svg path {
         fill: var(--purple3);
-        /*
-        @media (max-width: 790px) {
-          fill: black;
-        }
-        */
       }
-      
-      /*
-      @media (max-width: 790px) {
-        color: var(--lighterPurple);
-        background-color: transparent;
-        color: inherit;
-        border-radius: 0;
-      }
-      */
     }
   }
 }
 
 .addChannel {
   display: flex;
-  // justify-content: center;
   align-items: center;
   gap: 15px;
   padding-left: 26px;
@@ -242,11 +225,9 @@ app-search {
 
 .directUserName {
   display: inline-block;
-  // max-width: 190px;
   overflow-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
-
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;

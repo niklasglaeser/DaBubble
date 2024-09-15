@@ -1,4 +1,3 @@
-// src/app/dialog-add-channel/dialog-add-channel.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -12,7 +11,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 import { UserLogged } from '../../models/user-logged.model';
-import { arrayUnion, doc, Firestore, updateDoc } from '@angular/fire/firestore';
+import { arrayUnion, Firestore, updateDoc } from '@angular/fire/firestore';
 import { AuthService } from '../../services/lp-services/auth.service';
 
 @Component({
@@ -55,39 +54,37 @@ export class DialogAddChannelComponent implements OnInit {
     });
   }
 
+  /**
+   * Initializes the component by subscribing to the users observable.
+   */
   ngOnInit(): void {
     this.userService.users$.subscribe((users) => {
       this.users = users;
     });
   }
 
+  /**
+   * Handles the submission of the add channel form.
+   * Validates the form, checks for duplicate channel names,
+   * creates a new channel, and updates the channel state.
+   */
   async submit() {
     if (this.addChannelForm.valid) {
       let formData = this.addChannelForm.value;
       let newChannelName = formData.name;
-
       try {
         if (!this.allowDuplicateNames) {
           const nameExists = await this.channelService.checkChannelExists(newChannelName);
           if (nameExists) {
-            this.errorMessage = true;
-            setInterval(() => {
-              this.errorMessage = false;
-            }, 2000);
+            this.displayErrorMessage();
             return;
           }
         }
         const currentUser = this.authService.currentUserSig();
-        let newChannel = new Channel({
-          name: formData.name,
-          description: formData.description,
-          creator: currentUser?.username
-        });
+        let newChannel = this.createNewChannel(formData, currentUser);
         let channelId = await this.channelService.createChannel(newChannel);
         if (channelId) {
-          this.channelName = formData.name;
-          this.createdChannel = channelId;
-          this.currentStep = 'user';
+          this.updateChannelState(formData, channelId);
         }
       } catch (e) {
         console.error('Error creating channel:', e);
@@ -95,6 +92,10 @@ export class DialogAddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles the submission of the add user form.
+   * Adds selected users to the newly created channel and updates their profiles.
+   */
   async submitUser() {
     if (this.addUserForm.valid && this.createdChannel) {
       let userIds: string[] = [];
@@ -118,6 +119,12 @@ export class DialogAddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Updates user profiles by adding the channel ID to their list of joined channels.
+   * @param {string[]} userIds - Array of user IDs to update.
+   * @param {string} channelId - ID of the channel to add to the users' profiles.
+   * @throws Will throw an error if updating the user profiles fails.
+   */
   async updateUserProfilesWithChannel(userIds: string[], channelId: string) {
     try {
       for (const userId of userIds) {
@@ -132,6 +139,10 @@ export class DialogAddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Removes a user from the selected users list and adds them back to the filtered users list.
+   * @param {UserLogged} user - The user to remove.
+   */
   removeUser(user: UserLogged): void {
     this.selectedUsers = this.selectedUsers.filter((u) => u.uid !== user.uid);
     let alreadyInFilteredUsers = this.filteredUsers.some((u) => u.uid === user.uid);
@@ -140,6 +151,42 @@ export class DialogAddChannelComponent implements OnInit {
       this.filteredUsers.push(user);
       this.filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
     }
+  }
+
+  /**
+   * Creates a new Channel object with the provided form data and current user.
+   * @param {any} formData - The data from the add channel form.
+   * @param {any} currentUser - The current authenticated user.
+   * @returns {Channel} A new Channel object.
+   */
+  createNewChannel(formData: any, currentUser: any): Channel {
+    return new Channel({
+      name: formData.name,
+      description: formData.description,
+      creator: currentUser?.username
+    });
+  }
+
+  /**
+   * Updates the component's state with the new channel information.
+   * @param {any} formData - The data from the add channel form.
+   * @param {string} channelId - The ID of the newly created channel.
+   */
+  updateChannelState(formData: any, channelId: string): void {
+    this.channelName = formData.name;
+    this.createdChannel = channelId;
+    this.currentStep = 'user';
+  }
+
+  /**
+   * Displays an error message for a specified duration.
+   * @param {number} [duration=2000] - The duration in milliseconds to display the error message.
+   */
+  displayErrorMessage(duration: number = 2000): void {
+    this.errorMessage = true;
+    setTimeout(() => {
+      this.errorMessage = false;
+    }, duration);
   }
 
   close() {
