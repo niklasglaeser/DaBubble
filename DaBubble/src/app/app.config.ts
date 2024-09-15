@@ -28,6 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
+    { provide: LocationStrategy, useClass: HashLocationStrategy },  
   ],
 };
 
