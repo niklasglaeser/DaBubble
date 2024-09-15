@@ -1,6 +1,8 @@
 <div class="container">
+    
     <app-pop-up *ngIf="$registration || $emailSend || $setNewPW"></app-pop-up>
-
+    
+    
     <div class="content">
 
         <div [ngClass]="{'animation': !animated}" class="logo-box" (click)="toLandingPage()">
