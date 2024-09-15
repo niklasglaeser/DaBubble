@@ -22,13 +22,13 @@ export class UserService {
   }
 
   ngOnDestroy(): void {
-    if (this.unsubList) {this.unsubList();}
+    if (this.unsubList) { this.unsubList(); }
   }
 
   getUsersList() {
     return onSnapshot(this.getUsersRef(), (snapshot) => {
       let users: UserLogged[] = [];
-      snapshot.forEach((doc) => {users.push(doc.data() as UserLogged);});
+      snapshot.forEach((doc) => { users.push(doc.data() as UserLogged); });
       this.usersSubject.next(users);
     });
   }
@@ -36,19 +36,19 @@ export class UserService {
   async updateUser(userId: string, user: UserLogged) {
     try {
       let userDocRef = this.getSingleUser(userId);
-      await updateDoc(userDocRef, {username: user.username, email: user.email});
-    } catch (e) {console.error('Error updating user: ', e);}
+      await updateDoc(userDocRef, { username: user.username, email: user.email });
+    } catch (e) { console.error('Error updating user: ', e); }
   }
 
   async getSingleUserObj(docId: string): Promise<UserLogged | null> {
-    if (!docId) {console.error('Invalid document ID!'); return null;}
+    if (!docId) { console.error('Invalid document ID!'); return null; }
 
     try {
       let userDocRef = doc(this.firestore, `Users/${docId}`);
       let docSnap = await getDoc(userDocRef);
-      if (docSnap.exists()) {return { uid: docSnap.id, ...docSnap.data() } as UserLogged;}
-      else {console.error('No such user!'); return null;}
-    } catch (error) {console.error('Error fetching user document:', error); return null;}
+      if (docSnap.exists()) { return { uid: docSnap.id, ...docSnap.data() } as UserLogged; }
+      else { return null; }
+    } catch (error) { console.error('Error fetching user document:', error); return null; }
   }
 
   getSingleUser(docId: string) {

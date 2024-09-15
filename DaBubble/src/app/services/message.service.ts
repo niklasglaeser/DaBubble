@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDoc, onSnapshot, orderBy, query, Timestamp, updateDoc,} from '@angular/fire/firestore'
+import { addDoc, arrayUnion, collection, collectionData, deleteDoc, doc, Firestore, getDoc, onSnapshot, orderBy, query, Timestamp, updateDoc, } from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
 import { Message } from '../models/message.model'
 import { Reaction } from '../models/reaction.model'
@@ -16,42 +16,42 @@ export class MessageService {
   async addMessage(channelId: string, message: Message) {
     let messagesRef = collection(this.firestore, 'channels', channelId, 'messages');
     let currentUser = this.authService.currentUserSig()
-    await addDoc(messagesRef, {...message, created_at: Date.now(), updated_at: Date.now(), senderId: currentUser?.userId || 'Unknown User',})
+    await addDoc(messagesRef, { ...message, created_at: Date.now(), updated_at: Date.now(), senderId: currentUser?.userId || 'Unknown User', })
   }
 
   async updateMessage(channelId: string, messageId: string, newMessageText: string) {
     try {
       let messageDocRef = this.getSingleMessage(channelId, messageId)
-      await updateDoc(messageDocRef, {message: newMessageText, updated_at: Date.now(),})
-    } catch (e) {console.error('Error updating document:', e)}
+      await updateDoc(messageDocRef, { message: newMessageText, updated_at: Date.now(), })
+    } catch (e) { console.error('Error updating document:', e) }
   }
 
   async deleteMessage(channelId: string, messageId: string): Promise<void> {
     try {
       let messageDocRef = this.getSingleMessage(channelId, messageId);
       await deleteDoc(messageDocRef);
-    } catch (e) {console.error('Error deleting message:', e);}
+    } catch (e) { console.error('Error deleting message:', e); }
   }
 
   async addMessageThread(channelId: string, message: Message, messageId: string) {
     let messagesRef = collection(this.firestore, 'channels', channelId, 'messages', messageId, 'thread')
     let currentUser = this.authService.currentUserSig()
 
-    await addDoc(messagesRef, {...message, created_at: Date.now(), updated_at: Date.now(), senderId: currentUser?.userId || 'Unknown User',})
+    await addDoc(messagesRef, { ...message, created_at: Date.now(), updated_at: Date.now(), senderId: currentUser?.userId || 'Unknown User', })
   }
 
   async updateThreadMessage(channelId: string, messageId: string, threadId: string, newMessageText: string) {
     try {
       let messageDocRef = this.getSingleThreadMessage(channelId, messageId, threadId)
-      await updateDoc(messageDocRef, {message: newMessageText,updated_at: Date.now(),})
-    } catch (e) {console.error('Error updating document:', e)}
+      await updateDoc(messageDocRef, { message: newMessageText, updated_at: Date.now(), })
+    } catch (e) { console.error('Error updating document:', e) }
   }
 
   async deleteMessageThread(channelId: string, messageId: string, threadId: string): Promise<void> {
     try {
       let messageDocRef = this.getSingleThreadMessage(channelId, messageId, threadId);
       await deleteDoc(messageDocRef);
-    } catch (e) {console.error('Error deleting message:', e);}
+    } catch (e) { console.error('Error deleting message:', e); }
   }
 
 
@@ -61,7 +61,7 @@ export class MessageService {
       let q = query(userCollection, orderBy('username'));
 
       let unsubscribe = onSnapshot(q, snapshot => {
-        let users = snapshot.docs.map(doc => {let data = doc.data() as UserLogged; return data;}).filter(user => user.username.toLowerCase().includes(searchText.toLowerCase()));
+        let users = snapshot.docs.map(doc => { let data = doc.data() as UserLogged; return data; }).filter(user => user.username.toLowerCase().includes(searchText.toLowerCase()));
         observer.next(users);
       }, error => observer.error(error));
       return () => unsubscribe();
@@ -75,7 +75,7 @@ export class MessageService {
 
       const unsubscribe = onSnapshot(q, snapshot => {
         const channels = snapshot.docs
-          .map(doc => {let data = doc.data() as Channel; return data;})
+          .map(doc => { let data = doc.data() as Channel; return data; })
           .filter(channel => channel.name.toLowerCase().includes(searchText.toLowerCase()) && channel.members?.includes(userId));
         observer.next(channels);
       }, error => observer.error(error));
@@ -91,14 +91,14 @@ export class MessageService {
       let messagesQuery = query(messagesRef, orderBy('created_at', 'asc'));
 
       onSnapshot(messagesQuery, async (message) => {
-        let messages = message.docs.map((doc) => ({id: doc.id, ...doc.data(),})) as Message[]
+        let messages = message.docs.map((doc) => ({ id: doc.id, ...doc.data(), })) as Message[]
 
         let addUser = messages.map(async (message) => {
           let userDocRef = doc(this.firestore, `Users/${message.senderId}`);
           let userDoc = await getDoc(userDocRef);
           let userData: UserLogged | null = null;
-          if (userDoc.exists()) {let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged);}
-          return {...message, senderName: userData!.username, photoURL: userData!.photoURL,};
+          if (userDoc.exists()) { let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged); }
+          return { ...message, senderName: userData!.username, photoURL: userData!.photoURL, };
         })
         let messagesWithUserData = await Promise.all(addUser)
         observer.next(messagesWithUserData)
@@ -108,17 +108,17 @@ export class MessageService {
 
   getThreadMessagesWithUsers(channelId: string, messageId: string): Observable<Message[]> {
     return new Observable((observer) => {
-      let threadRef = collection(this.firestore,`channels/${channelId}/messages/${messageId}/thread`)
+      let threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`)
       let threadQuery = query(threadRef, orderBy('created_at', 'asc'))
 
       onSnapshot(threadQuery, async (snapshot) => {
-        let messages = snapshot.docs.map((doc) => ({id: doc.id, ...doc.data(),})) as Message[];
+        let messages = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data(), })) as Message[];
         let addUser = messages.map(async (message) => {
           let userDocRef = doc(this.firestore, `Users/${message.senderId}`)
           let userDoc = await getDoc(userDocRef)
           let userData: UserLogged | null = null
-          if (userDoc.exists()) {let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged)}
-          return {...message, senderName: userData!.username, photoURL: userData!.photoURL,}
+          if (userDoc.exists()) { let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged) }
+          return { ...message, senderName: userData!.username, photoURL: userData!.photoURL, }
         })
         let messagesWithUserData = await Promise.all(addUser)
         observer.next(messagesWithUserData)
@@ -143,13 +143,13 @@ export class MessageService {
           let userDoc = await getDoc(userDocRef);
           let userData: UserLogged | null = null;
 
-          if (userDoc.exists()) {let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged);}
-          let messageWithUserData = {id: docSnapshot.id, ...data, senderName: userData?.username || 'Unknown User', photoURL: userData?.photoURL || '',};
+          if (userDoc.exists()) { let userObj = userDoc.data(); userData = new UserLogged(userObj as UserLogged); }
+          let messageWithUserData = { id: docSnapshot.id, ...data, senderName: userData?.username || 'Unknown User', photoURL: userData?.photoURL || '', };
           observer.next(messageWithUserData);
         } else {
           observer.next(null);
         }
-      }, (error) => {observer.error(error);});
+      }, (error) => { observer.error(error); });
     });
   }
 

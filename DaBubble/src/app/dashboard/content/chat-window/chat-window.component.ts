@@ -59,7 +59,7 @@ export class ChatWindowComponent implements OnInit {
         this.subscribeToChannelData();
         this.loadMessages(channelId);
         await this.getCurrentUserId();
-        if (this.userId) {this.loadCurrentUser(this.userId);}
+        if (this.userId) { this.loadCurrentUser(this.userId); }
         this.scrollToBottom()
       }
     });
@@ -67,7 +67,7 @@ export class ChatWindowComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.unsubscribe) {this.unsubscribe();}
+    if (this.unsubscribe) { this.unsubscribe(); }
   }
 
   subscribeToChannelData() {
@@ -76,7 +76,7 @@ export class ChatWindowComponent implements OnInit {
         this.channelId,
         (channel) => {
           this.channel = channel;
-          if (this.channel && this.channel.members) {this.loadChannelMembers(this.channel.members);}
+          if (this.channel && this.channel.members) { this.loadChannelMembers(this.channel.members); }
         }
       );
     }
@@ -89,19 +89,19 @@ export class ChatWindowComponent implements OnInit {
       messages.forEach((message) => {
         let messageId = message.id;
         this.threadService.getThreadMessageCount(this.channelId, messageId!)
-          .subscribe((count) => {this.threadCounts.set(messageId!, count);});
+          .subscribe((count) => { this.threadCounts.set(messageId!, count); });
         this.threadService.getLastThreadMessageTime(this.channelId, messageId!)
-          .subscribe((lastMessageTime) => {this.lastThreadMessageTimes.set(messageId!, lastMessageTime);});
+          .subscribe((lastMessageTime) => { this.lastThreadMessageTimes.set(messageId!, lastMessageTime); });
       });
     });
   }
 
-  countMessages(messages: any){
+  countMessages(messages: any) {
     let newMessageCount = messages.length;
-      if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) {setTimeout(() => { this.scrollToBottom(); }, 500);}
-      this.previousMessageCount = newMessageCount;
-    }
-  
+    if (newMessageCount > this.previousMessageCount && this.isUserAtBottom()) { setTimeout(() => { this.scrollToBottom(); }, 500); }
+    this.previousMessageCount = newMessageCount;
+  }
+
 
   private isUserAtBottom(): boolean {
     let element = this.chatContainer.nativeElement;
@@ -113,27 +113,23 @@ export class ChatWindowComponent implements OnInit {
   }
 
   async loadChannelMembers(memberIds: string[]): Promise<void> {
-    let members: UserLogged[] = [];
-    for (let userId of memberIds) {
-      let user = await this.userService.getSingleUserObj(userId);
-      if (user) {members.push(user);} 
-      else {console.error(`User with ID ${userId} could not be found.`);}
-    }
+    const memberPromises = memberIds.map(userId => this.userService.getSingleUserObj(userId));
+    const members = (await Promise.all(memberPromises)).filter(user => user !== null) as UserLogged[];
     this.members = members;
   }
 
   async loadAllUsers() {
-    this.userService.users$.subscribe((users) => {this.users = users;});
+    this.userService.users$.subscribe((users) => { this.users = users; });
   }
 
   async loadCurrentUser(userId: string) {
     let user = await this.userService.getSingleUserObj(userId);
-    if (user) {this.currentUser = user;}
+    if (user) { this.currentUser = user; }
   }
 
   async getCurrentUserId() {
     const currentUser = this.authService.currentUserSig();
-    if (currentUser) {this.userId = currentUser.userId;}
+    if (currentUser) { this.userId = currentUser.userId; }
   }
 
   /*
