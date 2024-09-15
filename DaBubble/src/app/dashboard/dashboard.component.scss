@@ -1,11 +1,14 @@
 main {
     max-width: 1920px;
     width: 100%;
-    height: 100svh;
     background-color: var(--bgColor);
     margin: 0 auto;
     overflow: hidden;
-    min-height: 970px;
+    height: 100svh;
+    min-height: 950px;
+    @media (max-width:1200px) {
+      min-height: 920px;
+    }
     scroll-behavior: smooth;
 
     &::-webkit-scrollbar {
@@ -47,6 +50,5 @@ main {
         padding-right: 20px;
         padding-left: 0;
         padding-bottom: 10px;
-        height: calc(100svh - 110px);
     }
 }

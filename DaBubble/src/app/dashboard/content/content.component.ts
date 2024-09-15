@@ -90,6 +90,7 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.checkWindowSize(event.target.innerWidth);
+    this.showWorkspaceToggle = window.innerWidth > 1210 && window.innerWidth <= 1920;
   }
 
   checkWindowSize(newWidth: number) {
@@ -99,7 +100,6 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   }
 
   updateLayoutMobile() {
-    this.showWorkspaceToggle = window.innerWidth > 1210;
     this.isMobile = true;
     this.showSidebar = false;
     this.sidebarService.setIsMobile(this.isMobile);
@@ -110,7 +110,6 @@ export class ContentComponent implements OnInit, AfterContentChecked {
   }
 
   updateLayoutDesktop() {
-    this.showWorkspaceToggle = window.innerWidth <= 1920;
     this.isMobile = false;
     this.showSidebar = true;
     this.sidebarService.setIsMobile(this.isMobile);
