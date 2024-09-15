@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DialogAddChannelComponent } from '../../../dialog/dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChannelEditComponent } from '../../../dialog/dialog-channel-edit/dialog-channel-edit.component';
@@ -22,7 +22,7 @@ import { GlobalService } from '../../../services/global.service';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   @ViewChild('dialogAddChannel')
   dialogAddChannelComponent!: DialogAddChannelComponent;
 
@@ -43,13 +43,15 @@ export class SidebarComponent implements OnInit {
   channels: any = [];
   channelsSubscription!: Subscription;
   selectedChannelId: string | null = null;
-  fixedChannelId: string = 'IiKdwSHaVmXdf2JiliaU';
+  readonly fixedChannelId: string = 'IiKdwSHaVmXdf2JiliaU';
 
   users: UserLogged[] = [];
   directMessagesUsers: UserLogged[] = [];
   unsubscribe: any;
 
   currentUser: UserLogged | null = null;
+
+  private subscriptions: Subscription[] = [];
 
   constructor(public dialog: MatDialog, private channelService: ChannelService, private userService: UserService, private channelStateService: ChannelStateService, private authService: AuthService, private dmService: DirectMessagesService, private cdref: ChangeDetectorRef, private globalService: GlobalService) { }
 
@@ -62,11 +64,12 @@ export class SidebarComponent implements OnInit {
    * Subscribes to various services to handle users, channels, and direct messages.
    */
   ngOnInit(): void {
-    this.userService.users$.subscribe((users) => {
+    const usersSub = this.userService.users$.subscribe((users) => {
       this.users = users;
     });
+    this.subscriptions.push(usersSub);
 
-    this.channelService.channels$.subscribe((channels) => {
+    const channelsSub = this.channelService.channels$.subscribe((channels) => {
       this.channels = channels;
       // this.channels = channels.sort((a, b) => a.name.localeCompare(b.name));
       if (!this.isMobile) {
@@ -77,6 +80,8 @@ export class SidebarComponent implements OnInit {
         }
       }
     });
+    this.subscriptions.push(channelsSub);
+
 
     this.channelStateService.emitOpenDirectMessage.subscribe((userId: string) => {
       this.openDirectmessage(userId);
@@ -96,6 +101,10 @@ export class SidebarComponent implements OnInit {
       }
     });
     this.loadDmConvos();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**
