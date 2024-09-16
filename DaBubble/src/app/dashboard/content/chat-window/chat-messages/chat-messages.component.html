@@ -40,7 +40,7 @@
                             <div *ngIf="isMessageEmpty" class="error-message">Die Nachricht darf nicht leer sein.</div>
                         </ng-template>
                         <div class="open-thread">
-                            <div class="open-answers fs-14" (click)="openThread(channelId, message.id!, message)"><span *ngIf="getReplayCount(message.id!)">{{ threadCounts.get(message.id!) }}Antworten</span></div>
+                            <div class="open-answers fs-14" (click)="openThread(channelId, message.id!, message)"><span *ngIf="getReplayCount(message.id!)">{{ threadCounts.get(message.id!) }} Antworten</span></div>
                             <div class="fs-10 last-answer"><span *ngIf="getAnswerTime(message.id!) as answerTime">Letzte Antwort: {{formatTime(answerTime) }}</span></div>
                         </div>
                         <div class="reactions">

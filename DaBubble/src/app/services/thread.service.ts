@@ -14,25 +14,37 @@ export class ThreadService {
 
   constructor(private firestore: Firestore, private messageService: MessageService) { }
 
+
+  /**
+   * get thread messages for a given channel and message ID.
+   * Includes the origin message at the beginning of the messages array.
+   * @param channelId The ID of the channel.
+   * @param messageId The ID of the message.
+   * @returns An Observable emitting an array of Messages, including the origin message.
+   */
   getThreadMessages(channelId: string, messageId: string): Observable<Message[]> {
     return new Observable<Message[]>((observer) => {
       let threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
       let threadQuery = query(threadRef);
       let originMessageRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
-
-      onSnapshot(threadQuery, async (snapshot) => {
-        let threadMessages = snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})) as Message[];
+      onSnapshot(threadQuery, async (snapshot) => {let threadMessages = snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})) as Message[];
         try {
           let originMessageSnapshot = await getDoc(originMessageRef);
-          if (originMessageSnapshot.exists()) {
-            let originMessage = originMessageSnapshot.data() as Message;
-            observer.next([originMessage, ...threadMessages]);
-          } else {observer.next(threadMessages);}
+          if (originMessageSnapshot.exists()) { let originMessage = originMessageSnapshot.data() as Message; observer.next([originMessage, ...threadMessages]);}
+          else {observer.next(threadMessages);}
         } catch (error) {console.error('Fehler beim Abrufen der Originalnachricht:', error); observer.next(threadMessages);}
       });
     });
   }
 
+  /**
+   * Checks for existing thread messages and sets the selected message.
+   * If no thread exists, logs that it's ready for new replies.
+   * @param channelId The ID of the channel.
+   * @param messageId The ID of the message.
+   * @param originMessage The original message object.
+   * @returns A Promise that resolves when the operation is complete.
+   */
   async checkAndCreateThread(channelId: string, messageId: string, originMessage: Message) {
     try {
       let threadMessages$ = this.getThreadMessages(channelId, messageId);
@@ -42,9 +54,11 @@ export class ThreadService {
     } catch (error) {console.error('Fehler beim Überprüfen oder Erstellen des Threads:', error);}
   }
 
+
   setSelectedMessage(channelId: string, messageId: string, originMessage: Message) {
     this.selectedMessageSource.next({ channelId, messageId, originMessage });
   }
+
 
   getThreadMessageCount(channelId: string, messageId: string): Observable<number> {
     return new Observable<number>((observer) => {
@@ -57,11 +71,14 @@ export class ThreadService {
     });
   }
 
+   /**
+   * Retrieves the timestamp of the last message in a thread.
+   * @param channelId The ID of the channel.
+   * @param messageId The ID of the message.
+   * @returns An Observable emitting the date of the last message, or null if no messages exist.
+   */
   getLastThreadMessageTime(channelId: string, messageId: string): Observable<Date | null> {
-    return new Observable<Date | null>((observer) => {
-      let threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`);
-      let lastMessageQuery = query(threadRef, orderBy('created_at', 'desc'), limit(1));
-
+    return new Observable<Date | null>((observer) => {let threadRef = collection(this.firestore, `channels/${channelId}/messages/${messageId}/thread`); let lastMessageQuery = query(threadRef, orderBy('created_at', 'desc'), limit(1));
       onSnapshot(lastMessageQuery, (snapshot) => {
         if (snapshot.empty) {observer.next(null);}
         else {

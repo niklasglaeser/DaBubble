@@ -77,6 +77,11 @@ export class ChatFooterComponent {
     this.messageService.searchUsers('').subscribe((users) => {this.filteredUsers = users; this.dropdownOpen = true;});
   }
 
+  /**
+  * Handles the input event for the text input field.
+  *
+  * @param {Event} event - The input event object.
+  */
   onInput(event: any): void {
     let inputValue = this.inputText;
 
@@ -109,6 +114,11 @@ export class ChatFooterComponent {
     this.hasSelectedUser = true;
   }
 
+  /**
+  * Handles the keyboard event for moving the active item down in the dropdown.
+  *
+  * @param {KeyboardEvent} event - The keyboard event object.
+  */
   moveDown(event: KeyboardEvent): void {
     if (this.dropdownOpen) {
       if (this.filteredUsers.length > 0 && this.activeIndex < this.filteredUsers.length - 1) {this.activeIndex++;}
@@ -118,6 +128,11 @@ export class ChatFooterComponent {
     }
   }
 
+  /**
+  * Handles the keyboard event for moving the active item up in the dropdown.
+  *
+  * @param {KeyboardEvent} event - The keyboard event object.
+  */
   moveUp(event: KeyboardEvent): void {
     if (this.dropdownOpen) {
       if (this.filteredUsers.length > 0 && this.activeIndex > 0) {this.activeIndex--;} 
@@ -225,6 +240,13 @@ export class ChatFooterComponent {
     this.showEmojiPicker = false;
   }
 
+  /**
+  * Listens for click events outside the component and handles closing dropdowns.
+  *
+  * @hostListener('document:click', ['$event'])
+  *
+  * @param {MouseEvent} event - The click event object.
+  */
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
     let targetElement = event.target as HTMLElement;
