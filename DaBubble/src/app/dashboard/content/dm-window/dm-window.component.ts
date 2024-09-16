@@ -31,6 +31,7 @@ export class DmWindowComponent implements OnInit {
     let textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
     setTimeout(() => {
       textarea.focus();
+      textarea.value = '';
     }, 0);
     setTimeout(() => {this.scrollToBottom();}, 500);
   }

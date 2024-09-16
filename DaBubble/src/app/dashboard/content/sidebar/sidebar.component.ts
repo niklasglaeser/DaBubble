@@ -170,11 +170,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.isDirectChat = false;
     this.channelStateService.setSelectedChannelId(channelId);
     this.channelOpened.emit();
-    let textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
-    textarea.value = '';
-    setTimeout(() => {
-      textarea.focus();
-    }, 500);
   }
 
   /**
@@ -198,11 +193,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.selectedChannelId = null;
     this.selectedUserId = userId;
     this.isDirectChat = true;
-    let textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
-    textarea.value = '';
-    setTimeout(() => {
-      textarea.focus();
-    }, 100);
   }
 
   /**

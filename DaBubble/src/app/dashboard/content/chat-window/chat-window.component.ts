@@ -60,11 +60,12 @@ export class ChatWindowComponent implements OnInit {
         this.loadMessages(channelId);
         await this.getCurrentUserId();
         if (this.userId) { this.loadCurrentUser(this.userId); }
-        this.scrollToBottom()
+        this.scrollToBottom();
         let textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
         setTimeout(() => {
           textarea.focus();
-        }, 100);
+          textarea.value = '';
+        }, 500);
       }
     });
     // this.deviceService.deviceType$.subscribe((type) => {this.deviceType = type;})
