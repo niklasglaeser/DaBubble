@@ -84,7 +84,6 @@ export class ContentComponent implements OnInit, AfterContentChecked {
     this.sidebarService.toggleSidebar();
     let isSidebarOpen = this.sidebarService.getSidebarStatus();
     let isThreadOpen = this.sidebarService.getThreadStatus();
-    if (isSidebarOpen && isThreadOpen) { this.sidebarService.isThread(false);}
   }
 
   @HostListener('window:resize', ['$event'])
