@@ -100,7 +100,6 @@ export class UserLoggedService {
       const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
         await updateDoc(docRef, { onlineStatus: status });
-        console.log('Document successfully updated.');
       }
     } catch (error) {
       console.error('Error updating document:', error);
@@ -121,8 +120,7 @@ export class UserLoggedService {
  async addUser(user: UserLogged): Promise<void> {
   try {
     const userDocRef = doc(this.userCollection, user.uid); 
-    await setDoc(userDocRef, user.toJSON()); 
-    console.log("User document successfully created with UID:", user.uid);
+    await setDoc(userDocRef, user.toJSON());
   } catch (err) {
     // Silently handle the error
   }
