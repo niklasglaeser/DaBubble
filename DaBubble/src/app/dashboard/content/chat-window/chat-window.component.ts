@@ -30,6 +30,8 @@ import { DeviceService } from '../../../services/device.service';
 export class ChatWindowComponent implements OnInit {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   @Output() threadOpened = new EventEmitter<void>();
+  @ViewChild('chatMessageInput', { static: false }) chatMessageInput!: ElementRef;
+
   showChatMessage: boolean = true;
   private previousMessageCount: number = 0;
   channelId: string = '';
@@ -61,15 +63,16 @@ export class ChatWindowComponent implements OnInit {
         await this.getCurrentUserId();
         if (this.userId) { this.loadCurrentUser(this.userId); }
         this.scrollToBottom();
-        let textarea = document.getElementById('chat-message-input') as HTMLTextAreaElement;
         setTimeout(() => {
-          textarea.focus();
-          textarea.value = '';
+          if (this.chatMessageInput) {
+            this.chatMessageInput.nativeElement.focus();
+            this.chatMessageInput.nativeElement.value = '';
+          }
         }, 500);
       }
     });
-    // this.deviceService.deviceType$.subscribe((type) => {this.deviceType = type;})
   }
+  // this.deviceService.deviceType$.subscribe((type) => {this.deviceType = type;})
 
   ngOnDestroy() {
     if (this.unsubscribe) { this.unsubscribe(); }
