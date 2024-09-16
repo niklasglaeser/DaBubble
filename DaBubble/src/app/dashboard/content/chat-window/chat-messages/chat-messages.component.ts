@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, OnDestroy, SimpleChanges, inject, HostListener, ViewChild, ElementRef,} from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, SimpleChanges, inject, HostListener, ViewChild, ElementRef, } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Message } from '../../../../models/message.model';
 import { Observable, Subscription } from 'rxjs';
@@ -87,11 +87,11 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.userSubscription) {this.userSubscription.unsubscribe();}
+    if (this.userSubscription) { this.userSubscription.unsubscribe(); }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['channelId'] && !changes['channelId'].isFirstChange()) {this.closeEditMode();}
+    if (changes['channelId'] && !changes['channelId'].isFirstChange()) { this.closeEditMode(); }
   }
 
   editMessage(message: Message) {
@@ -100,14 +100,14 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
       this.editMessageText = message.message;
       this.selectedMessage = message;
       setTimeout(() => {
-        if (this.editMessageText) {this.adjustHeightDirectly(this.descriptionTextarea.nativeElement);}
+        if (this.editMessageText) { this.adjustHeightDirectly(this.descriptionTextarea.nativeElement); }
       }, 0);
     }
   }
 
   async saveEditedMessage() {
     if (this.selectedMessage) {
-      if (!this.editMessageText.trim()) {this.isMessageEmpty = true; return;}
+      if (!this.editMessageText.trim()) { this.isMessageEmpty = true; return; }
       try {
         this.selectedMessage.message = this.editMessageText;
         await this.messageService.updateMessage(this.channelId, this.selectedMessage.id!, this.editMessageText);
@@ -115,7 +115,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
         this.isMessageEmpty = false;
         this.selectedMessage = null;
         this.editMessageText = '';
-      } catch (e) {console.error('Error saving message:', e);}
+      } catch (e) { console.error('Error saving message:', e); }
     }
   }
 
@@ -145,8 +145,8 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
     let today = new Date();
     let isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
 
-    if (isToday) {return 'Heute';}
-    else {return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || '';}
+    if (isToday) { return 'Heute'; }
+    else { return this.datePipe.transform(date, 'EEEE, dd. MMMM yyyy') || ''; }
   }
 
   getReplayCount(messageId: string): boolean {
@@ -165,15 +165,52 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   }
 
   openImg(message: Message) {
-    this.dialog.open(DialogChatImgComponent, {data: { imagePath: message.imagePath }});
+    this.dialog.open(DialogChatImgComponent, { data: { imagePath: message.imagePath } });
   }
+
+  getFileName(imagePath: string): string {
+    const cleanUrl = imagePath.split('?')[0];
+    const urlSegments = cleanUrl.split('/');
+    const encodedFileName = urlSegments[urlSegments.length - 1];
+    const fileName = decodeURIComponent(encodedFileName);
+    return fileName;
+  }
+
+
+  async downloadImage(imagePath: string): Promise<void> {
+    try {
+      // Lade das Bild mit fetch herunter
+      const response = await fetch(imagePath);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      // Konvertiere die Antwort in einen Blob
+      const blob = await response.blob();
+
+      // Erstelle einen Download-Link mit dem Blob
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob); // Erstelle eine URL für den Blob
+      link.download = this.getFileName(imagePath);  // Setze den Dateinamen
+      link.click();
+
+      // Nach dem Download die URL wieder freigeben
+      URL.revokeObjectURL(link.href);
+    } catch (error) {
+      console.error('Download error:', error);
+    }
+  }
+
+
+
+
 
   async toggleReaction(message: Message, emoji: string) {
     const userId = this.currentUser?.uid!;
     const username = this.currentUser?.username!;
 
-    try {await this.emojiService.toggleReaction(this.channelId, message.id!, emoji, userId, username);}
-    catch (error) {console.error('Fehler beim Aktualisieren der Reaktion:', error);}
+    try { await this.emojiService.toggleReaction(this.channelId, message.id!, emoji, userId, username); }
+    catch (error) { console.error('Fehler beim Aktualisieren der Reaktion:', error); }
   }
 
   addEmoji(event: any, message: Message) {
@@ -215,7 +252,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent) {
     let target = event.target as HTMLElement;
     let isClickInside = target.closest('.emoji-picker-dialog');
-    if (!isClickInside && this.emojiPickerMessageId) {this.emojiPickerMessageId = undefined;}
+    if (!isClickInside && this.emojiPickerMessageId) { this.emojiPickerMessageId = undefined; }
   }
 }
 

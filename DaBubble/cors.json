@@ -1,0 +1,9 @@
+[
+    {
+      "origin": ["https://dabubble-312.developerakademie.net"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600,
+      "responseHeader": ["Content-Type"]
+    }
+  ]
+  
