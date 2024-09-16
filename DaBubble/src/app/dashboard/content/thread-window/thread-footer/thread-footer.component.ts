@@ -56,7 +56,7 @@ export class ThreadFooterComponent {
   constructor(private threadService: ThreadService, private authService: AuthService, private messageService: MessageService, private sanitizer: DomSanitizer,) {this.currentUserId = this.authService.uid;}
 
   sendMessage(): void {
-    let textarea = document.getElementById('chat-message-input-thread') as HTMLTextAreaElement;
+    let textarea = document.getElementById('thread-message-input') as HTMLTextAreaElement;
     let messageText = this.inputText;
 
     if (messageText.trim() || this.chatImg) {
