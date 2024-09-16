@@ -28,6 +28,10 @@ export class DmWindowComponent implements OnInit {
 
   loadMessagesAfterSidebarClick(): void {
     this.messages$ = this.dmService.loadConversation();
+    let textarea = document.getElementById('dm-message-input') as HTMLTextAreaElement;
+    setTimeout(() => {
+      textarea.focus();
+    }, 0);
     setTimeout(() => {this.scrollToBottom();}, 500);
   }
 
