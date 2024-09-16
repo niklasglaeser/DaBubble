@@ -1,4 +1,4 @@
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 @include mat.core();
 $DaBubble-primary: mat.define-palette(mat.$indigo-palette);
 $DaBubble-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
@@ -15,7 +15,7 @@ $DaBubble-theme: mat.define-light-theme(
   )
 );
 @include mat.all-component-themes($DaBubble-theme);
-@import "@ctrl/ngx-emoji-mart/picker";
+@import '@ctrl/ngx-emoji-mart/picker';
 
 /* You can add global styles to this file, and also import other style files */
 :root {
@@ -43,7 +43,7 @@ $DaBubble-theme: mat.define-light-theme(
 * {
   margin: 0;
   box-sizing: border-box;
-  font-family: "Nunito";
+  font-family: 'Nunito';
 }
 
 body {
@@ -96,27 +96,27 @@ a {
 }
 
 .fs-17 {
-  font-size: 17px ;
+  font-size: 17px;
   font-weight: 400;
 }
 
 .fs-16 {
-  font-size: 16px ;
+  font-size: 16px;
   font-weight: 400;
 }
 
 .fs-12 {
-  font-size: 12px ;
+  font-size: 12px;
   font-weight: 400;
 }
 
 .fs-14 {
-  font-size: 14px ;
+  font-size: 14px;
   font-weight: 400;
 }
 
 .fs-14-b {
-  font-size: 14px ;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -168,50 +168,50 @@ a {
 /* nunito-200 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Nunito";
+  font-family: 'Nunito';
   font-style: normal;
   font-weight: 200;
-  src: url("assets/fonts/nunito-v26-latin-200.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('assets/fonts/nunito-v26-latin-200.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* nunito-300 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Nunito";
+  font-family: 'Nunito';
   font-style: normal;
   font-weight: 300;
-  src: url("assets/fonts/nunito-v26-latin-300.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('assets/fonts/nunito-v26-latin-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* nunito-regular - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Nunito";
+  font-family: 'Nunito';
   font-style: normal;
   font-weight: 400;
-  src: url("assets/fonts/nunito-v26-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('assets/fonts/nunito-v26-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* nunito-500 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Nunito";
+  font-family: 'Nunito';
   font-style: normal;
   font-weight: 500;
-  src: url("assets/fonts/nunito-v26-latin-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('assets/fonts/nunito-v26-latin-500.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* nunito-600 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Nunito";
+  font-family: 'Nunito';
   font-style: normal;
   font-weight: 600;
-  src: url("assets/fonts/nunito-v26-latin-600.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('assets/fonts/nunito-v26-latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* nunito-700 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Nunito";
+  font-family: 'Nunito';
   font-style: normal;
   font-weight: 700;
-  src: url("assets/fonts/nunito-v26-latin-700.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('assets/fonts/nunito-v26-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 .dialog-panel-edit-channel .mat-mdc-dialog-container .mdc-dialog__container .mat-mdc-dialog-surface {
@@ -219,8 +219,10 @@ a {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   @media (max-width: 790px) {
     border-radius: 30px 30px 30px 30px;
+    max-height: 600px;
+    height: 100%;
   }
-  }
+}
 
 .dialog-panel-channel-overview .mat-mdc-dialog-container .mdc-dialog__container .mat-mdc-dialog-surface {
   border-radius: 30px 0 30px 30px;
@@ -251,4 +253,3 @@ a {
 .emoji-mart-preview {
   display: none;
 }
-
