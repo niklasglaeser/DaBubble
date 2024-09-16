@@ -63,18 +63,26 @@
         <div class="fs-20-700">Vollständige EMail Adresse</div>
       </div>
       <div class="row">
-        <input class="fs-18" [disabled]="isGuestUser" [(ngModel)]="profilEmail" type="text">
+        <input class="fs-18" [disabled]="isGuestUser" [(ngModel)]="profilEmail" type="text" />
       </div>
       <div *ngIf="!profilEmail" class="error-message">
         E-Mail darf nicht leer sein.
       </div>
+      <div *ngIf="profilEmail && !isValidEmail(profilEmail)" class="error-message">
+        Bitte geben Sie eine gültige E-Mail-Adresse ein.
+      </div>
+
       <div class="row" *ngIf="isGuestUser">
         <span class="fs-18 error-message">Gastbenutzer - nicht bearbeitbar</span>
       </div>
       <div class="dialog-actions">
         <button class="exitBtn fs-18-700" (click)="close()">Abbrechen</button>
-        <button *ngIf="hasChanges() && editNameClicked && profilName && profilEmail" class="saveBtn fs-18-700"
-          [disabled]="!profilName || !profilEmail || !hasChanges()" (click)="updateUser()">Speichern</button>
+        <button *ngIf="hasChanges() && editNameClicked && profilName && profilEmail && isValidEmail(profilEmail)"
+          class="saveBtn fs-18-700" (click)="updateUser()">
+          Speichern
+        </button>
+
+
       </div>
     </div>
     }

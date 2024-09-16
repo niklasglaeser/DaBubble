@@ -31,6 +31,8 @@ export class ChatWindowComponent implements OnInit {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   @Output() threadOpened = new EventEmitter<void>();
   @ViewChild('chatMessageInput', { static: false }) chatMessageInput!: ElementRef;
+  @ViewChild(ChatFooterComponent) chatFooterComponent!: ChatFooterComponent;
+
 
   showChatMessage: boolean = true;
   private previousMessageCount: number = 0;
@@ -63,12 +65,9 @@ export class ChatWindowComponent implements OnInit {
         await this.getCurrentUserId();
         if (this.userId) { this.loadCurrentUser(this.userId); }
         this.scrollToBottom();
-        setTimeout(() => {
-          if (this.chatMessageInput) {
-            this.chatMessageInput.nativeElement.focus();
-            this.chatMessageInput.nativeElement.value = '';
-          }
-        }, 500);
+        if (this.chatFooterComponent) {
+          this.chatFooterComponent.clearInput();
+        }
       }
     });
   }
