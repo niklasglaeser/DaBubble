@@ -246,7 +246,9 @@ export class ChatFooterComponent {
     this.inputText = '';
     if (this.chatMessageInput) {
       this.chatMessageInput.nativeElement.value = '';
-      this.chatMessageInput.nativeElement.focus();
+      if (window.innerWidth > 1200) {
+        this.chatMessageInput.nativeElement.focus();
+      }
     }
   }
 
