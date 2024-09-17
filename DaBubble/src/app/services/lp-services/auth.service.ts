@@ -45,7 +45,6 @@ private restoreUid(): void {
   const storedUid = sessionStorage.getItem('uid');
   if (storedUid) {
     this.uid = storedUid;
-    console.log('UID restored from sessionStorage:', this.uid);
   }
 }
 
@@ -71,7 +70,6 @@ private restoreUid(): void {
         userId: user.uid!
       });
       await this.updateUserStatus(this.uid, true);
-      console.log('UserId is subscribed:', this.uid, 'Username:', user.displayName);
     } else {
       this.currentUserSig.set(null);
       sessionStorage.removeItem('uid');
