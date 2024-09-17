@@ -1,20 +1,14 @@
 <div class="chat-content">
     <div *ngIf="messages$ | async as messages" id="chat-messages-container" #chatContainer>
-        <div *ngFor="let message of messages"
-            [ngClass]="message.senderId === currentUser?.uid ? 'user-send-message' : 'message'" [id]="message.id">
+        <div *ngFor="let message of messages" [ngClass]="message.senderId === currentUser?.uid ? 'user-send-message' : 'message'" [id]="message.id">
             <div class="message-date">{{ formatDate(message.created_at) }}</div>
             <div class="message-section">
                 <div class="reaction-bar">
-                    <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')">
-                        <div>✅</div>
-                    </div>
-                    <div class="applaud-reaction" (click)="toggleReaction(message, '🙌')">
-                        <div>🙌</div>
-                    </div>
+                    <div class="checkmark-reaction" (click)="toggleReaction(message, '✅')"><div>✅</div></div>
+                    <div class="applaud-reaction" (click)="toggleReaction(message, '🙌')"><div>🙌</div></div>
                     <div class="emoji-reaction" (click)="toggleEmojiPicker(message.id ?? undefined, $event)"></div>
                     <div class="comment-reaction" (click)="openThread(channelId, message.id!, message)"></div>
-                    <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction"
-                        (click)="editMessage(message)"></div>
+                    <div *ngIf="currentUser?.uid === message.senderId" class="option-reaction" (click)="editMessage(message)"></div>
                 </div>
                 <div class="message-content">
                     <img class="author-picture" [src]="message.photoURL">
@@ -23,10 +17,8 @@
                             <div class="author-name fs-18-700">{{message.senderName}}</div>
                             <div class="message-send-time fs-14">{{ formatTime(message.created_at) }} Uhr</div>
                         </div>
-                        <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate"
-                            class="text fs-18">
-                            <div *ngIf="message.imagePath && !checkPdf(message)" class="message-image"
-                                (click)="openImg(message)">
+                        <div *ngIf="!(editMessageClicked && selectedMessage?.id === message.id); else editTemplate" class="text fs-18">
+                            <div *ngIf="message.imagePath && !checkPdf(message)" class="message-image" (click)="openImg(message)">
                                 <img [src]="message.imagePath" alt="Message Image">
                             </div>
                             <div *ngIf="message.imagePath && checkPdf(message)" class="message-image">
@@ -34,13 +26,7 @@
                                     <mat-icon class="pdf">picture_as_pdf</mat-icon>
                                 </a>
                             </div>
-                            <div *ngIf="message.imagePath && !checkPdf(message)" class="download-icon">
-                                <mat-icon (click)="downloadImage(message.imagePath)">download</mat-icon>
-                            </div>
-
-
-                            <div [innerHTML]="formatMessage(message.message)" class="textcontent">{{message.message}}
-                            </div>
+                            <div [innerHTML]="formatMessage(message.message)" class="textcontent">{{message.message}}</div>
                         </div>
                         <ng-template #editTemplate>
                             <div class="edit-channel-btn">
@@ -49,22 +35,16 @@
                                 <span class="edit" (click)="deleteMessage()">Nachricht löschen</span>
                             </div>
                             <div class="edit-channel">
-                                <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText"
-                                    type="text" (input)="adjustHeight($event)"></textarea>
+                                <textarea #descriptionTextarea class="text fs-18" [(ngModel)]="editMessageText" type="text" (input)="adjustHeight($event)"></textarea>
                             </div>
                             <div *ngIf="isMessageEmpty" class="error-message">Die Nachricht darf nicht leer sein.</div>
                         </ng-template>
                         <div class="open-thread">
-                            <div class="open-answers fs-14" (click)="openThread(channelId, message.id!, message)"><span
-                                    *ngIf="getReplayCount(message.id!)">{{ threadCounts.get(message.id!) }}
-                                    Antworten</span></div>
-                            <div class="fs-10 last-answer"><span *ngIf="getAnswerTime(message.id!) as answerTime">Letzte
-                                    Antwort: {{formatTime(answerTime) }}</span></div>
+                            <div class="open-answers fs-14" (click)="openThread(channelId, message.id!, message)"><span *ngIf="getReplayCount(message.id!)">{{ threadCounts.get(message.id!) }} Antworten</span></div>
+                            <div class="fs-10 last-answer"><span *ngIf="getAnswerTime(message.id!) as answerTime">Letzte Antwort: {{formatTime(answerTime) }}</span></div>
                         </div>
                         <div class="reactions">
-                            <div *ngFor="let reaction of message.reactions" class="emoji-container"
-                                (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)"
-                                (click)="toggleReaction(message, reaction.emoji)">
+                            <div *ngFor="let reaction of message.reactions" class="emoji-container" (mouseenter)="toggleTooltip(true)" (mouseleave)="toggleTooltip(false)" (click)="toggleReaction(message, reaction.emoji)">
                                 <div class="emoji">{{ reaction.emoji }}</div>
                                 <div class="emoji-counter">{{ reaction.count }}</div>
 
@@ -72,16 +52,9 @@
                                     <div class="tooltip-content">
                                         <span class="tooltip-emoji" [style.fontSize.px]="30">{{ reaction.emoji}}</span>
                                         <span class="tooltip-text fs-18">
-                                            <ng-container *ngIf="reaction.usernames.length > 2"> {{
-                                                reaction.usernames[0] === currentUser?.username ? 'Du' :
-                                                reaction.usernames[0] }}, {{ reaction.usernames[1] ===
-                                                currentUser?.username ? 'Du' : reaction.usernames[1] }} und {{
-                                                reaction.usernames.length - 2 }} weiter</ng-container>
+                                            <ng-container *ngIf="reaction.usernames.length > 2"> {{ reaction.usernames[0] === currentUser?.username ? 'Du' : reaction.usernames[0] }}, {{ reaction.usernames[1] === currentUser?.username ? 'Du' : reaction.usernames[1] }} und {{ reaction.usernames.length - 2 }} weiter</ng-container>
                                             <ng-container *ngIf="reaction.usernames.length <= 2">
-                                                <ng-container *ngFor="let username of reaction.usernames"> {{ username
-                                                    === currentUser?.username ? 'Du' : username }}<span
-                                                        *ngIf="!isLastItem(reaction.usernames, username)">
-                                                        und</span></ng-container>
+                                                <ng-container *ngFor="let username of reaction.usernames"> {{ username === currentUser?.username ? 'Du' : username }}<span *ngIf="!isLastItem(reaction.usernames, username)"> und</span></ng-container>
                                             </ng-container>
                                         </span>
                                         <span class="tooltip-text">{{ getReactionText(reaction) }}</span>
@@ -93,9 +66,7 @@
                     </div>
                 </div>
                 <div *ngIf="emojiPickerMessageId === message.id" class="emoji-picker-dialog">
-                    <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8"
-                        searchPosition=none color="#444df2" set="twitter"
-                        (emojiClick)="addEmoji($event, message)"></emoji-mart>
+                    <emoji-mart [isNative]="true" [exclude]="[ 'recent','flags', 'symbols', 'animals']" [perLine]="8" searchPosition=none color="#444df2" set="twitter" (emojiClick)="addEmoji($event, message)"></emoji-mart>
                 </div>
             </div>
         </div>

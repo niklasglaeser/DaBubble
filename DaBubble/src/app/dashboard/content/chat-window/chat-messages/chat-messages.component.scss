@@ -213,7 +213,7 @@
   background-color: #edeefe;
   border-radius: 30px;
   border-top-left-radius: 0px;
-  gap: 8px;
+  gap: 20px;
 }
 
 .textcontent {
@@ -467,18 +467,6 @@
 .error-message {
   color: red;
 }
-
-.download-icon {
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end; /* Rechtsbündig unter dem Text */
-}
-
-.download-icon mat-icon {
-  color: #444df2;
-  cursor: pointer;
-}
-
 
 @media (max-width: 1650px) {
   .reaction-bar {
