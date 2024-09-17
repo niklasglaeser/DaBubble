@@ -201,7 +201,6 @@ backToSignUp(): void {
  */
  handleUploadSuccess(photoURL: string): void {
   this.profileImg = photoURL;
-  console.log('Bild erfolgreich hochgeladen:', photoURL);
 }
 
   

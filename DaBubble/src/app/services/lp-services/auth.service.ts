@@ -156,7 +156,6 @@ private restoreUid(): void {
   return from(this.userService.addUser(userObject)).pipe(
     switchMap(() => {
       this.uid = uid;
-      console.log('User ID:', this.uid);
       return of(userCredential);
     })
   );
