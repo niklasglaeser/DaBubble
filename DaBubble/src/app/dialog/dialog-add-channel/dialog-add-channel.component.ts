@@ -41,7 +41,7 @@ export class DialogAddChannelComponent implements OnInit {
   unsubscribe: any;
   createdChannel: any;
 
-  allowDuplicateNames: boolean = true;
+  allowDuplicateNames: boolean = false;
 
   constructor(private fbChannel: FormBuilder, private fbUser: FormBuilder, public dialogRef: MatDialogRef<DialogAddChannelComponent>, private channelService: ChannelService, private userService: UserService, private authService: AuthService) {
     this.addChannelForm = this.fbChannel.group({
