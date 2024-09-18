@@ -107,7 +107,6 @@ export class ChannelService {
     try {
       let channelDocRef = this.getSingleChannel(channelId);
       await deleteDoc(channelDocRef);
-      console.log('Channel deleted with ID: ', channelId);
     } catch (e) {console.error('Error deleting document: ', e);}
   }
 
